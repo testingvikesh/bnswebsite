@@ -1,17 +1,20 @@
 #!/usr/bin/env bash
-# Run on the Hostinger/cPanel box as user bns.
+# Run on the cPanel box that serves businessnavacharschool.com.
 # GitHub Actions calls this after git reset --hard origin/main.
 set -euo pipefail
 
-APP_DIR="/home/bns/bnswebsite"
-WEB_DIR="/home/bns/public_html"
+LIVE_HOME="/home/businessnavachar"
+APP_DIR="${LIVE_HOME}/bnswebsite"
+WEB_DIR="${LIVE_HOME}/public_html"
 
 echo "=== BNS deploy $(date -Is) ==="
+echo "whoami=$(whoami) HOME=$HOME"
 echo "APP_DIR=$APP_DIR"
 echo "WEB_DIR=$WEB_DIR"
 
 if [ ! -d "$APP_DIR/.git" ]; then
   echo "ERROR: $APP_DIR is not a git checkout"
+  echo "SSH user must be businessnavachar (GitHub secret SERVER_USER)."
   exit 1
 fi
 
@@ -20,7 +23,6 @@ echo "HEAD: $(git log -1 --oneline)"
 echo "Title in git checkout:"
 grep "<title>" resources/views/layouts/front.blade.php || true
 
-# Clear Laravel caches in every folder that looks like this app
 clear_artisan() {
   local dir="$1"
   if [ -f "$dir/artisan" ]; then
@@ -30,8 +32,6 @@ clear_artisan() {
 }
 
 clear_artisan "$APP_DIR"
-clear_artisan "/home/bns"
-clear_artisan "$WEB_DIR"
 
 if [ ! -e "$WEB_DIR" ]; then
   echo "No $WEB_DIR — document root is probably $APP_DIR/public"
@@ -60,7 +60,7 @@ if [ -d "$WEB_DIR/.git" ]; then
   exit 0
 fi
 
-# Full Laravel copy sitting in public_html (artisan at web root is unusual but happens)
+# Full Laravel copy sitting in public_html
 if [ -f "$WEB_DIR/artisan" ]; then
   echo "Syncing Laravel app into public_html (keeping .env and storage)"
   rsync -a \

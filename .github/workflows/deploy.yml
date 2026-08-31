@@ -21,13 +21,18 @@ jobs:
           script_stop: true
           script: |
             set -e
-            echo "Connected as $(whoami)@$(hostname)"
-            echo "=== /home/bns ==="
-            ls -la /home/bns | head -40
+            echo "Connected as $(whoami)@$(hostname) HOME=$HOME"
 
-            APP_DIR="/home/bns/bnswebsite"
+            LIVE_HOME="/home/businessnavachar"
+            APP_DIR="${LIVE_HOME}/bnswebsite"
+
+            echo "=== ${LIVE_HOME} ==="
+            ls -la "$LIVE_HOME" | head -40
+
             if [ ! -d "$APP_DIR/.git" ]; then
               echo "ERROR: $APP_DIR is not a git repo"
+              echo "whoami=$(whoami). Live cPanel user is businessnavachar."
+              echo "Set GitHub secret SERVER_USER=businessnavachar"
               exit 1
             fi
 
@@ -48,7 +53,7 @@ jobs:
               php artisan optimize:clear
             fi
 
-            if [ -f /home/bns/deploy.sh ]; then
-              echo "=== also running /home/bns/deploy.sh ==="
-              bash /home/bns/deploy.sh || echo "WARN: /home/bns/deploy.sh failed"
+            if [ -f "${LIVE_HOME}/deploy.sh" ]; then
+              echo "=== also running ${LIVE_HOME}/deploy.sh ==="
+              bash "${LIVE_HOME}/deploy.sh" || echo "WARN: deploy.sh failed"
             fi
