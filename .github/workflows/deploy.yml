@@ -4,6 +4,7 @@ on:
   push:
     branches:
       - main
+  workflow_dispatch:
 
 jobs:
   deploy:
@@ -16,5 +17,38 @@ jobs:
           host: ${{ secrets.SERVER_HOST }}
           username: ${{ secrets.SERVER_USER }}
           key: ${{ secrets.SERVER_SSH_KEY }}
+          command_timeout: 10m
+          script_stop: true
           script: |
-            /home/bns/deploy.sh
+            set -e
+            echo "Connected as $(whoami)@$(hostname)"
+            echo "=== /home/bns ==="
+            ls -la /home/bns | head -40
+
+            APP_DIR="/home/bns/bnswebsite"
+            if [ ! -d "$APP_DIR/.git" ]; then
+              echo "ERROR: $APP_DIR is not a git repo"
+              exit 1
+            fi
+
+            cd "$APP_DIR"
+            echo "=== git before ==="
+            git remote -v
+            git log -1 --oneline
+
+            git fetch origin main
+            git reset --hard origin/main
+
+            echo "=== git after ==="
+            git log -1 --oneline
+
+            if [ -f scripts/server-deploy.sh ]; then
+              bash scripts/server-deploy.sh
+            else
+              php artisan optimize:clear
+            fi
+
+            if [ -f /home/bns/deploy.sh ]; then
+              echo "=== also running /home/bns/deploy.sh ==="
+              bash /home/bns/deploy.sh || echo "WARN: /home/bns/deploy.sh failed"
+            fi
