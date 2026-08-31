@@ -1,82 +1,46 @@
 name: Deploy BNS Website
 
+# Manual only. Automatic live updates use cPanel Git (see .cpanel.yml).
+# GitHub SSH from Actions was failing (exit 255 / publickey) on every push.
 on:
-  push:
-    branches:
-      - main
   workflow_dispatch:
+
+permissions:
+  contents: read
 
 jobs:
   deploy:
     runs-on: ubuntu-latest
 
     steps:
-      - name: Checkout repository
-        uses: actions/checkout@v5
-
-      - name: Prepare SSH key
+      - name: Pull main on the live server
+        uses: appleboy/ssh-action@v1.2.2
         env:
-          SSH_KEY: ${{ secrets.SERVER_SSH_KEY }}
-          SSH_HOST: ${{ secrets.SERVER_HOST }}
-          SSH_USER: ${{ secrets.SERVER_USER }}
-        run: |
-          set -euo pipefail
-          test -n "${SSH_HOST:-}" || { echo "Missing GitHub secret SERVER_HOST"; exit 1; }
-          test -n "${SSH_USER:-}" || { echo "Missing GitHub secret SERVER_USER"; exit 1; }
-          test -n "${SSH_KEY:-}" || { echo "Missing GitHub secret SERVER_SSH_KEY"; exit 1; }
+          GH_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+        with:
+          host: ${{ secrets.SERVER_HOST }}
+          username: ${{ secrets.SERVER_USER }}
+          key: ${{ secrets.SERVER_SSH_KEY }}
+          command_timeout: 10m
+          envs: GH_TOKEN
+          script: |
+            set -e
+            APP_USER="businessnavachar"
+            APP_DIR="/home/${APP_USER}/bnswebsite"
+            echo "SSH user=$(whoami)"
 
-          mkdir -p ~/.ssh
-          chmod 700 ~/.ssh
-          printf '%s\n' "$SSH_KEY" | sed 's/\r$//' > ~/.ssh/deploy_key
-          chmod 600 ~/.ssh/deploy_key
-          if [ "$(tail -c1 ~/.ssh/deploy_key | wc -l)" -eq 0 ]; then
-            echo >> ~/.ssh/deploy_key
-          fi
-
-          ssh-keyscan -H "$SSH_HOST" >> ~/.ssh/known_hosts 2>/dev/null || true
-
-          echo "Testing SSH as ${SSH_USER}@${SSH_HOST}"
-          ssh -i ~/.ssh/deploy_key -o IdentitiesOnly=yes -o BatchMode=yes -o StrictHostKeyChecking=accept-new \
-            "${SSH_USER}@${SSH_HOST}" 'echo SSH_OK user=$(whoami)'
-
-      - name: Upload files and publish live
-        env:
-          SSH_HOST: ${{ secrets.SERVER_HOST }}
-          SSH_USER: ${{ secrets.SERVER_USER }}
-        run: |
-          set -euo pipefail
-          SSH=(ssh -i "$HOME/.ssh/deploy_key" -o IdentitiesOnly=yes -o BatchMode=yes -o StrictHostKeyChecking=accept-new)
-
-          tar czf - \
-            app bootstrap config database public resources routes scripts \
-            artisan composer.json composer.lock \
-            | "${SSH[@]}" "${SSH_USER}@${SSH_HOST}" \
-            'rm -rf /tmp/bnswebsite-release && mkdir -p /tmp/bnswebsite-release && tar xzf - -C /tmp/bnswebsite-release && echo STAGED_OK'
-
-          "${SSH[@]}" "${SSH_USER}@${SSH_HOST}" bash -s << 'REMOTE'
-          set -e
-          APP_USER="businessnavachar"
-          APP_DIR="/home/${APP_USER}/bnswebsite"
-          STAGE="/tmp/bnswebsite-release"
-
-          echo "Remote user=$(whoami) host=$(hostname)"
-          ls -la "$STAGE"
-
-          if command -v rsync >/dev/null 2>&1; then
-            rsync -a "$STAGE/" "$APP_DIR/"
-          else
-            cp -a "$STAGE"/. "$APP_DIR"/
-          fi
-
-          if [ "$(id -u)" = "0" ]; then
-            chown -R "${APP_USER}:${APP_USER}" "$APP_DIR"
-            sudo -u "$APP_USER" -H bash -lc "cd '$APP_DIR' && php artisan optimize:clear"
-          else
+            git config --global --add safe.directory "$APP_DIR"
             cd "$APP_DIR"
-            php artisan optimize:clear
-          fi
 
-          rm -rf "$STAGE"
-          grep "<title>" "${APP_DIR}/resources/views/layouts/front.blade.php" || true
-          echo "Deploy finished"
-          REMOTE
+            git fetch --depth=1 "https://x-access-token:${GH_TOKEN}@github.com/testingvikesh/bnswebsite.git" main
+            git reset --hard FETCH_HEAD
+
+            if [ "$(id -u)" = "0" ]; then
+              chown -R "${APP_USER}:${APP_USER}" "$APP_DIR"
+              sudo -u "$APP_USER" -H bash -lc "cd '$APP_DIR' && php artisan optimize:clear"
+            else
+              php artisan optimize:clear
+            fi
+
+            grep "<title>" resources/views/layouts/front.blade.php || true
+            echo "Deploy finished"
