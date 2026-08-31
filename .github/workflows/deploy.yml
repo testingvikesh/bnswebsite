@@ -14,6 +14,28 @@ jobs:
       - name: Checkout repository
         uses: actions/checkout@v5
 
+      - name: Make live files writable
+        uses: appleboy/ssh-action@v1.2.2
+        with:
+          host: ${{ secrets.SERVER_HOST }}
+          username: ${{ secrets.SERVER_USER }}
+          key: ${{ secrets.SERVER_SSH_KEY }}
+          script_stop: true
+          script: |
+            set -e
+            APP_USER="businessnavachar"
+            APP_DIR="/home/${APP_USER}/bnswebsite"
+
+            echo "Connected as $(whoami)@$(hostname)"
+            ls -la "${APP_DIR}/app/Providers" || true
+
+            if [ "$(id -u)" = "0" ]; then
+              chown -R "${APP_USER}:${APP_USER}" "$APP_DIR"
+            fi
+
+            chmod -R u+rwX "$APP_DIR"
+            echo "Live tree is writable"
+
       - name: Copy project files to live server
         uses: appleboy/scp-action@v0.1.7
         with:
@@ -24,35 +46,27 @@ jobs:
           target: "/home/businessnavachar/bnswebsite"
           overwrite: true
 
-      - name: Clear Laravel cache on live server
+      - name: Fix owner and clear Laravel cache
         uses: appleboy/ssh-action@v1.2.2
         with:
           host: ${{ secrets.SERVER_HOST }}
           username: ${{ secrets.SERVER_USER }}
           key: ${{ secrets.SERVER_SSH_KEY }}
           command_timeout: 10m
+          script_stop: true
           script: |
             set -e
             APP_USER="businessnavachar"
             APP_DIR="/home/${APP_USER}/bnswebsite"
 
-            echo "Connected as $(whoami)@$(hostname)"
+            if [ "$(id -u)" = "0" ]; then
+              chown -R "${APP_USER}:${APP_USER}" "$APP_DIR"
+              sudo -u "$APP_USER" -H bash -lc "cd '$APP_DIR' && php artisan optimize:clear"
+            else
+              cd "$APP_DIR"
+              php artisan optimize:clear
+            fi
+
             echo "Title file:"
             grep "<title>" "${APP_DIR}/resources/views/layouts/front.blade.php" || true
-
-            cd "$APP_DIR"
-            php artisan optimize:clear
-
-            chown -R "${APP_USER}:${APP_USER}" \
-              "${APP_DIR}/app" \
-              "${APP_DIR}/bootstrap" \
-              "${APP_DIR}/config" \
-              "${APP_DIR}/database" \
-              "${APP_DIR}/public" \
-              "${APP_DIR}/resources" \
-              "${APP_DIR}/routes" \
-              "${APP_DIR}/scripts" \
-              "${APP_DIR}/bootstrap/cache" \
-              "${APP_DIR}/storage" || true
-
             echo "Deploy finished"
