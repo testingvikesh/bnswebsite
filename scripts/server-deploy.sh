@@ -1,6 +1,5 @@
 #!/usr/bin/env bash
-# Run on the cPanel box that serves businessnavacharschool.com.
-# GitHub Actions calls this after git reset --hard origin/main.
+# Run as user businessnavachar after git reset --hard origin/main.
 set -euo pipefail
 
 LIVE_HOME="/home/businessnavachar"
@@ -12,9 +11,14 @@ echo "whoami=$(whoami) HOME=$HOME"
 echo "APP_DIR=$APP_DIR"
 echo "WEB_DIR=$WEB_DIR"
 
+if [ "$(id -un)" = "root" ]; then
+  echo "ERROR: do not deploy as root (git ownership / file permissions)."
+  echo "Re-run as businessnavachar."
+  exit 1
+fi
+
 if [ ! -d "$APP_DIR/.git" ]; then
   echo "ERROR: $APP_DIR is not a git checkout"
-  echo "SSH user must be businessnavachar (GitHub secret SERVER_USER)."
   exit 1
 fi
 

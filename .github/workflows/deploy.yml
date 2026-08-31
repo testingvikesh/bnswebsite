@@ -21,39 +21,36 @@ jobs:
           script_stop: true
           script: |
             set -e
-            echo "Connected as $(whoami)@$(hostname) HOME=$HOME"
-
-            LIVE_HOME="/home/businessnavachar"
+            APP_USER="businessnavachar"
+            LIVE_HOME="/home/${APP_USER}"
             APP_DIR="${LIVE_HOME}/bnswebsite"
 
-            echo "=== ${LIVE_HOME} ==="
-            ls -la "$LIVE_HOME" | head -40
+            echo "Connected as $(whoami)@$(hostname) HOME=$HOME"
 
             if [ ! -d "$APP_DIR/.git" ]; then
               echo "ERROR: $APP_DIR is not a git repo"
-              echo "whoami=$(whoami). Live cPanel user is businessnavachar."
-              echo "Set GitHub secret SERVER_USER=businessnavachar"
               exit 1
             fi
 
-            cd "$APP_DIR"
-            echo "=== git before ==="
-            git remote -v
-            git log -1 --oneline
+            as_app() {
+              if [ "$(id -un)" = "$APP_USER" ]; then
+                bash -lc "$*"
+              else
+                sudo -u "$APP_USER" -H bash -lc "$*"
+              fi
+            }
 
-            git fetch origin main
-            git reset --hard origin/main
+            echo "=== git before ==="
+            as_app "cd '$APP_DIR' && git remote -v && git log -1 --oneline"
+
+            as_app "cd '$APP_DIR' && git fetch origin main && git reset --hard origin/main"
 
             echo "=== git after ==="
-            git log -1 --oneline
+            as_app "cd '$APP_DIR' && git log -1 --oneline"
 
-            if [ -f scripts/server-deploy.sh ]; then
-              bash scripts/server-deploy.sh
-            else
-              php artisan optimize:clear
-            fi
+            as_app "cd '$APP_DIR' && bash scripts/server-deploy.sh"
 
-            if [ -f "${LIVE_HOME}/deploy.sh" ]; then
-              echo "=== also running ${LIVE_HOME}/deploy.sh ==="
-              bash "${LIVE_HOME}/deploy.sh" || echo "WARN: deploy.sh failed"
-            fi
+            # In case a previous root artisan run left root-owned cache files
+            chown -R "${APP_USER}:${APP_USER}" \
+              "${APP_DIR}/bootstrap/cache" \
+              "${APP_DIR}/storage" || true
