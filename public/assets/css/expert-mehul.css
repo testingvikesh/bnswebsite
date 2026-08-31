@@ -1,0 +1,778 @@
+/* Expert / Dr. Mehul Rupani page */
+
+.bns-expert-mehul__card {
+    max-width: 1100px;
+}
+
+.bns-expert-mehul__identity {
+    display: flex;
+    align-items: center;
+    gap: 28px;
+    margin-bottom: 36px;
+    padding-bottom: 32px;
+    border-bottom: 1px solid rgba(15, 23, 42, 0.08);
+}
+
+.bns-expert-mehul__photo-wrap {
+    flex-shrink: 0;
+    width: 148px;
+    height: 148px;
+    border-radius: 50%;
+    overflow: hidden;
+    border: 4px solid rgba(255, 85, 68, 0.2);
+    box-shadow: 0 12px 32px rgba(10, 29, 55, 0.12);
+}
+
+.bns-expert-mehul__photo {
+    width: 100%;
+    height: 100%;
+    object-fit: cover;
+    display: block;
+}
+
+.bns-expert-mehul__credentials {
+    margin: 0 0 6px;
+    font-size: 0.92rem;
+    font-weight: 600;
+    letter-spacing: 0.02em;
+    color: #64748b;
+}
+
+.bns-expert-mehul__name {
+    margin: 0 0 8px;
+    font-size: clamp(1.55rem, 2.5vw, 2rem);
+    font-weight: 800;
+    line-height: 1.25;
+    color: #0a1d37;
+}
+
+.bns-expert-mehul__designation {
+    margin: 0 0 4px;
+    font-size: 1.05rem;
+    font-weight: 700;
+    color: var(--eduvers-base, #ff5544);
+}
+
+.bns-expert-mehul__org {
+    margin: 0 0 10px;
+    font-size: 0.98rem;
+    font-weight: 600;
+    color: #334155;
+}
+
+.bns-expert-mehul__tagline {
+    margin: 0;
+    font-size: 0.95rem;
+    font-weight: 500;
+    color: #64748b;
+}
+
+.bns-expert-mehul__motto {
+    margin: 0 0 28px;
+    padding: 32px 28px;
+    text-align: center;
+    background: linear-gradient(180deg, #fff8f5 0%, #fff 100%);
+    border: 1px solid rgba(255, 85, 68, 0.25);
+    border-radius: 16px;
+}
+
+.bns-expert-mehul__motto-label {
+    display: inline-block;
+    margin-bottom: 14px;
+    font-size: 0.78rem;
+    font-weight: 700;
+    letter-spacing: 0.08em;
+    text-transform: uppercase;
+    color: var(--eduvers-base, #ff5544);
+}
+
+.bns-expert-mehul__motto-gujarati {
+    margin-bottom: 16px;
+}
+
+.bns-expert-mehul__motto-line {
+    margin: 0;
+    font-size: clamp(1.45rem, 3vw, 1.9rem);
+    font-weight: 800;
+    line-height: 1.45;
+    color: #0a1d37;
+}
+
+.bns-expert-mehul__motto-line.is-connector {
+    margin: 6px 0;
+    font-size: 1.05rem;
+    font-weight: 700;
+    color: var(--eduvers-base, #ff5544);
+}
+
+.bns-expert-mehul__motto-english {
+    margin: 0 auto;
+    max-width: 560px;
+    font-size: 1rem;
+    font-weight: 600;
+    line-height: 1.65;
+    color: #64748b;
+}
+
+.bns-expert-mehul__business-motto {
+    margin: 0 0 28px;
+    padding: 32px 28px;
+    text-align: center;
+    background: linear-gradient(135deg, #0a2240 0%, #123a5e 100%);
+    border-radius: 16px;
+    color: #fff;
+}
+
+.bns-expert-mehul__business-motto .bns-expert-mehul__motto-label {
+    color: #fbbf24;
+}
+
+.bns-expert-mehul__business-motto-lines {
+    margin-top: 4px;
+}
+
+.bns-expert-mehul__business-motto-line {
+    margin: 0;
+    font-size: clamp(1.2rem, 2.4vw, 1.55rem);
+    font-weight: 700;
+    line-height: 1.5;
+    color: rgba(255, 255, 255, 0.92);
+}
+
+.bns-expert-mehul__business-motto-line.is-lead {
+    margin-bottom: 10px;
+    font-size: clamp(1.55rem, 3vw, 2rem);
+    font-weight: 800;
+    color: #fff;
+}
+
+.bns-expert-mehul__business-motto-line:not(.is-lead) + .bns-expert-mehul__business-motto-line {
+    margin-top: 6px;
+}
+
+.bns-expert-mehul__creed {
+    margin: 0 0 40px;
+    padding: 36px 32px;
+    border-radius: 18px;
+    background: linear-gradient(145deg, #0a2240 0%, #123a5e 55%, #0f2d4a 100%);
+    color: #fff;
+    text-align: center;
+    box-shadow: 0 18px 40px rgba(10, 29, 55, 0.18);
+}
+
+.bns-expert-mehul__creed-label {
+    display: inline-block;
+    margin-bottom: 10px;
+    padding: 4px 14px;
+    border-radius: 999px;
+    font-size: 0.78rem;
+    font-weight: 700;
+    letter-spacing: 0.08em;
+    text-transform: uppercase;
+    color: #0a1d37;
+    background: #fbbf24;
+}
+
+.bns-expert-mehul__creed-title {
+    margin: 0 0 12px;
+    font-size: clamp(1.45rem, 2.4vw, 1.85rem);
+    font-weight: 800;
+    color: #fff;
+}
+
+.bns-expert-mehul__creed-intro {
+    margin: 0 auto 28px;
+    max-width: 520px;
+    font-size: 0.98rem;
+    line-height: 1.65;
+    color: rgba(255, 255, 255, 0.78);
+}
+
+.bns-expert-mehul__creed-list {
+    margin: 0;
+    padding: 0;
+    text-align: left;
+    max-width: 640px;
+    margin-inline: auto;
+}
+
+.bns-expert-mehul__creed-line {
+    display: flex;
+    align-items: flex-start;
+    gap: 14px;
+    padding: 14px 0;
+    font-size: clamp(1.02rem, 1.6vw, 1.18rem);
+    font-weight: 600;
+    line-height: 1.55;
+    color: #fff;
+    border-bottom: 1px solid rgba(255, 255, 255, 0.1);
+}
+
+.bns-expert-mehul__creed-line:last-child {
+    border-bottom: 0;
+    padding-bottom: 0;
+}
+
+.bns-expert-mehul__creed-line:first-child {
+    padding-top: 0;
+}
+
+.bns-expert-mehul__creed-mark {
+    flex-shrink: 0;
+    width: 10px;
+    height: 10px;
+    margin-top: 0.55em;
+    border-radius: 50%;
+    background: var(--eduvers-base, #ff5544);
+    box-shadow: 0 0 0 4px rgba(255, 85, 68, 0.22);
+}
+
+.bns-expert-mehul__framework {
+    margin: 0 0 36px;
+}
+
+.bns-expert-mehul__framework-head {
+    margin-bottom: 16px;
+}
+
+.bns-expert-mehul__framework-head h3 {
+    margin: 0;
+    font-size: clamp(1.2rem, 2vw, 1.45rem);
+    font-weight: 800;
+    color: #0a1d37;
+}
+
+.bns-expert-mehul__framework-subtitle {
+    margin: 8px 0 0;
+    font-size: 1.05rem;
+    font-weight: 700;
+    letter-spacing: 0.08em;
+    color: var(--eduvers-base, #ff5544);
+}
+
+.bns-expert-mehul__framework-intro {
+    margin: 0 0 14px;
+    font-size: 0.98rem;
+    line-height: 1.65;
+    color: #64748b;
+}
+
+.bns-expert-mehul__framework-notes {
+    margin: 12px 0 0;
+    padding: 0;
+}
+
+.bns-expert-mehul__framework-notes li {
+    margin: 0 0 6px;
+    font-size: 0.95rem;
+    font-weight: 600;
+    color: #334155;
+}
+
+.bns-expert-mehul__table-wrap {
+    overflow-x: auto;
+    border-radius: 14px;
+    border: 1px solid rgba(15, 23, 42, 0.08);
+    background: #fff;
+    -webkit-overflow-scrolling: touch;
+}
+
+.bns-expert-mehul__table {
+    width: 100%;
+    min-width: 720px;
+    border-collapse: collapse;
+    margin: 0;
+}
+
+.bns-expert-mehul__table th,
+.bns-expert-mehul__table td {
+    padding: 12px 14px;
+    text-align: left;
+    vertical-align: top;
+    border-bottom: 1px solid rgba(15, 23, 42, 0.08);
+    font-size: 0.92rem;
+    line-height: 1.55;
+}
+
+.bns-expert-mehul__table thead th {
+    background: #0a2240;
+    color: #fff;
+    font-weight: 700;
+    white-space: nowrap;
+    font-size: 0.85rem;
+}
+
+.bns-expert-mehul__table tbody tr:nth-child(even) {
+    background: #f8fafc;
+}
+
+.bns-expert-mehul__table tbody tr:last-child td {
+    border-bottom: 0;
+}
+
+.bns-expert-mehul__table td.is-letter {
+    width: 64px;
+    text-align: center;
+    vertical-align: middle;
+}
+
+.bns-expert-mehul__table td.is-feature {
+    font-weight: 700;
+    color: #0a1d37;
+    white-space: nowrap;
+}
+
+.bns-expert-mehul__table--plain {
+    min-width: 640px;
+}
+
+.bns-expert-mehul__letter {
+    display: inline-flex;
+    align-items: center;
+    justify-content: center;
+    width: 36px;
+    height: 36px;
+    border-radius: 50%;
+    background: var(--eduvers-base, #ff5544);
+    color: #fff;
+    font-weight: 800;
+    font-size: 1rem;
+}
+
+.bns-expert-mehul__signature {
+    margin: 0 0 28px;
+    padding: 32px 28px;
+    text-align: center;
+    background: linear-gradient(180deg, #fff8f5 0%, #fff 100%);
+    border: 1px solid rgba(255, 85, 68, 0.25);
+    border-radius: 16px;
+}
+
+.bns-expert-mehul__signature-title {
+    margin: 0 0 18px;
+    font-size: clamp(1.3rem, 2.2vw, 1.65rem);
+    font-weight: 800;
+    color: #0a1d37;
+}
+
+.bns-expert-mehul__signature-list {
+    margin: 0;
+    padding: 0;
+}
+
+.bns-expert-mehul__signature-list li {
+    padding: 8px 0;
+    font-size: clamp(1rem, 1.6vw, 1.12rem);
+    font-weight: 700;
+    color: #334155;
+    border-bottom: 1px solid rgba(15, 23, 42, 0.06);
+}
+
+.bns-expert-mehul__signature-list li:last-child {
+    border-bottom: 0;
+    color: var(--eduvers-base, #ff5544);
+}
+
+.bns-expert-mehul__formula {
+    margin: 0 0 36px;
+    padding: 32px 28px;
+    border-radius: 18px;
+    background: linear-gradient(145deg, #0a2240 0%, #123a5e 55%, #0f2d4a 100%);
+    color: #fff;
+    text-align: center;
+}
+
+.bns-expert-mehul__formula-items {
+    display: grid;
+    gap: 20px;
+    margin-top: 18px;
+}
+
+.bns-expert-mehul__formula-item {
+    padding: 18px 16px;
+    border-radius: 12px;
+    background: rgba(255, 255, 255, 0.06);
+    border: 1px solid rgba(255, 255, 255, 0.1);
+}
+
+.bns-expert-mehul__formula-eq {
+    margin: 0 0 10px;
+    font-size: clamp(0.92rem, 1.5vw, 1.05rem);
+    font-weight: 600;
+    line-height: 1.55;
+    color: rgba(255, 255, 255, 0.88);
+}
+
+.bns-expert-mehul__formula-result {
+    margin: 0;
+    font-size: clamp(1.05rem, 1.8vw, 1.25rem);
+    font-weight: 800;
+    color: #fbbf24;
+}
+
+.bns-expert-mehul__formula-result span {
+    margin-right: 6px;
+    color: rgba(255, 255, 255, 0.7);
+}
+
+.bns-expert-mehul__currency-closing {
+    margin: 0 0 36px;
+    padding: 32px 28px;
+    border-radius: 18px;
+    background: linear-gradient(145deg, #0a2240 0%, #123a5e 55%, #0f2d4a 100%);
+    color: #fff;
+    text-align: center;
+}
+
+.bns-expert-mehul__currency-closing-text {
+    margin: 16px auto 0;
+    max-width: 720px;
+    font-size: clamp(1.05rem, 1.8vw, 1.22rem);
+    font-weight: 600;
+    line-height: 1.7;
+    color: #fff;
+}
+
+.bns-expert-mehul__currency-closing-text i {
+    margin-right: 8px;
+    color: #fbbf24;
+}
+
+.bns-expert-mehul__business-closing {
+    margin: 0 0 28px;
+    padding: 32px 28px;
+    text-align: center;
+    background: linear-gradient(180deg, #fff8f5 0%, #fff 100%);
+    border: 1px solid rgba(255, 85, 68, 0.25);
+    border-radius: 16px;
+}
+
+.bns-expert-mehul__business-closing-intro {
+    margin: 12px auto 14px;
+    max-width: 720px;
+    font-size: 1.05rem;
+    font-weight: 600;
+    line-height: 1.7;
+    color: #0a1d37;
+}
+
+.bns-expert-mehul__business-closing-bridge {
+    margin: 0 0 18px;
+    font-size: 1.15rem;
+    font-weight: 800;
+    color: var(--eduvers-base, #ff5544);
+}
+
+.bns-expert-mehul__business-closing-build-title {
+    margin: 0 0 12px;
+    font-size: 1rem;
+    font-weight: 700;
+    color: #334155;
+}
+
+.bns-expert-mehul__business-closing-list {
+    display: grid;
+    grid-template-columns: repeat(auto-fit, minmax(180px, 1fr));
+    gap: 10px 16px;
+    margin: 0 auto 18px;
+    max-width: 640px;
+    padding: 0;
+    text-align: left;
+}
+
+.bns-expert-mehul__business-closing-list li {
+    display: flex;
+    align-items: flex-start;
+    gap: 8px;
+    font-size: 0.98rem;
+    font-weight: 600;
+    color: #0a1d37;
+}
+
+.bns-expert-mehul__business-closing-list i {
+    margin-top: 3px;
+    color: var(--eduvers-base, #ff5544);
+}
+
+.bns-expert-mehul__business-closing-outro {
+    margin: 0 auto;
+    max-width: 640px;
+    font-size: 1.02rem;
+    font-weight: 600;
+    line-height: 1.65;
+    color: #475569;
+}
+
+.bns-expert-mehul__income-formula {
+    margin: 0 0 28px;
+    padding: 32px 28px;
+    text-align: center;
+    background: linear-gradient(180deg, #fff8f5 0%, #fff 100%);
+    border: 1px solid rgba(255, 85, 68, 0.25);
+    border-radius: 16px;
+}
+
+.bns-expert-mehul__income-flow {
+    margin-top: 10px;
+}
+
+.bns-expert-mehul__income-flow-step {
+    margin: 0 auto;
+    max-width: 780px;
+    padding: 14px 16px;
+    border-radius: 12px;
+    background: #f8fafc;
+    border: 1px solid rgba(15, 23, 42, 0.08);
+    font-size: clamp(0.92rem, 1.5vw, 1.05rem);
+    font-weight: 700;
+    line-height: 1.55;
+    color: #0a1d37;
+}
+
+.bns-expert-mehul__income-flow-arrow {
+    padding: 8px 0;
+    color: var(--eduvers-base, #ff5544);
+    font-size: 1.1rem;
+}
+
+.bns-expert-mehul__income-result-title {
+    margin: 0 0 12px;
+    font-size: 1.15rem;
+    font-weight: 800;
+    letter-spacing: 0.06em;
+    color: var(--eduvers-base, #ff5544);
+}
+
+.bns-expert-mehul__income-results {
+    display: grid;
+    grid-template-columns: repeat(auto-fit, minmax(180px, 1fr));
+    gap: 10px;
+    margin: 0;
+    padding: 0;
+}
+
+.bns-expert-mehul__income-results li {
+    padding: 12px 14px;
+    border-radius: 10px;
+    background: #0a2240;
+    color: #fff;
+    font-size: 0.95rem;
+    font-weight: 700;
+}
+
+.bns-expert-mehul__balance-result {
+    margin: 0 auto;
+    max-width: 640px;
+    padding: 16px 18px;
+    border-radius: 12px;
+    background: #0a2240;
+    color: #fbbf24;
+    font-size: clamp(1rem, 1.6vw, 1.15rem);
+    font-weight: 800;
+    line-height: 1.55;
+}
+
+.bns-expert-mehul__homework {
+    margin: 0 0 36px;
+}
+
+.bns-expert-mehul__hw-theme {
+    margin: 0 0 24px;
+    padding: 28px 24px;
+    text-align: center;
+    background: linear-gradient(180deg, #fff8f5 0%, #fff 100%);
+    border: 1px solid rgba(255, 85, 68, 0.25);
+    border-radius: 16px;
+}
+
+.bns-expert-mehul__hw-theme-quote {
+    margin: 10px 0 14px;
+    font-size: clamp(1.2rem, 2vw, 1.45rem);
+    font-weight: 800;
+    line-height: 1.45;
+    color: #0a1d37;
+}
+
+.bns-expert-mehul__hw-theme-intro {
+    margin: 0 0 12px;
+    font-size: 1.02rem;
+    font-weight: 600;
+    line-height: 1.65;
+    color: #475569;
+}
+
+.bns-expert-mehul__hw-theme-line {
+    margin: 0;
+    font-size: 1.05rem;
+    font-weight: 600;
+    color: #334155;
+}
+
+.bns-expert-mehul__hw-theme-line.is-accent {
+    margin-top: 4px;
+    font-size: 1.2rem;
+    font-weight: 800;
+    color: var(--eduvers-base, #ff5544);
+}
+
+.bns-expert-mehul__hw-tasks-title {
+    margin: 0 0 14px;
+    font-size: 1.15rem;
+    font-weight: 800;
+    color: #0a1d37;
+}
+
+.bns-expert-mehul__hw-tasks {
+    display: grid;
+    gap: 16px;
+    margin-bottom: 22px;
+}
+
+.bns-expert-mehul__hw-task {
+    padding: 20px 18px;
+    border-radius: 14px;
+    background: #f8fafc;
+    border: 1px solid rgba(15, 23, 42, 0.08);
+    border-left: 4px solid var(--eduvers-base, #ff5544);
+}
+
+.bns-expert-mehul__hw-task-head {
+    display: flex;
+    align-items: center;
+    gap: 12px;
+    margin-bottom: 10px;
+}
+
+.bns-expert-mehul__hw-task-head h4 {
+    margin: 0;
+    font-size: 1.08rem;
+    font-weight: 800;
+    color: #0a1d37;
+}
+
+.bns-expert-mehul__hw-task-lead {
+    margin: 0 0 10px;
+    font-size: 0.95rem;
+    font-weight: 600;
+    color: #64748b;
+}
+
+.bns-expert-mehul__hw-task-list {
+    margin: 0;
+    padding: 0;
+    display: grid;
+    gap: 6px;
+}
+
+.bns-expert-mehul__hw-task-list li {
+    display: flex;
+    align-items: flex-start;
+    gap: 8px;
+    font-size: 0.95rem;
+    font-weight: 600;
+    color: #334155;
+}
+
+.bns-expert-mehul__hw-task-list i {
+    margin-top: 3px;
+    color: var(--eduvers-base, #ff5544);
+    font-size: 0.85rem;
+}
+
+.bns-expert-mehul__hw-submission {
+    margin: 0 0 22px;
+    padding: 22px 20px;
+    border-radius: 14px;
+    background: #fff;
+    border: 1px dashed rgba(255, 85, 68, 0.4);
+}
+
+.bns-expert-mehul__hw-submission h4 {
+    margin: 0 0 8px;
+    font-size: 1.1rem;
+    font-weight: 800;
+    color: #0a1d37;
+}
+
+.bns-expert-mehul__hw-submission > p {
+    margin: 0 0 12px;
+    font-size: 0.95rem;
+    font-weight: 600;
+    color: #64748b;
+}
+
+.bns-expert-mehul__hw-thought {
+    padding: 28px 24px;
+    border-radius: 16px;
+    background: linear-gradient(145deg, #0a2240 0%, #123a5e 55%, #0f2d4a 100%);
+    color: #fff;
+    text-align: center;
+}
+
+.bns-expert-mehul__hw-thought-quote {
+    margin: 14px auto 16px;
+    max-width: 640px;
+    font-size: clamp(1.05rem, 1.8vw, 1.22rem);
+    font-weight: 700;
+    line-height: 1.65;
+    color: #fff;
+}
+
+.bns-expert-mehul__hw-thought-quote i {
+    margin-right: 8px;
+    color: #fbbf24;
+}
+
+.bns-expert-mehul__hw-thought-lines {
+    margin: 0 auto;
+    max-width: 480px;
+}
+
+.bns-expert-mehul__hw-thought-lines p {
+    margin: 0 0 6px;
+    font-size: 1rem;
+    font-weight: 600;
+    color: rgba(255, 255, 255, 0.88);
+}
+
+.bns-expert-mehul__hw-thought-lines p:last-child {
+    margin-bottom: 0;
+    color: #fbbf24;
+    font-weight: 800;
+}
+
+.bns-expert-mehul__profile {
+    margin-bottom: 12px;
+}
+
+.bns-expert-mehul__profile .bns-vision-header {
+    margin-bottom: 20px;
+}
+
+.bns-expert-mehul__profile .bns-vision-header h3 {
+    margin: 0;
+    font-size: 1.35rem;
+    font-weight: 800;
+    color: #0a1d37;
+}
+
+@media (max-width: 767.98px) {
+    .bns-expert-mehul__identity {
+        flex-direction: column;
+        text-align: center;
+        gap: 20px;
+    }
+
+    .bns-expert-mehul__photo-wrap {
+        width: 128px;
+        height: 128px;
+    }
+
+    .bns-expert-mehul__creed {
+        padding: 28px 20px;
+    }
+
+    .bns-expert-mehul__creed-line {
+        font-size: 1rem;
+    }
+}

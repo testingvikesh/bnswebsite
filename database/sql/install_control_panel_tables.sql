@@ -1,0 +1,7 @@
+-- DEPRECATED — use install_bns_database.sql instead
+-- This file previously included removed SOP tables.
+--
+-- Production cleanup:
+--   1) database/sql/drop_unnecessary_tables.sql
+--   2) database/sql/install_bns_database.sql  (missing tables only)
+--   3) database/sql/fix_users_table.sql       (legacy hosting users table)

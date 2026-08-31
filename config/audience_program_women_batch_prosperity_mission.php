@@ -1,0 +1,51 @@
+<?php
+
+return [
+    'eyebrow' => 'Business Navachar School (BNS) – Women Business School',
+    'title' => "India's Prosperity Mission",
+    'subtitle' => 'Empowering Women. Strengthening Families. Building a Prosperous India.',
+    'intro' => [
+        'At Business Navachar School (BNS), we believe that when women become financially independent and entrepreneurial, families become stronger, businesses become more successful, communities become more prosperous, and the nation becomes more developed.',
+        'Our mission is to empower women through practical business education, entrepreneurship, innovation, leadership, Artificial Intelligence (AI), digital business, and financial literacy, enabling them to build sustainable businesses and contribute to Viksit Bharat 2047.',
+    ],
+    'points_heading' => 'Our Mission for a Prosperous India',
+    'points' => [
+        ['icon' => 'fas fa-flag', 'title' => '🇮🇳 Empower women to become confident entrepreneurs and business leaders.'],
+        ['icon' => 'fas fa-flag', 'title' => '🇮🇳 Transform Dreams into Ideas, Ideas into Startups, and Startups into Successful Businesses.'],
+        ['icon' => 'fas fa-flag', 'title' => '🇮🇳 Promote financial independence through entrepreneurship.'],
+        ['icon' => 'fas fa-flag', 'title' => '🇮🇳 Encourage women-led startups, MSMEs, home-based businesses, and family businesses.'],
+        ['icon' => 'fas fa-flag', 'title' => '🇮🇳 Strengthen leadership, innovation, and business management skills among women.'],
+        ['icon' => 'fas fa-flag', 'title' => '🇮🇳 Build expertise in Marketing, Sales, Branding, Finance, Accounting, HR, Operations, Digital Marketing, AI, and Business Strategy.'],
+        ['icon' => 'fas fa-flag', 'title' => '🇮🇳 Prepare women for the AI-driven and digital business economy.'],
+        ['icon' => 'fas fa-flag', 'title' => '🇮🇳 Support women in creating employment opportunities through their businesses.'],
+        ['icon' => 'fas fa-flag', 'title' => '🇮🇳 Build a nationwide ecosystem of women entrepreneurs, mentors, investors, business coaches, and industry experts.'],
+        ['icon' => 'fas fa-flag', 'title' => '🇮🇳 Deliver practical business education through live projects, workshops, case studies, mentoring, networking events, and business visits.'],
+        ['icon' => 'fas fa-flag', 'title' => '🇮🇳 Deliver a structured syllabus and learning methodology developed with the guidance of Faculties of IIM, as per the applicable collaboration framework.'],
+        ['icon' => 'fas fa-flag', 'title' => '🇮🇳 Provide learning through BNS-trained faculties, business coaches, industry experts, with selected sessions by Faculties of IIM, where applicable.'],
+        ['icon' => 'fas fa-flag', 'title' => '🇮🇳 Recognize excellence through Program Completion Certificates, Skill Certificates, Project Certificates, and Participation/Appreciation Certificates by Faculties of IIM for eligible workshops, seminars, masterclasses, training programs, and events conducted under the applicable collaboration framework.'],
+        ['icon' => 'fas fa-flag', 'title' => '🇮🇳 Promote ethical entrepreneurship, responsible leadership, and sustainable business practices.'],
+        ['icon' => 'fas fa-flag', 'title' => '🇮🇳 Contribute to Viksit Bharat 2047 by building women-led enterprises that strengthen India\'s economy and create long-term social impact.'],
+    ],
+    'become_heading' => 'Our Dream',
+    'become_points' => [
+        'Every Woman Financially Independent.',
+        'Every Family Financially Strong.',
+        'Every Business Creating Employment.',
+        'Every Community Growing Together.',
+        'Every Entrepreneur Contributing to India\'s Prosperity.',
+    ],
+    'belief_heading' => 'Our Belief',
+    'belief_lines' => [
+        'When Women Learn, Families Grow.',
+        'When Women Start Businesses, Employment Grows.',
+        'When Businesses Grow, Communities Prosper.',
+        'When Communities Prosper, India Becomes Stronger.',
+        'Together, We Build Viksit Bharat 2047.',
+    ],
+    'taglines' => [
+        'Empowered Women. Prosperous Families.',
+        'Women Entrepreneurs. Strong India.',
+        'Learn. Launch. Grow. Lead.',
+        'Together Towards Viksit Bharat 2047.',
+    ],
+];

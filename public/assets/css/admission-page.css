@@ -1,0 +1,1177 @@
+/* BNS — Admissions */
+.bns-admission-page {
+    background: linear-gradient(180deg, #e8edf4 0%, #f4f6f9 40%, #eef2f7 100%);
+    padding-bottom: 100px;
+}
+
+.bns-admission-apply,
+.bns-admission-content {
+    padding: 50px 0;
+}
+
+.bns-admission-alert {
+    border-radius: 12px;
+    margin-bottom: 24px;
+}
+
+.bns-admission-steps {
+    display: flex;
+    flex-wrap: wrap;
+    gap: 8px;
+    margin-bottom: 28px;
+}
+
+.bns-admission-step {
+    font-size: 11px;
+    font-weight: 700;
+    padding: 8px 12px;
+    border-radius: 999px;
+    background: #fff;
+    border: 2px solid #dde3ec;
+    color: #64748b;
+}
+
+.bns-admission-step.is-active {
+    border-color: #fe5500;
+    color: #fe5500;
+    background: rgba(254, 85, 0, 0.08);
+}
+
+.bns-admission-form {
+    background: #fff;
+    border-radius: 16px;
+    padding: 32px;
+    box-shadow: 0 10px 36px rgba(15, 23, 42, 0.08);
+    margin-bottom: 40px;
+}
+
+.bns-admission-panel {
+    display: none;
+    border: none;
+    margin: 0 0 24px;
+    padding: 0;
+}
+
+.bns-admission-panel.is-active {
+    display: block;
+}
+
+.bns-admission-panel legend {
+    font-size: 1.2rem;
+    font-weight: 700;
+    color: #0a1d37;
+    margin-bottom: 20px;
+    float: none;
+    width: 100%;
+}
+
+.bns-admission-options {
+    display: flex;
+    flex-wrap: wrap;
+    gap: 10px;
+}
+
+.bns-admission-option {
+    margin: 0;
+    cursor: pointer;
+}
+
+.bns-admission-option input {
+    position: absolute;
+    opacity: 0;
+    pointer-events: none;
+}
+
+.bns-admission-option span {
+    display: inline-block;
+    padding: 10px 16px;
+    border-radius: 10px;
+    border: 2px solid #dde3ec;
+    font-size: 14px;
+    font-weight: 600;
+    color: #334155;
+    transition: all 0.2s ease;
+}
+
+.bns-admission-option input:checked + span {
+    border-color: #fe5500;
+    background: rgba(254, 85, 0, 0.1);
+    color: #fe5500;
+}
+
+.bns-admission-total {
+    font-size: 1.25rem;
+    font-weight: 700;
+    color: #fe5500;
+    padding: 16px;
+    background: #f8fafc;
+    border-radius: 12px;
+}
+
+.bns-admission-nav {
+    display: flex;
+    gap: 12px;
+    flex-wrap: wrap;
+}
+
+.bns-admission-btn {
+    display: inline-flex;
+    align-items: center;
+    gap: 8px;
+    padding: 14px 22px;
+    border-radius: 10px;
+    font-weight: 700;
+    text-decoration: none;
+    border: none;
+    cursor: pointer;
+    font-size: 14px;
+}
+
+.bns-admission-btn--primary {
+    background: #fe5500;
+    color: #fff;
+}
+
+.bns-admission-btn--outline {
+    background: #fff;
+    border: 2px solid #dde3ec;
+    color: #0a1d37;
+}
+
+.bns-admission-card {
+    background: #fff;
+    border-radius: 16px;
+    padding: 40px;
+    box-shadow: 0 10px 36px rgba(15, 23, 42, 0.08);
+    margin-bottom: 32px;
+}
+
+.bns-admission-card__subtitle {
+    font-size: 1.35rem;
+    font-weight: 700;
+    color: #fe5500;
+    margin-bottom: 14px;
+}
+
+.bns-admission-card__intro {
+    font-size: 17px;
+    line-height: 1.75;
+    color: #475569;
+    margin-bottom: 20px;
+}
+
+.bns-admission-list li {
+    display: flex;
+    align-items: flex-start;
+    gap: 10px;
+    margin-bottom: 12px;
+    font-size: 15px;
+    color: #363a40;
+}
+
+.bns-admission-list li i {
+    color: #fe5500;
+    margin-top: 3px;
+}
+
+.bns-admission-trust,
+.bns-admission-ctas {
+    background: #fff;
+    border-radius: 16px;
+    padding: 32px;
+    box-shadow: 0 10px 36px rgba(15, 23, 42, 0.08);
+    margin-bottom: 32px;
+}
+
+.bns-admission-trust h3,
+.bns-admission-ctas h3 {
+    font-size: 1.25rem;
+    font-weight: 700;
+    color: #0a1d37;
+    margin-bottom: 20px;
+}
+
+.bns-admission-ctas__grid {
+    display: flex;
+    flex-wrap: wrap;
+    gap: 10px;
+}
+
+.bns-admission-cta {
+    display: inline-flex;
+    align-items: center;
+    gap: 8px;
+    padding: 12px 18px;
+    border-radius: 10px;
+    border: none;
+    font-weight: 700;
+    font-size: 13px;
+    text-decoration: none;
+    color: #fff;
+    cursor: pointer;
+}
+
+.bns-admission-cta--primary { background: #fe5500; }
+.bns-admission-cta--blue { background: #2563eb; }
+.bns-admission-cta--green { background: #16a34a; }
+.bns-admission-cta--dark { background: #0a1d37; }
+.bns-admission-cta--whatsapp { background: #25d366; }
+.bns-admission-cta--orange { background: #ea580c; }
+
+.bns-admission-card--office {
+    background: linear-gradient(180deg, #0a2240 0%, #123a5e 100%);
+    color: #fff;
+}
+
+.bns-admission-card--office h3 { color: #fe5500; }
+
+.bns-admission-office a { color: #fff; }
+
+.bns-admission-map iframe {
+    width: 100%;
+    height: 300px;
+    border: 0;
+    border-radius: 12px;
+}
+
+.bns-admission-dashboard-grid {
+    display: grid;
+    grid-template-columns: repeat(auto-fill, minmax(180px, 1fr));
+    gap: 10px;
+}
+
+.bns-admission-dashboard-item {
+    display: flex;
+    align-items: center;
+    gap: 8px;
+    padding: 12px;
+    background: #f8fafc;
+    border-radius: 10px;
+    font-size: 14px;
+    font-weight: 600;
+}
+
+.bns-admission-confirm {
+    padding: 80px 0;
+}
+
+.bns-admission-confirm__card {
+    max-width: 800px;
+    margin: 0 auto;
+    background: #fff;
+    border-radius: 16px;
+    padding: 48px;
+    text-align: center;
+    box-shadow: 0 16px 48px rgba(15, 23, 42, 0.1);
+}
+
+.bns-admission-confirm__icon {
+    font-size: 4rem;
+    color: #16a34a;
+    margin-bottom: 16px;
+}
+
+.bns-admission-confirm__number {
+    font-size: 1.1rem;
+    color: #fe5500;
+    font-weight: 700;
+}
+
+.bns-admission-confirm__details {
+    text-align: left;
+    background: #f8fafc;
+    padding: 20px;
+    border-radius: 12px;
+    margin: 24px 0;
+}
+
+/* Admissions hub landing */
+.bns-admission-hub-intro {
+    margin: 50px auto 48px;
+}
+
+.bns-admission-hub-intro .container {
+    max-width: 960px;
+    margin: 0 auto;
+    padding: 44px 40px;
+    background: #fff;
+    border-radius: 16px;
+    box-shadow: 0 10px 36px rgba(15, 23, 42, 0.08);
+    border: 1px solid rgba(15, 23, 42, 0.06);
+    text-align: center;
+}
+
+.bns-admission-hub-intro__subtitle {
+    font-size: clamp(1.25rem, 2.5vw, 1.6rem);
+    font-weight: 700;
+    color: #fe5500;
+    margin: 0 0 16px;
+}
+
+.bns-admission-hub-intro__text {
+    margin: 0 0 14px;
+    font-size: 17px;
+    line-height: 1.75;
+    color: #363a40;
+}
+
+.bns-admission-hero-cta {
+    display: inline-flex;
+    align-items: center;
+    gap: 10px;
+    margin-top: 20px;
+    padding: 16px 28px;
+    border-radius: 12px;
+    border: none;
+    background: #fe5500;
+    color: #fff;
+    font-weight: 700;
+    text-decoration: none;
+    cursor: pointer;
+}
+
+.bns-admission-hero-cta:hover {
+    background: #e04a00;
+    color: #fff;
+}
+
+.bns-admission-hub {
+    padding-bottom: 50px;
+}
+
+.bns-admission-hub-group {
+    margin-bottom: 48px;
+}
+
+.bns-admission-hub-group__title {
+    font-size: 1.35rem;
+    font-weight: 700;
+    color: #0a1d37;
+    margin: 0 0 24px;
+    padding-bottom: 12px;
+    border-bottom: 3px solid #fe5500;
+    display: inline-block;
+}
+
+.bns-admission-hub-card {
+    display: flex;
+    flex-direction: column;
+    width: 100%;
+    height: 100%;
+    padding: 28px 24px;
+    background: #fff;
+    border-radius: 16px;
+    border: 1px solid rgba(15, 23, 42, 0.08);
+    box-shadow: 0 8px 28px rgba(15, 23, 42, 0.06);
+    text-decoration: none;
+    text-align: left;
+    color: inherit;
+    font-family: inherit;
+    cursor: pointer;
+    transition: all 0.2s ease;
+}
+
+.bns-admission-hub-card:hover {
+    border-color: #fe5500;
+    transform: translateY(-4px);
+    box-shadow: 0 16px 40px rgba(254, 85, 0, 0.12);
+    color: inherit;
+}
+
+.bns-admission-hub-card--featured {
+    background: linear-gradient(180deg, #fff8f5 0%, #fff 100%);
+    border-color: rgba(254, 85, 0, 0.35);
+}
+
+.bns-admission-hub-card__icon {
+    width: 52px;
+    height: 52px;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    border-radius: 12px;
+    background: rgba(254, 85, 0, 0.1);
+    color: #fe5500;
+    font-size: 1.25rem;
+    margin-bottom: 16px;
+}
+
+.bns-admission-hub-card__title {
+    font-size: 1.1rem;
+    font-weight: 700;
+    color: #0a1d37;
+    margin: 0 0 10px;
+}
+
+.bns-admission-hub-card__desc {
+    font-size: 14px;
+    line-height: 1.65;
+    color: #64748b;
+    margin: 0 0 16px;
+    flex-grow: 1;
+}
+
+.bns-admission-hub-card__link {
+    font-size: 13px;
+    font-weight: 700;
+    color: #fe5500;
+    display: inline-flex;
+    align-items: center;
+    gap: 6px;
+}
+
+.bns-admission-hub-extras {
+    margin-bottom: 32px;
+}
+
+.bns-admission-back {
+    display: inline-flex;
+    align-items: center;
+    gap: 8px;
+    font-weight: 600;
+    color: #fe5500;
+    text-decoration: none;
+    margin-bottom: 20px;
+}
+
+.bns-admission-tagline {
+    text-align: center;
+    padding: 44px 40px;
+    background: linear-gradient(135deg, #0a2240 0%, #123a5e 100%);
+    border-radius: 16px;
+    color: #fff;
+    margin-top: 32px;
+}
+
+.bns-admission-tagline__brand {
+    font-size: 13px;
+    font-weight: 700;
+    letter-spacing: 0.14em;
+    margin: 0 0 12px;
+}
+
+.bns-admission-tagline__text {
+    font-size: 1.15rem;
+    font-weight: 700;
+    color: #fe5500;
+    margin: 0 0 10px;
+}
+
+.bns-admission-tagline__sub {
+    margin: 0 0 8px;
+    opacity: 0.95;
+}
+
+.bns-admission-tagline__hindi {
+    margin: 0;
+    font-size: 18px;
+    font-weight: 600;
+}
+
+@media (max-width: 767px) {
+    .bns-admission-hub-intro { margin: 40px auto 40px; }
+    .bns-admission-hub-intro .container { padding: 32px 24px; }
+    .bns-admission-form { padding: 24px 20px; }
+    .bns-admission-card { padding: 28px 24px; }
+}
+
+/* Eligibility criteria page */
+.bns-eligibility-programs {
+    display: flex;
+    flex-direction: column;
+    gap: 28px;
+    margin-top: 32px;
+}
+
+.bns-eligibility-program {
+    background: #f8fafc;
+    border: 1px solid rgba(15, 23, 42, 0.08);
+    border-radius: 16px;
+    overflow: hidden;
+}
+
+.bns-eligibility-program__header {
+    display: flex;
+    align-items: center;
+    gap: 14px;
+    padding: 20px 24px;
+    background: linear-gradient(135deg, #0a2240 0%, #123a5e 100%);
+    color: #fff;
+}
+
+.bns-eligibility-program__icon {
+    font-size: 1.75rem;
+    line-height: 1;
+}
+
+.bns-eligibility-program__title {
+    margin: 0;
+    font-size: 1.15rem;
+    font-weight: 700;
+    color: #ffffff;
+}
+
+.bns-eligibility-program__body {
+    padding: 24px;
+}
+
+.bns-eligibility-program__label {
+    font-size: 0.95rem;
+    font-weight: 700;
+    color: #fe5500;
+    margin: 0 0 14px;
+    text-transform: uppercase;
+    letter-spacing: 0.04em;
+}
+
+.bns-eligibility-age {
+    display: inline-flex;
+    flex-direction: column;
+    gap: 4px;
+    margin-top: 20px;
+    padding: 14px 18px;
+    background: rgba(254, 85, 0, 0.08);
+    border-radius: 10px;
+    border-left: 4px solid #fe5500;
+}
+
+.bns-eligibility-age strong {
+    font-size: 12px;
+    text-transform: uppercase;
+    letter-spacing: 0.06em;
+    color: #64748b;
+}
+
+.bns-eligibility-age span {
+    font-size: 1.05rem;
+    font-weight: 700;
+    color: #0a1d37;
+}
+
+.bns-eligibility-section {
+    margin-top: 40px;
+    padding-top: 32px;
+    border-top: 1px solid rgba(15, 23, 42, 0.08);
+}
+
+.bns-eligibility-section h3 {
+    font-size: 1.25rem;
+    font-weight: 700;
+    color: #0a1d37;
+    margin: 0 0 16px;
+}
+
+.bns-eligibility-section__intro,
+.bns-eligibility-section__outro {
+    font-size: 16px;
+    line-height: 1.7;
+    color: #363a40;
+    margin: 0 0 16px;
+}
+
+.bns-eligibility-section--highlight {
+    background: linear-gradient(180deg, #fff8f5 0%, #fff 100%);
+    border: 1px solid rgba(254, 85, 0, 0.2);
+    border-radius: 16px;
+    padding: 28px 24px;
+    margin-top: 40px;
+    border-top: none;
+}
+
+.bns-admission-list--checks li i {
+    color: #22c55e;
+}
+
+.bns-eligibility-why {
+    display: grid;
+    grid-template-columns: repeat(auto-fill, minmax(220px, 1fr));
+    gap: 10px 20px;
+    margin: 0 0 16px;
+}
+
+.bns-eligibility-why li {
+    position: relative;
+    padding-left: 18px;
+    font-size: 15px;
+    color: #363a40;
+}
+
+.bns-eligibility-why li::before {
+    content: '–';
+    position: absolute;
+    left: 0;
+    color: #fe5500;
+    font-weight: 700;
+}
+
+.bns-eligibility-closing {
+    text-align: center;
+    margin-top: 48px;
+    padding: 40px 32px;
+    background: linear-gradient(135deg, #0a2240 0%, #123a5e 100%);
+    border-radius: 16px;
+    color: #fff;
+}
+
+.bns-eligibility-closing h3 {
+    margin: 0 0 12px;
+    font-size: 1.35rem;
+    font-weight: 700;
+    color: #ffffff;
+}
+
+.bns-eligibility-closing__subtitle {
+    margin: 0 0 10px;
+    font-size: 1.05rem;
+    opacity: 0.95;
+}
+
+.bns-eligibility-closing__tagline {
+    margin: 0 0 8px;
+    font-weight: 700;
+    color: #fe5500;
+}
+
+.bns-eligibility-closing__hindi {
+    margin: 0 0 24px;
+    font-size: 17px;
+    font-weight: 600;
+    opacity: 0.9;
+}
+
+.bns-eligibility-journey {
+    margin: 0 0 20px;
+    padding: 0;
+    display: flex;
+    flex-direction: column;
+    gap: 12px;
+}
+
+.bns-eligibility-content__intro {
+    margin: 0 0 16px;
+    font-size: 1rem;
+    line-height: 1.65;
+    color: #475569;
+}
+
+.bns-eligibility-content__heading {
+    margin: 0 0 12px;
+    font-size: 1.15rem;
+    font-weight: 800;
+    color: #0a1d37;
+}
+
+.bns-eligibility-content__school {
+    margin: 0 0 8px;
+    font-size: 1.2rem;
+    font-weight: 800;
+    color: #0a1d37;
+}
+
+.bns-eligibility-content__school-sub {
+    margin: 0 0 16px;
+    font-size: 0.95rem;
+    line-height: 1.55;
+    color: #64748b;
+}
+
+.bns-eligibility-track--divider {
+    margin-top: 28px;
+    padding-top: 28px;
+    border-top: 2px solid rgba(255, 85, 68, 0.15);
+}
+
+.bns-eligibility-journey li {
+    display: block;
+    padding: 12px 16px;
+    border-radius: 10px;
+    background: rgba(255, 255, 255, 0.08);
+    border: 1px solid rgba(255, 255, 255, 0.12);
+}
+
+.bns-eligibility-journey__content {
+    display: flex;
+    flex-direction: column;
+    gap: 6px;
+}
+
+.bns-eligibility-journey__content strong,
+.bns-eligibility-journey__content > span {
+    display: inline;
+}
+
+.bns-eligibility-journey__desc {
+    margin: 4px 0 0;
+    font-size: 0.9rem;
+    line-height: 1.55;
+    font-weight: 500;
+    color: rgba(255, 255, 255, 0.88);
+}
+
+.bns-eligibility-closing--begin {
+    margin-top: 20px;
+    padding: 22px 20px;
+    border-radius: 14px;
+    text-align: center;
+    background: linear-gradient(135deg, rgb(51, 61, 97) 0%, #1e293b 100%);
+}
+
+.bns-eligibility-closing--begin h3 {
+    color: #fff;
+}
+
+.bns-eligibility-closing--begin .bns-eligibility-closing__tagline {
+    color: #fff;
+    margin-bottom: 0;
+}
+
+.bns-eligibility-journey strong {
+    color: #fe5500;
+    font-size: 0.95rem;
+    letter-spacing: 0.02em;
+}
+
+.bns-eligibility-journey span {
+    color: #fff;
+    font-weight: 600;
+}
+
+.bns-eligibility-taglines {
+    margin-top: 40px;
+    padding: 24px 22px;
+    border-radius: 14px;
+    text-align: center;
+    background: linear-gradient(135deg, rgb(51, 61, 97) 0%, #1e293b 100%);
+}
+
+.bns-eligibility-tagline {
+    margin: 0 0 8px;
+    font-size: clamp(0.95rem, 2.2vw, 1.08rem);
+    font-weight: 800;
+    letter-spacing: 0.03em;
+    color: #fff;
+    line-height: 1.45;
+}
+
+.bns-eligibility-tagline:last-child {
+    margin-bottom: 0;
+}
+
+/* Admission process page */
+.bns-process-steps {
+    display: flex;
+    flex-direction: column;
+    gap: 0;
+    margin-top: 36px;
+    position: relative;
+}
+
+.bns-process-step {
+    display: grid;
+    grid-template-columns: 56px 1fr;
+    gap: 20px;
+    padding-bottom: 32px;
+    position: relative;
+}
+
+.bns-process-step:not(:last-child)::before {
+    content: '';
+    position: absolute;
+    left: 27px;
+    top: 56px;
+    bottom: 0;
+    width: 2px;
+    background: linear-gradient(180deg, #fe5500 0%, rgba(254, 85, 0, 0.15) 100%);
+}
+
+.bns-process-step__marker {
+    display: flex;
+    justify-content: center;
+}
+
+.bns-process-step__number {
+    width: 56px;
+    height: 56px;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    border-radius: 50%;
+    background: #fe5500;
+    color: #fff;
+    font-size: 1.25rem;
+    font-weight: 800;
+    box-shadow: 0 8px 24px rgba(254, 85, 0, 0.35);
+    flex-shrink: 0;
+}
+
+.bns-process-step__content {
+    background: #f8fafc;
+    border: 1px solid rgba(15, 23, 42, 0.08);
+    border-radius: 16px;
+    padding: 24px;
+}
+
+.bns-process-step__title {
+    margin: 0 0 12px;
+    font-size: 1.15rem;
+    font-weight: 700;
+    color: #0a1d37;
+}
+
+.bns-process-step__intro,
+.bns-process-step__note {
+    margin: 0 0 16px;
+    font-size: 16px;
+    line-height: 1.7;
+    color: #363a40;
+}
+
+.bns-process-step__note {
+    font-style: italic;
+    color: #64748b;
+}
+
+.bns-process-step__label {
+    font-weight: 700;
+    color: #0a1d37;
+    margin: 0 0 12px;
+    font-size: 14px;
+}
+
+.bns-process-programs {
+    display: grid;
+    grid-template-columns: repeat(auto-fill, minmax(240px, 1fr));
+    gap: 12px;
+    margin-bottom: 8px;
+}
+
+.bns-process-program {
+    display: flex;
+    align-items: center;
+    gap: 10px;
+    padding: 14px 16px;
+    background: #fff;
+    border: 1px solid rgba(254, 85, 0, 0.2);
+    border-radius: 12px;
+    text-decoration: none;
+    color: #0a1d37;
+    font-weight: 600;
+    font-size: 14px;
+    transition: all 0.2s ease;
+}
+
+.bns-process-program:hover {
+    border-color: #fe5500;
+    background: #fff8f5;
+    color: #fe5500;
+}
+
+.bns-process-program__icon {
+    font-size: 1.35rem;
+    line-height: 1;
+}
+
+.bns-process-tags {
+    display: grid;
+    grid-template-columns: repeat(auto-fill, minmax(220px, 1fr));
+    gap: 10px;
+    margin: 0 0 8px;
+}
+
+.bns-process-tags li {
+    display: flex;
+    align-items: center;
+    gap: 8px;
+    padding: 10px 14px;
+    background: #fff;
+    border-radius: 10px;
+    font-size: 14px;
+    color: #363a40;
+    border: 1px solid rgba(15, 23, 42, 0.06);
+}
+
+.bns-process-tags__icon {
+    font-size: 1.1rem;
+    line-height: 1;
+}
+
+.bns-process-step__link {
+    display: inline-flex;
+    align-items: center;
+    gap: 8px;
+    margin-top: 16px;
+    padding: 0;
+    background: none;
+    border: none;
+    font-weight: 700;
+    color: #fe5500;
+    text-decoration: none;
+    cursor: pointer;
+}
+
+.bns-process-step__link:hover {
+    color: #e04a00;
+}
+
+.bns-process-section {
+    margin-top: 40px;
+    padding-top: 32px;
+    border-top: 1px solid rgba(15, 23, 42, 0.08);
+}
+
+.bns-process-section h3 {
+    font-size: 1.25rem;
+    font-weight: 700;
+    color: #0a1d37;
+    margin: 0 0 16px;
+}
+
+.bns-process-section__intro,
+.bns-process-section__outro {
+    font-size: 16px;
+    line-height: 1.7;
+    color: #363a40;
+    margin: 0 0 16px;
+}
+
+.bns-process-section--cert {
+    background: linear-gradient(180deg, #fff8f5 0%, #fff 100%);
+    border: 1px solid rgba(254, 85, 0, 0.2);
+    border-radius: 16px;
+    padding: 28px 24px;
+    border-top: none;
+}
+
+.bns-process-section--help {
+    background: #f8fafc;
+    border-radius: 16px;
+    padding: 28px 24px;
+    border-top: none;
+}
+
+.bns-process-help {
+    display: grid;
+    grid-template-columns: repeat(auto-fill, minmax(200px, 1fr));
+    gap: 12px;
+}
+
+.bns-process-help__item {
+    display: flex;
+    align-items: center;
+    gap: 10px;
+    padding: 16px;
+    background: #fff;
+    border: 1px solid rgba(15, 23, 42, 0.08);
+    border-radius: 12px;
+    text-decoration: none;
+    color: #0a1d37;
+    font-weight: 600;
+    transition: all 0.2s ease;
+}
+
+.bns-process-help__item:hover {
+    border-color: #fe5500;
+    color: #fe5500;
+}
+
+.bns-process-help__icon {
+    font-size: 1.25rem;
+}
+
+.bns-process-section--ready {
+    text-align: center;
+    padding: 32px 24px;
+    background: linear-gradient(135deg, #0a2240 0%, #123a5e 100%);
+    border-radius: 16px;
+    color: #fff;
+    border-top: none;
+}
+
+.bns-process-section--ready h3 {
+    color: #fff;
+}
+
+.bns-process-section--ready .bns-process-section__intro {
+    color: rgba(255, 255, 255, 0.95);
+    max-width: 720px;
+    margin-left: auto;
+    margin-right: auto;
+}
+
+.bns-process-actions {
+    margin-top: 40px;
+}
+
+.bns-process-actions h3 {
+    font-size: 1.25rem;
+    font-weight: 700;
+    color: #0a1d37;
+    margin: 0 0 20px;
+    text-align: center;
+}
+
+.bns-process-closing {
+    margin-top: 40px;
+}
+
+@media (max-width: 767px) {
+    .bns-process-step {
+        grid-template-columns: 44px 1fr;
+        gap: 14px;
+    }
+
+    .bns-process-step__number {
+        width: 44px;
+        height: 44px;
+        font-size: 1rem;
+    }
+
+    .bns-process-step:not(:last-child)::before {
+        left: 21px;
+        top: 44px;
+    }
+
+    .bns-process-step__content {
+        padding: 18px 16px;
+    }
+}
+
+/* FAQs page */
+.bns-faq-list {
+    display: flex;
+    flex-direction: column;
+    gap: 12px;
+    margin-top: 32px;
+}
+
+.bns-faq-item {
+    background: #f8fafc;
+    border: 1px solid rgba(15, 23, 42, 0.08);
+    border-radius: 14px;
+    overflow: hidden;
+    transition: border-color 0.2s ease, box-shadow 0.2s ease;
+}
+
+.bns-faq-item[open] {
+    border-color: rgba(254, 85, 0, 0.35);
+    box-shadow: 0 8px 28px rgba(254, 85, 0, 0.08);
+}
+
+.bns-faq-item__question {
+    display: flex;
+    align-items: center;
+    gap: 14px;
+    padding: 18px 20px;
+    cursor: pointer;
+    list-style: none;
+    font-weight: 700;
+    color: #0a1d37;
+    user-select: none;
+}
+
+.bns-faq-item__question::-webkit-details-marker {
+    display: none;
+}
+
+.bns-faq-item__number {
+    width: 36px;
+    height: 36px;
+    flex-shrink: 0;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    border-radius: 50%;
+    background: #fe5500;
+    color: #fff;
+    font-size: 14px;
+    font-weight: 800;
+}
+
+.bns-faq-item__text {
+    flex: 1;
+    font-size: 1rem;
+    line-height: 1.45;
+}
+
+.bns-faq-item__toggle {
+    color: #fe5500;
+    font-size: 14px;
+    transition: transform 0.2s ease;
+}
+
+.bns-faq-item[open] .bns-faq-item__toggle {
+    transform: rotate(180deg);
+}
+
+.bns-faq-item__answer {
+    padding: 0 20px 20px 70px;
+    color: #363a40;
+    font-size: 15px;
+    line-height: 1.7;
+}
+
+.bns-faq-item__answer p {
+    margin: 0 0 12px;
+}
+
+.bns-faq-item__outro {
+    margin-top: 12px !important;
+    font-style: italic;
+    color: #64748b;
+}
+
+.bns-faq-programs {
+    display: flex;
+    flex-direction: column;
+    gap: 8px;
+    margin: 0 0 8px;
+}
+
+.bns-faq-programs li {
+    display: flex;
+    align-items: center;
+    gap: 10px;
+    padding: 10px 14px;
+    background: #fff;
+    border-radius: 10px;
+    border: 1px solid rgba(15, 23, 42, 0.06);
+    font-weight: 600;
+}
+
+.bns-faq-programs__icon {
+    font-size: 1.2rem;
+    line-height: 1;
+}
+
+.bns-faq-help {
+    margin-top: 40px;
+}
+
+.bns-faq-section-title {
+    font-size: 1.35rem;
+    font-weight: 700;
+    color: #0a1d37;
+    margin: 48px 0 24px;
+    padding-bottom: 12px;
+    border-bottom: 3px solid #fe5500;
+    display: inline-block;
+}
+
+.bns-faq-list--additional {
+    margin-top: 0;
+}
+
+@media (max-width: 767px) {
+    .bns-faq-item__answer {
+        padding: 0 16px 16px 16px;
+    }
+
+    .bns-faq-item__question {
+        padding: 16px;
+        align-items: flex-start;
+    }
+
+    .bns-faq-item__text {
+        font-size: 15px;
+    }
+}

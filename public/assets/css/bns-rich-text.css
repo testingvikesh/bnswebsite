@@ -1,0 +1,170 @@
+/**
+ * Site-wide emphasis for important phrases (Faculties of IIM, Business Navachar School, etc.).
+ * Keeps bold inline so lists/paragraphs never show stretched gaps around emphasized words.
+ */
+
+/* Base: never let emphasis break word spacing or become a block/flex item */
+.bns-em,
+strong.bns-em,
+b.bns-em,
+.bns-rich-text strong,
+.bns-rich-text b,
+:is(
+    .bns-vision-modal:not(.bns-message-modal),
+    .bns-why-bns-modal,
+    .bns-program-structure-modal,
+    .bns-founder-modal,
+    .bns-faqs-modal,
+    .bns-prosperity-modal,
+    .bns-certification-modal,
+    .bns-eligibility-criteria,
+    .bns-audience-program-hero,
+    .bns-pitch-detail,
+    .bns-orientation-pitch,
+    .bns-coach-presentation,
+    .about-one,
+    .bns-about-page,
+    .bns-eligibility-content,
+    .bns-process-step,
+    .bns-why-reason,
+    .bns-values-page,
+    .bns-vision2047-page,
+    .bns-prosperity-section,
+    .bns-brochure-intro,
+    .bns-events-page,
+    .bns-audience-journey,
+    .bns-pitch-member-intro,
+    .bns-pitch-detail__school-types,
+    .bns-school-types,
+    .bns-home,
+    .bns-admission-page,
+    .bns-register-page,
+    .bns-team-page,
+    .bns-faculty-page
+) :is(p, li, span, td, figcaption, h3, h4, h5, h6, div) :is(strong, b) {
+    display: inline !important;
+    margin: 0 !important;
+    padding: 0 !important;
+    white-space: normal !important;
+    word-spacing: normal !important;
+    letter-spacing: inherit;
+    max-width: none;
+    font-weight: 700;
+    color: var(--eduvers-black, #0d2944);
+}
+
+/* Keep emphasized phrases inline inside flex list rows (icon + text). */
+.bns-orientation-pitch__roles li > span,
+.bns-orientation-pitch__coach-benefits li > span,
+.bns-orientation-pitch__vision-centers li > span,
+.bns-pitch-detail__point-text,
+.bns-orientation-pitch__point-text,
+.bns-coach-presentation__point-text {
+    flex: 1 1 auto;
+    min-width: 0;
+    text-align: left;
+    text-wrap: pretty;
+}
+
+.bns-orientation-pitch__roles li > span :is(strong, b, .bns-em),
+.bns-orientation-pitch__coach-benefits li > span :is(strong, b, .bns-em),
+.bns-orientation-pitch__vision-centers li > span :is(strong, b, .bns-em),
+.bns-pitch-detail__point-text :is(strong, b, .bns-em, span),
+.bns-orientation-pitch__point-text :is(strong, b, .bns-em, span),
+.bns-coach-presentation__point-text :is(strong, b, .bns-em, span) {
+    display: inline !important;
+    white-space: normal !important;
+    word-spacing: normal !important;
+}
+
+.bns-pitch-detail__point-text :is(strong, b, .bns-em),
+.bns-orientation-pitch__point-text :is(strong, b, .bns-em),
+.bns-coach-presentation__point-text :is(strong, b, .bns-em) {
+    font-weight: 800;
+    color: #0a1d37;
+}
+
+.bns-pitch-detail__point-text > span,
+.bns-orientation-pitch__point-text > span,
+.bns-coach-presentation__point-text > span {
+    font-weight: 500;
+    color: #475569;
+}
+
+/* Weekly schedule chips — gold accent on dark navy */
+.bns-orientation-pitch__weekly-item :is(strong, b, .bns-em) {
+    color: #fbbf24 !important;
+}
+
+/*
+ * Dark / branded panels site-wide.
+ * Base .bns-em is navy (#0d2944) for light backgrounds; on maroon/navy panels
+ * that navy is unreadable — force emphasis to inherit the panel's light text.
+ */
+:is(
+    .bns-hero-highlights,
+    .bns-coach-presentation__card--closing,
+    .bns-coach-presentation__highlight-card,
+    .bns-orientation-pitch__footer,
+    .bns-orientation-pitch__highlight,
+    .bns-orientation-pitch__vision-main,
+    .bns-orientation-pitch__vision-2047,
+    .bns-pitch-detail__section--closing,
+    .bns-pitch-detail__pillar-card,
+    .bns-pitch-detail__highlight-card,
+    .bns-pitch-detail__methodology-banner,
+    .bns-about-philosophy__inner,
+    .bns-vision-statement,
+    .bns-vision-taglines,
+    .bns-values-statement,
+    .bns-why-closing,
+    .bns-why-belief,
+    .bns-prosperity-viksit,
+    .bns-vision2047-highlight,
+    .bns-founder-highlight,
+    .bns-eligibility-closing,
+    .bns-admission-tagline,
+    .bns-admission-cta--dark,
+    .bns-programs-closing,
+    .bns-programs-benefits,
+    .bns-events-cta,
+    .bns-stat-card--featured,
+    .bns-audience-program-box--featured,
+    .bns-audience-card--pro,
+    .bns-contact-tagline,
+    .bns-contact-banner,
+    .bns-whatsapp-tagline,
+    .bns-whatsapp-card--chat,
+    .bns-social-tagline,
+    .bns-social-banner,
+    .bns-faculty-tagline,
+    .bns-faculty-modal__hero,
+    .bns-faculty-modal__section--bns,
+    .bns-team-collab,
+    .bns-register-hero,
+    .bns-register-panel__header,
+    .bns-testimonials-hero,
+    .bns-legal__footer-tagline,
+    .bns-modal__header,
+    .bns-why-bns-modal__taglines,
+    .bns-vision-modal__taglines,
+    .bns-founder-modal__footer-tagline,
+    .about-one__points
+) :is(strong, b, .bns-em) {
+    color: inherit !important;
+}
+
+/* Closing coach card — body copy stays white including nested emphasis */
+.bns-coach-presentation__card--closing .bns-coach-presentation__point-text,
+.bns-coach-presentation__card--closing .bns-coach-presentation__point-text :is(strong, b, .bns-em, span),
+.bns-coach-presentation__card--closing .bns-coach-presentation__card-body :is(p, .bns-coach-presentation__para, .bns-coach-presentation__callout),
+.bns-coach-presentation__card--closing .bns-coach-presentation__card-body :is(p, .bns-coach-presentation__para, .bns-coach-presentation__callout) :is(strong, b, .bns-em),
+.bns-coach-presentation__card--closing .bns-coach-presentation__taglines p,
+.bns-coach-presentation__card--closing .bns-coach-presentation__taglines p :is(strong, b, .bns-em) {
+    color: #fff !important;
+}
+
+.bns-about-page__intro .about-one__text :is(strong, b, .bns-em),
+.bns-about-page__intro .about-one__points h3 :is(strong, b, .bns-em) {
+    color: rgba(255, 255, 255, 0.95) !important;
+}

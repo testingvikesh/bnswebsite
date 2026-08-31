@@ -1,0 +1,77 @@
+/* BNS — Eduvers-style inner page banner */
+.page-header--bns {
+    position: relative;
+    display: block;
+    overflow: hidden;
+    background-color: #061428;
+    z-index: 1;
+}
+
+.page-header--bns .page-header__bg {
+    position: absolute;
+    inset: 0;
+    opacity: 1;
+    background-repeat: no-repeat;
+    background-size: cover;
+    background-position: center;
+    z-index: -2;
+}
+
+.page-header--bns::before {
+    content: "";
+    position: absolute;
+    inset: 0;
+    background: linear-gradient(
+        135deg,
+        rgba(6, 20, 40, 0.9) 0%,
+        rgba(10, 34, 64, 0.82) 50%,
+        rgba(18, 58, 94, 0.75) 100%
+    );
+    z-index: -1;
+}
+
+.page-header--bns .page-header__inner {
+    padding: 200px 0 100px;
+}
+
+.page-header--bns .page-header__inner h3 {
+    font-size: 28px;
+    color: #fff;
+    font-weight: 700;
+    margin-bottom: 16px;
+    text-transform: capitalize;
+}
+
+.page-header--bns .page-header__subtitle {
+    max-width: 720px;
+    margin: 0 auto;
+    font-size: 1rem;
+    line-height: 1.65;
+    font-weight: 500;
+    color: rgba(255, 255, 255, 0.9);
+}
+
+.page-header--bns .thm-breadcrumb li a {
+    color: #fff;
+}
+
+.page-header--bns .thm-breadcrumb li a:hover {
+    color: var(--eduvers-base, #ff5544);
+}
+
+.page-header--bns .thm-breadcrumb li span {
+    color: var(--eduvers-base, #ff5544);
+    font-weight: 600;
+}
+
+.page-header--bns .page-header__sep {
+    color: var(--eduvers-base, #ff5544) !important;
+    font-weight: 700;
+    padding: 0 4px;
+}
+
+@media (max-width: 767px) {
+    .page-header--bns .page-header__inner {
+        padding: 160px 0 72px;
+    }
+}

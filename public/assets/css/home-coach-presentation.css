@@ -1,0 +1,439 @@
+/* BNS Home — Business Coach Presentation Points */
+
+.bns-coach-presentation {
+    padding: 72px 0 88px;
+    background: linear-gradient(180deg, #fff 0%, #f8fafc 55%, #eef2f7 100%);
+    font-family: var(--eduvers-font);
+}
+
+.bns-coach-presentation__header {
+    max-width: 860px;
+    margin: 0 auto 36px;
+    text-align: center;
+}
+
+.bns-coach-presentation__eyebrow {
+    display: inline-block;
+    margin-bottom: 12px;
+    padding: 6px 14px;
+    border-radius: 999px;
+    background: rgba(51, 61, 97, 0.1);
+    color: rgb(51, 61, 97);
+    font-size: 12px;
+    font-weight: 700;
+    letter-spacing: 0.08em;
+    text-transform: uppercase;
+}
+
+.bns-coach-presentation__title {
+    margin: 0 0 12px;
+    font-size: clamp(1.75rem, 3.5vw, 2.35rem);
+    font-weight: 700;
+    line-height: 1.2;
+    color: #0a1d37;
+}
+
+.bns-coach-presentation__subtitle {
+    margin: 0;
+    font-size: 1.02rem;
+    line-height: 1.7;
+    color: #475569;
+}
+
+.bns-coach-presentation__highlights {
+    display: grid;
+    grid-template-columns: repeat(5, minmax(0, 1fr));
+    gap: 14px;
+    margin-bottom: 32px;
+}
+
+.bns-coach-presentation__highlight-card {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    text-align: center;
+    padding: 18px 12px;
+    border-radius: 14px;
+    background: linear-gradient(135deg, rgb(51, 61, 97) 0%, #1a2f4d 100%);
+    color: #fff;
+    box-shadow: 0 10px 28px rgba(15, 23, 42, 0.12);
+}
+
+.bns-coach-presentation__highlight-icon {
+    display: inline-flex;
+    align-items: center;
+    justify-content: center;
+    width: 38px;
+    height: 38px;
+    margin-bottom: 10px;
+    border-radius: 10px;
+    background: rgba(255, 255, 255, 0.12);
+    color: #fbbf24;
+    font-size: 15px;
+}
+
+.bns-coach-presentation__highlight-card strong {
+    font-size: clamp(1.1rem, 2vw, 1.35rem);
+    font-weight: 800;
+    line-height: 1.15;
+    color: #fff !important;
+}
+
+.bns-coach-presentation__highlight-card span {
+    margin-top: 6px;
+    font-size: 0.78rem;
+    line-height: 1.45;
+    color: rgba(255, 255, 255, 0.88);
+}
+
+.bns-coach-presentation__grid {
+    display: grid;
+    grid-template-columns: repeat(2, minmax(0, 1fr));
+    gap: 18px;
+}
+
+.bns-coach-presentation__card {
+    display: flex;
+    flex-direction: column;
+    border-radius: 16px;
+    background: #fff;
+    border: 1px solid rgba(15, 23, 42, 0.08);
+    box-shadow: 0 8px 26px rgba(15, 23, 42, 0.05);
+    overflow: hidden;
+}
+
+.bns-coach-presentation__card--closing {
+    grid-column: 1 / -1;
+    background: linear-gradient(135deg, #b42318 0%, #7a1f35 100%);
+    border-color: transparent;
+    color: #fff;
+}
+
+.bns-coach-presentation__card--growth_path {
+    grid-column: span 1;
+}
+
+.bns-coach-presentation__card-head {
+    display: flex;
+    align-items: center;
+    gap: 12px;
+    padding: 16px 18px;
+    background: rgba(51, 61, 97, 0.05);
+    border-bottom: 1px solid rgba(15, 23, 42, 0.06);
+}
+
+.bns-coach-presentation__card--closing .bns-coach-presentation__card-head {
+    background: rgba(255, 255, 255, 0.08);
+    border-bottom-color: rgba(255, 255, 255, 0.14);
+}
+
+.bns-coach-presentation__card-num {
+    flex-shrink: 0;
+    width: 34px;
+    height: 34px;
+    display: inline-flex;
+    align-items: center;
+    justify-content: center;
+    border-radius: 8px;
+    background: var(--eduvers-base, #ff5544);
+    color: #fff;
+    font-size: 0.85rem;
+    font-weight: 800;
+}
+
+.bns-coach-presentation__card--closing .bns-coach-presentation__card-num {
+    background: #fbbf24;
+    color: #0a1d37;
+}
+
+.bns-coach-presentation__card-title {
+    margin: 0;
+    font-size: 1.02rem;
+    font-weight: 700;
+    line-height: 1.35;
+    color: #0a1d37;
+}
+
+.bns-coach-presentation__card--closing .bns-coach-presentation__card-title {
+    color: #fff;
+}
+
+.bns-coach-presentation__card-body {
+    padding: 18px 18px 20px;
+}
+
+.bns-coach-presentation__card-body p {
+    margin: 0 0 10px;
+    font-size: 0.94rem;
+    line-height: 1.65;
+    color: #475569;
+}
+
+.bns-coach-presentation__card--closing .bns-coach-presentation__card-body p {
+    color: rgba(255, 255, 255, 0.94);
+}
+
+.bns-coach-presentation__callout {
+    display: flex;
+    align-items: flex-start;
+    gap: 10px;
+    margin-bottom: 14px !important;
+    padding: 12px 14px;
+    border-radius: 10px;
+    background: rgba(255, 85, 68, 0.1);
+    border-left: 4px solid var(--eduvers-base, #ff5544);
+    font-size: 0.95rem !important;
+    font-weight: 700 !important;
+    color: #b42318 !important;
+}
+
+.bns-coach-presentation__callout i {
+    margin-top: 3px;
+    color: var(--eduvers-base, #ff5544);
+    font-size: 12px;
+}
+
+.bns-coach-presentation__callout--footer {
+    margin-top: 14px;
+    margin-bottom: 0 !important;
+}
+
+.bns-coach-presentation__para--footer {
+    margin-top: 14px;
+    font-weight: 600;
+    color: #0a1d37;
+}
+
+.bns-coach-presentation__para {
+    margin: 0 0 12px;
+    font-size: 0.94rem;
+    line-height: 1.65;
+    color: #475569;
+}
+
+.bns-coach-presentation__points {
+    margin: 0;
+    padding: 0;
+    list-style: none;
+}
+
+.bns-coach-presentation__point {
+    display: flex;
+    align-items: flex-start;
+    gap: 12px;
+    margin-bottom: 10px;
+    padding: 10px 12px;
+    border-radius: 10px;
+    background: rgba(51, 61, 97, 0.04);
+}
+
+.bns-coach-presentation__point:last-child {
+    margin-bottom: 0;
+}
+
+.bns-coach-presentation__point-icon {
+    flex-shrink: 0;
+    display: inline-flex;
+    align-items: center;
+    justify-content: center;
+    width: 22px;
+    height: 22px;
+    margin-top: 1px;
+    border-radius: 50%;
+    background: rgba(255, 85, 68, 0.12);
+    color: var(--eduvers-base, #ff5544);
+    font-size: 7px;
+}
+
+.bns-coach-presentation__point-text {
+    font-size: 0.92rem;
+    line-height: 1.55;
+    color: #334155;
+}
+
+.bns-coach-presentation__point-text strong {
+    display: inline;
+    font-weight: 800;
+    color: #0a1d37;
+}
+
+.bns-coach-presentation__point-text span {
+    font-weight: 500;
+    color: #475569;
+}
+
+.bns-coach-presentation__points--tags,
+.bns-coach-presentation__points--events {
+    display: grid;
+    grid-template-columns: repeat(2, minmax(0, 1fr));
+    gap: 8px;
+}
+
+.bns-coach-presentation__points--tags .bns-coach-presentation__point,
+.bns-coach-presentation__points--events .bns-coach-presentation__point {
+    margin-bottom: 0;
+}
+
+.bns-coach-presentation__card--closing .bns-coach-presentation__point {
+    background: rgba(255, 255, 255, 0.1);
+}
+
+.bns-coach-presentation__card--closing .bns-coach-presentation__point-icon {
+    background: rgba(251, 191, 36, 0.2);
+    color: #fbbf24;
+}
+
+.bns-coach-presentation__card--closing .bns-coach-presentation__point-text,
+.bns-coach-presentation__card--closing .bns-coach-presentation__point-text :is(strong, b, .bns-em, span) {
+    color: #fff !important;
+}
+
+.bns-coach-presentation__card--closing .bns-coach-presentation__para,
+.bns-coach-presentation__card--closing .bns-coach-presentation__para--footer,
+.bns-coach-presentation__card--closing .bns-coach-presentation__callout,
+.bns-coach-presentation__card--closing .bns-coach-presentation__taglines p,
+.bns-coach-presentation__card--closing .bns-coach-presentation__para :is(strong, b, .bns-em),
+.bns-coach-presentation__card--closing .bns-coach-presentation__para--footer :is(strong, b, .bns-em),
+.bns-coach-presentation__card--closing .bns-coach-presentation__callout :is(strong, b, .bns-em),
+.bns-coach-presentation__card--closing .bns-coach-presentation__taglines p :is(strong, b, .bns-em) {
+    color: rgba(255, 255, 255, 0.95) !important;
+}
+
+.bns-coach-presentation__card--closing .bns-coach-presentation__callout {
+    background: rgba(255, 255, 255, 0.12);
+    border-left-color: #fbbf24;
+}
+
+.bns-coach-presentation__card--closing .bns-coach-presentation__callout i,
+.bns-coach-presentation__card--closing .bns-coach-presentation__taglines p i {
+    color: #fbbf24 !important;
+}
+
+.bns-coach-presentation__list {
+    margin: 0;
+    padding: 0;
+    list-style: none;
+}
+
+.bns-coach-presentation__list li {
+    display: flex;
+    align-items: flex-start;
+    gap: 10px;
+    margin-bottom: 8px;
+    font-size: 0.92rem;
+    line-height: 1.55;
+    color: #334155;
+}
+
+.bns-coach-presentation__list i {
+    margin-top: 4px;
+    color: var(--eduvers-base, #ff5544);
+    font-size: 11px;
+}
+
+.bns-coach-presentation__path li {
+    display: flex;
+    align-items: center;
+    gap: 12px;
+    padding: 10px 12px;
+    margin-bottom: 8px;
+    border-radius: 10px;
+    background: rgba(51, 61, 97, 0.06);
+    font-size: 0.92rem;
+    color: rgb(51, 61, 97);
+}
+
+.bns-coach-presentation__path li strong {
+    font-weight: 800;
+    color: #0a1d37;
+}
+
+.bns-coach-presentation__path li .bns-coach-presentation__point-icon {
+    width: 24px;
+    height: 24px;
+    font-size: 11px;
+    margin-top: 0;
+}
+
+.bns-coach-presentation__path li:last-child {
+    margin-bottom: 0;
+    background: rgba(255, 85, 68, 0.1);
+}
+
+.bns-coach-presentation__path li:last-child strong {
+    color: #b42318;
+}
+
+.bns-coach-presentation__tags,
+.bns-coach-presentation__events {
+    display: flex;
+    flex-wrap: wrap;
+    gap: 8px;
+    margin-top: 4px;
+}
+
+.bns-coach-presentation__tags span,
+.bns-coach-presentation__events span {
+    display: inline-flex;
+    align-items: center;
+    gap: 6px;
+    padding: 7px 12px;
+    border-radius: 999px;
+    background: rgba(51, 61, 97, 0.08);
+    font-size: 0.82rem;
+    font-weight: 600;
+    color: rgb(51, 61, 97);
+}
+
+.bns-coach-presentation__events span i {
+    color: var(--eduvers-base, #ff5544);
+    font-size: 11px;
+}
+
+.bns-coach-presentation__taglines {
+    margin-top: 14px;
+    padding-top: 14px;
+    border-top: 1px solid rgba(255, 255, 255, 0.2);
+}
+
+.bns-coach-presentation__taglines p {
+    display: flex;
+    align-items: flex-start;
+    gap: 10px;
+    margin: 0 0 8px;
+    font-size: 1rem !important;
+    font-weight: 700 !important;
+    color: #fbbf24 !important;
+}
+
+.bns-coach-presentation__taglines p i {
+    margin-top: 6px;
+    font-size: 7px;
+    color: #fbbf24;
+}
+
+@media (max-width: 1199px) {
+    .bns-coach-presentation__highlights {
+        grid-template-columns: repeat(3, minmax(0, 1fr));
+    }
+}
+
+@media (max-width: 767px) {
+    .bns-coach-presentation {
+        padding: 52px 0 64px;
+    }
+
+    .bns-coach-presentation__highlights,
+    .bns-coach-presentation__grid {
+        grid-template-columns: 1fr;
+    }
+
+    .bns-coach-presentation__card--closing {
+        grid-column: auto;
+    }
+
+    .bns-coach-presentation__points--tags,
+    .bns-coach-presentation__points--events {
+        grid-template-columns: 1fr;
+    }
+}

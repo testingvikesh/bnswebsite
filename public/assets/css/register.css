@@ -1,0 +1,855 @@
+/* BNS Registration — Youth School Admission */
+.bns-register-page {
+    background: linear-gradient(180deg, #e8edf4 0%, #f4f6f9 40%, #eef2f7 100%);
+    padding-bottom: 90px;
+    overflow-x: hidden;
+}
+
+.bns-register-intro {
+    padding: 36px 0 8px;
+    text-align: center;
+}
+
+.bns-register-intro__eyebrow {
+    display: inline-flex;
+    align-items: center;
+    gap: 8px;
+    font-size: 12px;
+    font-weight: 700;
+    letter-spacing: 0.14em;
+    text-transform: uppercase;
+    color: #64748b;
+    background: #fff;
+    border: 1px solid #e2e8f0;
+    padding: 8px 16px;
+    border-radius: 999px;
+    margin-bottom: 14px;
+}
+
+.bns-register-intro__eyebrow i { color: var(--eduvers-base); }
+
+.bns-register-intro__text {
+    max-width: 680px;
+    margin: 0 auto;
+    color: #475569;
+    font-size: 1.08rem;
+    line-height: 1.7;
+}
+
+.bns-register-hero {
+    position: relative;
+    padding: 140px 0 110px;
+    background: linear-gradient(145deg, #061428 0%, #0a2240 45%, #123a5e 100%);
+    color: #fff;
+    text-align: center;
+    overflow: hidden;
+}
+
+.bns-register-hero::before {
+    content: "";
+    position: absolute;
+    inset: 0;
+    background:
+        radial-gradient(ellipse 80% 60% at 20% 100%, rgba(255, 85, 68, 0.15) 0%, transparent 55%),
+        radial-gradient(ellipse 60% 50% at 90% 20%, rgba(59, 130, 246, 0.12) 0%, transparent 50%);
+    pointer-events: none;
+}
+
+.bns-register-hero .container { position: relative; z-index: 1; }
+
+.bns-register-hero__eyebrow {
+    display: inline-flex;
+    align-items: center;
+    gap: 8px;
+    font-size: 12px;
+    font-weight: 700;
+    letter-spacing: 0.14em;
+    text-transform: uppercase;
+    color: rgba(255, 255, 255, 0.85);
+    background: rgba(255, 255, 255, 0.08);
+    border: 1px solid rgba(255, 255, 255, 0.12);
+    padding: 8px 16px;
+    border-radius: 999px;
+    margin-bottom: 18px;
+}
+
+.bns-register-hero__eyebrow i { color: var(--eduvers-base); }
+
+.bns-register-hero__title {
+    font-size: clamp(1.85rem, 4.5vw, 2.75rem);
+    font-weight: 800;
+    margin: 0 0 14px;
+    letter-spacing: -0.02em;
+    color: #ffffff;
+}
+
+.bns-register-hero__text {
+    max-width: 680px;
+    margin: 0 auto;
+    opacity: 0.9;
+    font-size: 1.08rem;
+    line-height: 1.7;
+}
+
+.bns-register-hub {
+    margin-top: 0;
+    padding: 40px 0 48px;
+    position: relative;
+    z-index: 2;
+}
+
+.bns-register-hub > .container {
+    padding-top: 8px;
+    padding-bottom: 8px;
+}
+
+.bns-register-hub__label {
+    font-size: 13px;
+    font-weight: 700;
+    letter-spacing: 0.1em;
+    text-transform: uppercase;
+    color: #64748b;
+    margin: 0 0 28px;
+    text-align: center;
+}
+
+.bns-register-direct-note {
+    margin: 0 0 20px;
+}
+
+.bns-register-direct-note__btn {
+    display: inline-flex;
+    align-items: center;
+    gap: 8px;
+    padding: 8px 14px;
+    border: 1px solid #e2e8f0;
+    border-radius: 999px;
+    background: #fff;
+    color: #475569;
+    font-size: 14px;
+    font-weight: 600;
+    cursor: pointer;
+    transition: border-color 0.2s ease, color 0.2s ease;
+}
+
+.bns-register-direct-note__btn:hover {
+    border-color: var(--eduvers-base, #ff5544);
+    color: var(--eduvers-base, #ff5544);
+}
+
+.bns-register-hub--direct .bns-register-panel.is-open {
+    margin-top: 0;
+}
+
+.bns-register-alert {
+    max-width: 920px;
+    margin: 0 auto 24px;
+    border-radius: 14px;
+    border: none;
+    box-shadow: 0 10px 30px rgba(15, 23, 42, 0.08);
+    padding: 16px 20px;
+}
+
+/* Program selection cards — same "pro" audience-card style as /programs/featured (see home-audience.css) */
+.bns-register-boxes {
+    margin: 0 0 40px;
+}
+
+.bns-register-boxes .bns-audience-card--pro {
+    border: none;
+    appearance: none;
+    font: inherit;
+}
+
+@media (max-width: 575px) {
+    .bns-register-boxes {
+        margin-bottom: 32px;
+    }
+}
+
+.bns-register-panel__toolbar {
+    display: flex;
+    flex-wrap: wrap;
+    align-items: center;
+    justify-content: space-between;
+    gap: 12px;
+    padding: 14px 20px;
+    background: #f1f5f9;
+    border-bottom: 1px solid #e2e8f0;
+}
+
+@media (min-width: 768px) {
+    .bns-register-panel__toolbar { padding: 14px 40px; }
+}
+
+.bns-register-panel__change {
+    display: inline-flex;
+    align-items: center;
+    gap: 8px;
+    padding: 8px 14px;
+    font-size: 0.88rem;
+    font-weight: 600;
+    color: #0f172a;
+    background: #fff;
+    border: 1.5px solid #e2e8f0;
+    border-radius: 999px;
+    cursor: pointer;
+    transition: border-color 0.2s ease, color 0.2s ease;
+}
+
+.bns-register-panel__change:hover {
+    border-color: var(--eduvers-base);
+    color: var(--eduvers-base);
+}
+
+.bns-register-panel__hint {
+    font-size: 0.82rem;
+    color: #64748b;
+}
+
+.bns-register-panel__hint .req { color: #ef4444; }
+
+/* Form panel */
+.bns-register-panel {
+    display: none;
+    margin-top: 12px;
+    background: #fff;
+    border-radius: 22px;
+    box-shadow: 0 20px 60px rgba(8, 25, 51, 0.12);
+    border: 1px solid rgba(15, 23, 42, 0.06);
+    overflow: hidden;
+}
+
+.bns-register-panel.is-open {
+    display: block;
+    animation: bnsPanelIn 0.45s cubic-bezier(0.22, 1, 0.36, 1);
+}
+
+@keyframes bnsPanelIn {
+    from { opacity: 0; transform: translateY(20px); }
+    to { opacity: 1; transform: translateY(0); }
+}
+
+.bns-register-panel__header {
+    position: relative;
+    padding: 32px 36px 28px;
+    background: linear-gradient(135deg, #061428 0%, #0d2944 50%, #143352 100%);
+    color: #fff;
+    overflow: hidden;
+}
+
+.bns-register-panel__header::before {
+    content: "";
+    position: absolute;
+    right: -40px;
+    top: -40px;
+    width: 200px;
+    height: 200px;
+    border-radius: 50%;
+    background: rgba(255, 85, 68, 0.12);
+}
+
+.bns-register-panel__header::after {
+    content: "";
+    position: absolute;
+    bottom: 0;
+    left: 0;
+    right: 0;
+    height: 4px;
+    background: linear-gradient(90deg, var(--eduvers-base), #ff9a8b, var(--eduvers-base));
+}
+
+.bns-register-panel__title {
+    position: relative;
+    font-size: clamp(1.2rem, 2.8vw, 1.75rem);
+    font-weight: 800;
+    margin: 0 0 8px;
+    text-transform: uppercase;
+    letter-spacing: 0.03em;
+    color: #ffffff;
+}
+
+.bns-register-panel__subtitle {
+    position: relative;
+    margin: 0;
+    opacity: 0.88;
+    font-size: 0.98rem;
+    line-height: 1.55;
+}
+
+.bns-register-panel__body {
+    padding: 28px 20px 40px;
+    background: #fafbfc;
+}
+
+@media (min-width: 768px) {
+    .bns-register-panel__body { padding: 36px 40px 48px; }
+}
+
+/* Form sections */
+.bns-admission-form__section-card {
+    background: #fff;
+    border-radius: 16px;
+    padding: 26px 22px 28px;
+    margin-bottom: 22px;
+    border: 1px solid #e8ecf1;
+    box-shadow: 0 2px 12px rgba(15, 23, 42, 0.04);
+    transition: box-shadow 0.25s ease;
+}
+
+@media (min-width: 768px) {
+    .bns-admission-form__section-card {
+        padding: 28px 28px 30px;
+    }
+}
+
+.bns-admission-form__section-card:hover {
+    box-shadow: 0 6px 24px rgba(15, 23, 42, 0.07);
+}
+
+.bns-admission-form__section-head {
+    display: flex;
+    align-items: flex-start;
+    gap: 14px;
+    margin-bottom: 24px;
+    padding-bottom: 18px;
+    border-bottom: 2px solid #f1f5f9;
+}
+
+.bns-admission-form__section-sub {
+    margin: 4px 0 0;
+    font-size: 0.88rem;
+    color: #64748b;
+    line-height: 1.5;
+}
+
+.bns-admission-form__section-num {
+    flex-shrink: 0;
+    width: 42px;
+    height: 42px;
+    border-radius: 12px;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    font-size: 15px;
+    font-weight: 800;
+    color: #fff;
+    background: linear-gradient(135deg, var(--eduvers-base), #e84a3a);
+    box-shadow: 0 4px 14px rgba(255, 85, 68, 0.35);
+}
+
+.bns-admission-form__section-title {
+    font-size: 1.12rem;
+    font-weight: 700;
+    color: #0f172a !important;
+    margin: 0;
+    line-height: 1.35;
+    padding-top: 2px;
+}
+
+.bns-admission-form__label {
+    display: block;
+    font-size: 0.92rem;
+    font-weight: 600;
+    color: #1e293b;
+    margin-bottom: 8px;
+    letter-spacing: 0.01em;
+}
+
+.bns-admission-form__label .req { color: #ef4444; }
+
+.bns-admission-form .form-control {
+    height: 48px;
+    border: 1.5px solid #e2e8f0;
+    border-radius: 10px;
+    padding: 10px 16px;
+    font-size: 0.95rem;
+    color: #1e293b;
+    background: #fff;
+    transition: border-color 0.2s ease, box-shadow 0.2s ease;
+}
+
+.bns-admission-form .form-control:focus {
+    border-color: var(--eduvers-base);
+    box-shadow: 0 0 0 4px rgba(255, 85, 68, 0.12);
+}
+
+.bns-admission-form textarea.form-control {
+    height: auto;
+    min-height: 100px;
+    resize: vertical;
+}
+
+.bns-admission-form__field-group { margin-bottom: 22px; }
+
+.bns-admission-form__field-group:last-child { margin-bottom: 0; }
+
+/* Chip checkboxes & radio pills */
+.bns-admission-form__check-grid {
+    display: grid;
+    grid-template-columns: repeat(auto-fill, minmax(132px, 1fr));
+    gap: 10px;
+}
+
+.bns-admission-form__check-grid--wide {
+    grid-template-columns: repeat(auto-fill, minmax(200px, 1fr));
+}
+
+@media (max-width: 575px) {
+    .bns-admission-form__check-grid {
+        grid-template-columns: repeat(2, minmax(0, 1fr));
+    }
+
+    .bns-admission-form__check-grid--wide {
+        grid-template-columns: 1fr;
+    }
+}
+
+.bns-admission-form__check-grid .bns-chip {
+    display: block;
+    width: 100%;
+    margin: 0;
+}
+
+.bns-chip {
+    position: relative;
+    margin: 0;
+    cursor: pointer;
+}
+
+.bns-chip input {
+    position: absolute;
+    opacity: 0;
+    width: 0;
+    height: 0;
+}
+
+.bns-chip__text {
+    display: flex;
+    align-items: center;
+    gap: 8px;
+    width: 100%;
+    min-height: 44px;
+    padding: 10px 14px;
+    font-size: 0.86rem;
+    font-weight: 500;
+    color: #475569;
+    background: #f8fafc;
+    border: 1.5px solid #e2e8f0;
+    border-radius: 12px;
+    transition: all 0.22s ease;
+    line-height: 1.35;
+    user-select: none;
+}
+
+.bns-chip__text::before {
+    content: "";
+    width: 16px;
+    height: 16px;
+    border-radius: 4px;
+    border: 2px solid #cbd5e1;
+    flex-shrink: 0;
+    transition: all 0.22s ease;
+}
+
+.bns-chip input[type="radio"] + .bns-chip__text::before {
+    border-radius: 50%;
+}
+
+.bns-chip:hover .bns-chip__text {
+    border-color: #cbd5e1;
+    background: #fff;
+}
+
+.bns-chip input:checked + .bns-chip__text {
+    color: #0f172a;
+    background: rgba(255, 85, 68, 0.08);
+    border-color: var(--eduvers-base);
+    font-weight: 600;
+}
+
+.bns-chip input:checked + .bns-chip__text::before {
+    background: var(--eduvers-base);
+    border-color: var(--eduvers-base);
+}
+
+.bns-chip input[type="checkbox"]:checked + .bns-chip__text::before {
+    content: "✓";
+    color: #fff;
+    font-size: 11px;
+    font-weight: 800;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    line-height: 1;
+}
+
+.bns-chip input[type="radio"]:checked + .bns-chip__text::before {
+    box-shadow: inset 0 0 0 4px #fff;
+}
+
+.bns-admission-form__inline-options {
+    display: flex;
+    flex-wrap: wrap;
+    gap: 10px;
+    padding-top: 4px;
+}
+
+/* Photo upload */
+.bns-photo-upload {
+    position: relative;
+}
+
+.bns-photo-upload__input {
+    position: absolute;
+    inset: 0;
+    opacity: 0;
+    cursor: pointer;
+    z-index: 2;
+}
+
+.bns-photo-upload__box {
+    display: flex;
+    align-items: center;
+    gap: 14px;
+    padding: 14px 18px;
+    border: 2px dashed #cbd5e1;
+    border-radius: 12px;
+    background: #f8fafc;
+    transition: border-color 0.2s ease, background 0.2s ease;
+    min-height: 48px;
+}
+
+.bns-photo-upload:hover .bns-photo-upload__box,
+.bns-photo-upload:focus-within .bns-photo-upload__box {
+    border-color: var(--eduvers-base);
+    background: rgba(255, 85, 68, 0.04);
+}
+
+.bns-photo-upload__icon {
+    width: 40px;
+    height: 40px;
+    border-radius: 10px;
+    background: rgba(255, 85, 68, 0.12);
+    color: var(--eduvers-base);
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    font-size: 16px;
+    flex-shrink: 0;
+}
+
+.bns-photo-upload__text {
+    font-size: 0.9rem;
+    color: #64748b;
+}
+
+.bns-photo-upload__text strong {
+    display: block;
+    color: #0f172a;
+    font-weight: 600;
+    margin-bottom: 2px;
+}
+
+.bns-photo-upload__filename {
+    font-size: 0.82rem;
+    color: var(--eduvers-base);
+    font-weight: 600;
+    margin-top: 4px;
+}
+
+/* Declaration */
+.bns-admission-form__declaration {
+    font-size: 0.94rem;
+    line-height: 1.7;
+    color: #475569;
+    margin-bottom: 16px;
+    padding: 20px 22px;
+    background: linear-gradient(135deg, #f8fafc 0%, #fff 100%);
+    border-radius: 12px;
+    border: 1px solid #e8ecf1;
+    border-left: 4px solid var(--eduvers-base);
+}
+
+.bns-admission-form__check--consent .bns-chip__text {
+    font-weight: 600;
+    padding: 14px 20px;
+}
+
+/* Footer CTA */
+.bns-admission-form__footer {
+    margin-top: 12px;
+    padding: 32px 24px 28px;
+    background: linear-gradient(180deg, #fff 0%, #f8fafc 100%);
+    border-radius: 16px;
+    border: 1px solid #e8ecf1;
+    text-align: center;
+}
+
+.bns-admission-form__tagline {
+    font-weight: 800;
+    font-size: 0.95rem;
+    color: #0f172a;
+    margin: 0 0 6px;
+    letter-spacing: 0.06em;
+    text-transform: uppercase;
+}
+
+.bns-admission-form__motto {
+    font-style: italic;
+    color: #64748b;
+    margin: 0 0 24px;
+    font-size: 0.94rem;
+    line-height: 1.65;
+    max-width: 640px;
+    margin-left: auto;
+    margin-right: auto;
+}
+
+.bns-admission-form__btn--primary {
+    min-width: min(100%, 320px);
+    margin-bottom: 18px;
+}
+
+.bns-admission-form__footer-links {
+    display: flex;
+    flex-wrap: wrap;
+    align-items: center;
+    justify-content: center;
+    gap: 8px 18px;
+    font-size: 0.88rem;
+    font-weight: 600;
+}
+
+.bns-admission-form__footer-links a {
+    color: #475569;
+    text-decoration: none;
+    display: inline-flex;
+    align-items: center;
+    gap: 6px;
+    transition: color 0.2s ease;
+}
+
+.bns-admission-form__footer-links a:hover {
+    color: var(--eduvers-base);
+}
+
+.bns-admission-form__actions {
+    display: flex;
+    flex-wrap: wrap;
+    gap: 12px;
+    justify-content: center;
+}
+
+.bns-admission-form__btn {
+    display: inline-flex !important;
+    align-items: center;
+    justify-content: center;
+    gap: 10px;
+    min-width: 200px;
+    padding: 14px 24px !important;
+    border: none;
+    border-radius: 10px !important;
+    font-weight: 700 !important;
+    font-size: 0.95rem !important;
+    text-decoration: none !important;
+    box-shadow: 0 6px 20px rgba(0, 0, 0, 0.12);
+    transition: transform 0.22s ease, box-shadow 0.22s ease !important;
+}
+
+.bns-admission-form__btn:hover {
+    transform: translateY(-2px);
+    box-shadow: 0 10px 28px rgba(0, 0, 0, 0.16);
+}
+
+.bns-admission-form__btn--apply {
+    background: linear-gradient(135deg, #16a34a, #15803d) !important;
+    color: #fff !important;
+}
+
+.bns-admission-form__btn--brochure {
+    background: linear-gradient(135deg, #2563eb, #1d4ed8) !important;
+    color: #fff !important;
+}
+
+.bns-admission-form__btn--counsel {
+    background: linear-gradient(135deg, var(--eduvers-base), #e84a3a) !important;
+    color: #fff !important;
+}
+
+.bns-admission-form__btn--talk {
+    background: linear-gradient(135deg, #0f172a, #1e293b) !important;
+    color: #fff !important;
+}
+
+/* Sticky quick actions bar */
+.bns-register-panel__header--student::after {
+    background: linear-gradient(90deg, #2563eb, #60a5fa, #2563eb);
+}
+
+.bns-register-panel__header--women::after {
+    background: linear-gradient(90deg, #db2777, #f472b6, #db2777);
+}
+
+.bns-register-panel__header--working-women::after {
+    background: linear-gradient(90deg, #7c3aed, #a78bfa, #7c3aed);
+}
+
+.bns-register-panel__header--job-professional::after {
+    background: linear-gradient(90deg, #0d9488, #2dd4bf, #0d9488);
+}
+
+.bns-register-panel__header--business-growth::after {
+    background: linear-gradient(90deg, #d97706, #fbbf24, #d97706);
+}
+
+.bns-register-panel__header--venue-inspection::after {
+    background: linear-gradient(90deg, #0369a1, #38bdf8, #0369a1);
+}
+
+.bns-venue-inspection-page .bns-venue-inspection-panel {
+    margin-top: 0;
+}
+
+.bns-venue-inspection-hero {
+    background: linear-gradient(135deg, #0c4a6e 0%, #0369a1 50%, #0ea5e9 100%);
+}
+
+.bns-register-sticky-bar {
+    position: fixed;
+    bottom: 0;
+    left: 0;
+    right: 0;
+    z-index: 100;
+    padding: 12px 16px;
+    background: rgba(255, 255, 255, 0.95);
+    backdrop-filter: blur(12px);
+    border-top: 1px solid #e2e8f0;
+    box-shadow: 0 -8px 32px rgba(15, 23, 42, 0.08);
+    transform: translateY(100%);
+    transition: transform 0.35s cubic-bezier(0.22, 1, 0.36, 1);
+}
+
+.bns-register-sticky-bar.is-visible {
+    transform: translateY(0);
+}
+
+.bns-register-sticky-bar__inner {
+    display: flex;
+    flex-wrap: wrap;
+    gap: 10px;
+    justify-content: center;
+    max-width: 1100px;
+    margin: 0 auto;
+}
+
+.bns-register-sticky-bar .thm-btn {
+    min-width: 0;
+    flex: 1 1 140px;
+    max-width: 220px;
+    justify-content: center;
+    padding: 12px 16px !important;
+    font-size: 0.88rem !important;
+    border-radius: 10px !important;
+    color: #fff !important;
+    border: none !important;
+    box-shadow: 0 4px 14px rgba(0, 0, 0, 0.12);
+}
+
+.bns-register-sticky-bar .thm-btn.bns-admission-form__btn--apply {
+    background: linear-gradient(135deg, #16a34a, #15803d) !important;
+}
+
+.bns-register-sticky-bar .thm-btn.bns-admission-form__btn--brochure {
+    background: linear-gradient(135deg, #2563eb, #1d4ed8) !important;
+}
+
+.bns-register-sticky-bar .thm-btn.bns-admission-form__btn--counsel {
+    background: linear-gradient(135deg, var(--eduvers-base), #e84a3a) !important;
+}
+
+.bns-register-sticky-bar .thm-btn.bns-admission-form__btn--talk {
+    background: linear-gradient(135deg, #0f172a, #1e293b) !important;
+}
+
+.bns-register-sticky-bar .thm-btn.bns-admission-form__btn--counsel {
+    display: none;
+}
+
+.bns-register-page.has-sticky-bar {
+    padding-bottom: 100px;
+}
+
+@media (max-width: 575px) {
+    .bns-register-sticky-bar .thm-btn {
+        flex: 1 1 calc(50% - 5px);
+        max-width: none;
+    }
+}
+
+.bns-register-quick-modal__intro {
+    color: #475569;
+    font-size: 0.98rem;
+    line-height: 1.65;
+    margin-bottom: 1.25rem;
+}
+
+.bns-register-quick-form__actions {
+    display: flex;
+    flex-wrap: wrap;
+    gap: 12px;
+    align-items: center;
+    margin-top: 1.5rem;
+}
+
+.bns-register-quick-form__actions .thm-btn {
+    margin: 0;
+}
+
+.bns-register-quick-form__combo {
+    margin-top: 1.25rem;
+    padding-top: 1.1rem;
+    border-top: 1px dashed rgba(15, 23, 42, 0.12);
+}
+
+.bns-register-quick-form__combo-label {
+    margin: 0 0 10px;
+    font-size: 0.85rem;
+    font-weight: 600;
+    color: #64748b;
+}
+
+.bns-register-quick-form__combo-options {
+    display: flex;
+    flex-wrap: wrap;
+    gap: 10px;
+}
+
+.bns-register-quick-form__combo-btn {
+    display: inline-flex;
+    align-items: center;
+    gap: 8px;
+    padding: 10px 16px;
+    border-radius: 10px;
+    border: 1.5px solid #e2e8f0;
+    background: #fff;
+    font-size: 0.85rem;
+    font-weight: 600;
+    color: #334155;
+    cursor: pointer;
+    transition: all 0.2s ease;
+}
+
+.bns-register-quick-form__combo-btn:hover {
+    border-color: var(--eduvers-base);
+    color: var(--eduvers-base);
+    background: rgba(255, 85, 68, 0.06);
+}
+
+.bns-register-quick-form__combo-btn i {
+    font-size: 0.85rem;
+}
+
+.bns-register-full-forms {
+    margin-top: 2rem;
+}

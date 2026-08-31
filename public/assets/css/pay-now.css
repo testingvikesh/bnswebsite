@@ -1,0 +1,509 @@
+.bns-pay-now__section {
+    padding: 36px 0 72px;
+    background: linear-gradient(180deg, #f7f8fc 0%, #fff 55%);
+}
+
+.bns-pay-now__lang {
+    display: inline-flex;
+    gap: 8px;
+    margin-bottom: 18px;
+    padding: 4px;
+    border: 1px solid rgba(15, 23, 42, 0.1);
+    border-radius: 999px;
+    background: #fff;
+}
+
+.bns-pay-now__lang-btn {
+    border: 0;
+    background: transparent;
+    color: #64748b;
+    font-weight: 700;
+    font-size: 0.9rem;
+    padding: 8px 16px;
+    border-radius: 999px;
+    cursor: pointer;
+}
+
+.bns-pay-now__lang-btn.is-active {
+    background: var(--eduvers-base, #ff5544);
+    color: #fff;
+}
+
+.bns-pay-now__banner {
+    background: #fff;
+    border: 1px solid rgba(255, 85, 68, 0.16);
+    border-radius: 20px;
+    padding: 28px 24px;
+    box-shadow: 0 16px 40px rgba(15, 23, 42, 0.06);
+}
+
+.bns-pay-now__eyebrow {
+    margin: 0 0 10px;
+    font-size: 0.95rem;
+    font-weight: 800;
+    letter-spacing: 0.04em;
+    color: var(--eduvers-base, #ff5544);
+}
+
+.bns-pay-now__banner h2 {
+    margin: 0 0 18px;
+    font-size: clamp(1.2rem, 2.4vw, 1.55rem);
+    font-weight: 800;
+    color: #0a1d37;
+    line-height: 1.4;
+}
+
+.bns-pay-now__points {
+    margin: 0 0 24px;
+    padding: 0;
+    list-style: none;
+    display: grid;
+    gap: 12px;
+}
+
+.bns-pay-now__points li {
+    position: relative;
+    padding-left: 28px;
+    color: #334155;
+    line-height: 1.55;
+    font-size: 0.98rem;
+}
+
+.bns-pay-now__points li::before {
+    content: "✅";
+    position: absolute;
+    left: 0;
+    top: 0;
+}
+
+.bns-pay-now__footer {
+    margin: 0 0 22px;
+    font-size: 1rem;
+    font-weight: 800;
+    color: #0a1d37;
+}
+
+.bns-pay-now__actions {
+    display: flex;
+    flex-wrap: wrap;
+    gap: 12px;
+}
+
+.bns-pay-now__btn {
+    display: inline-flex;
+    align-items: center;
+    justify-content: center;
+    gap: 8px;
+    min-height: 48px;
+    padding: 12px 18px;
+    border: 1px solid rgba(15, 23, 42, 0.12);
+    border-radius: 12px;
+    background: #fff;
+    color: #0a1d37;
+    font-weight: 800;
+    text-decoration: none !important;
+}
+
+.bns-pay-now__btn--primary,
+.bns-pay-now__btn.bns-pay-now__btn--primary {
+    background: var(--eduvers-base, #ff5544);
+    border-color: var(--eduvers-base, #ff5544);
+    color: #fff;
+}
+
+.bns-pay-now-modal .modal-header {
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    gap: 16px;
+    border-bottom-color: rgba(15, 23, 42, 0.08);
+}
+
+.bns-pay-now-modal .modal-title {
+    margin: 0;
+    padding-right: 8px;
+    font-weight: 800;
+    color: #0a1d37;
+}
+
+.bns-pay-now-modal .bns-modal-close {
+    margin-left: auto;
+}
+
+.bns-pay-now__mode {
+    display: grid;
+    grid-template-columns: repeat(2, minmax(0, 1fr));
+    gap: 10px;
+    margin-bottom: 18px;
+}
+
+.bns-pay-now__mode-option {
+    display: flex;
+    align-items: center;
+    gap: 10px;
+    margin: 0;
+    padding: 14px 16px;
+    border: 1px solid rgba(15, 23, 42, 0.12);
+    border-radius: 12px;
+    background: #f8fafc;
+    color: #334155;
+    font-weight: 700;
+    cursor: pointer;
+    transition: border-color 0.2s ease, background 0.2s ease, box-shadow 0.2s ease;
+}
+
+.bns-pay-now__mode-option input {
+    margin: 0;
+    accent-color: var(--eduvers-base, #ff5544);
+}
+
+.bns-pay-now__mode-option.is-active {
+    background: rgba(255, 85, 68, 0.08);
+    border-color: var(--eduvers-base, #ff5544);
+    box-shadow: 0 0 0 1px rgba(255, 85, 68, 0.2);
+    color: #0a1d37;
+}
+
+.bns-pay-now__new-intro {
+    margin: 0 0 16px;
+    color: #64748b;
+    font-weight: 600;
+    line-height: 1.5;
+}
+
+.bns-pay-now__mode-panel .bns-intro-session-form__btn {
+    margin-top: 8px;
+}
+
+@media (max-width: 575px) {
+    .bns-pay-now__mode {
+        grid-template-columns: 1fr;
+    }
+}
+
+/* Membership modal must sit above sticky CTA (120), headers (999), chat, etc. */
+.bns-membership-upload-modal {
+    z-index: 100060 !important;
+}
+
+.modal-backdrop.bns-membership-upload-backdrop,
+body.modal-open .modal-backdrop.show:last-of-type {
+    z-index: 100050 !important;
+}
+
+.bns-membership-upload-modal .modal-dialog {
+    z-index: 100061;
+    pointer-events: auto;
+}
+
+.bns-membership-upload-modal .modal-content,
+.bns-membership-upload-modal .modal-body,
+.bns-membership-upload-modal .form-control,
+.bns-membership-upload-modal .form-select,
+.bns-membership-upload-modal .btn,
+.bns-membership-upload-modal .thm-btn,
+.bns-membership-upload-modal input,
+.bns-membership-upload-modal label,
+.bns-membership-upload-modal button {
+    pointer-events: auto !important;
+    position: relative;
+    z-index: 1;
+}
+
+.bns-membership-upload-modal .form-control,
+.bns-membership-upload-modal .form-select {
+    background: #fff !important;
+    opacity: 1 !important;
+}
+
+/* Program dropdown: normal select only (not radio / orange button list) */
+.bns-pay-now__program-select {
+    display: block;
+    width: 100%;
+    min-height: 48px;
+    appearance: auto;
+    -webkit-appearance: menulist;
+    -moz-appearance: menulist;
+    background-color: #fff !important;
+    color: #0a1d37 !important;
+    border: 1px solid rgba(15, 23, 42, 0.18) !important;
+    border-radius: 10px;
+    padding: 10px 14px;
+    font-weight: 600;
+    box-shadow: none !important;
+}
+
+.bns-pay-now__program-select option {
+    background: #fff;
+    color: #0a1d37;
+    font-weight: 600;
+}
+
+#bnsPayNowSubmitBtn {
+    position: relative;
+    z-index: 0;
+}
+
+.bns-pay-now__lang-tabs {
+    display: flex;
+    flex-wrap: wrap;
+    gap: 8px;
+    margin-bottom: 16px;
+}
+
+.bns-pay-now__lang-tab {
+    border: 1px solid rgba(15, 23, 42, 0.14);
+    background: #f8fafc;
+    color: #334155;
+    border-radius: 999px;
+    padding: 8px 14px;
+    font-size: 0.85rem;
+    font-weight: 800;
+    cursor: pointer;
+}
+
+.bns-pay-now__lang-tab.is-active {
+    background: rgba(255, 85, 68, 0.12);
+    border-color: #ff5544;
+    color: #9f1239;
+}
+
+.bns-pay-now__lang-panel {
+    display: none;
+}
+
+.bns-pay-now__lang-panel.is-active {
+    display: block;
+}
+
+.bns-pay-now__instr-eyebrow {
+    margin: 0 0 8px;
+    font-weight: 800;
+    color: #0a1d37;
+}
+
+.bns-pay-now__instr-subtitle {
+    margin: 0 0 16px;
+    font-size: 1.05rem;
+    font-weight: 800;
+    color: #9f1239;
+    line-height: 1.4;
+}
+
+.bns-pay-now__instr-section {
+    margin-bottom: 14px;
+    padding: 12px 14px;
+    border-radius: 12px;
+    background: #f8fafc;
+    border: 1px solid #e2e8f0;
+}
+
+.bns-pay-now__instr-section h4 {
+    margin: 0 0 8px;
+    font-size: 0.95rem;
+    font-weight: 800;
+    color: #0a1d37;
+}
+
+.bns-pay-now__instr-section ul {
+    margin: 0;
+    padding-left: 0;
+    list-style: none;
+}
+
+.bns-pay-now__instr-section li {
+    margin: 0 0 6px;
+    color: #334155;
+    font-weight: 600;
+    line-height: 1.45;
+    font-size: 0.9rem;
+}
+
+.bns-pay-now__instr-thanks,
+.bns-pay-now__instr-brand,
+.bns-pay-now__instr-tagline {
+    margin: 8px 0 0;
+    font-weight: 700;
+    color: #0a1d37;
+}
+
+.bns-pay-now__instr-tagline {
+    color: #64748b;
+    font-size: 0.88rem;
+}
+
+.bns-pay-now__banner--instructions .bns-pay-now__lang-tabs {
+    margin-bottom: 18px;
+}
+
+.bns-pay-now__banner--instructions .bns-pay-now__instr-section {
+    margin-top: 12px;
+    margin-bottom: 0;
+}
+
+.bns-pay-now__banner--instructions .bns-pay-now__instr-section .bns-pay-now__points {
+    margin-bottom: 0;
+}
+
+.bns-pay-now__banner--instructions .bns-pay-now__actions {
+    margin-top: 20px;
+}
+
+body.bns-membership-modal-open .bns-sticky-cta,
+body.bns-membership-modal-open .chat-icon,
+body.bns-membership-modal-open .scroll-to-top {
+    z-index: 1 !important;
+    pointer-events: none !important;
+}
+
+.bns-membership-form__row {
+    display: grid;
+    grid-template-columns: 1fr 1fr;
+    gap: 14px;
+    margin-bottom: 16px;
+}
+
+.bns-membership-form__field {
+    position: relative;
+    z-index: 2;
+}
+
+.bns-membership-form__field .form-label {
+    font-weight: 700;
+    color: #0a1d37;
+    margin-bottom: 6px;
+}
+
+.bns-membership-form__field .form-control {
+    min-height: 46px;
+    border-radius: 10px;
+}
+
+@media (max-width: 575px) {
+    .bns-membership-form__row {
+        grid-template-columns: 1fr;
+        gap: 12px;
+    }
+}
+
+.bns-pay-now__tabs {
+    display: grid;
+    grid-template-columns: repeat(3, 1fr);
+    gap: 8px;
+    margin-bottom: 18px;
+}
+
+.bns-pay-now__tab {
+    border: 1px solid rgba(15, 23, 42, 0.12);
+    background: #f8fafc;
+    color: #475569;
+    font-weight: 700;
+    font-size: 0.86rem;
+    padding: 10px 12px;
+    border-radius: 12px;
+    cursor: pointer;
+}
+
+.bns-pay-now__tab.is-active {
+    background: rgba(255, 85, 68, 0.1);
+    border-color: rgba(255, 85, 68, 0.35);
+    color: #0a1d37;
+}
+
+.bns-pay-now__lookup-msg {
+    margin: 12px 0 0;
+    font-size: 0.92rem;
+}
+
+.bns-pay-now__lookup-msg.is-error {
+    color: #b91c1c;
+}
+
+.bns-pay-now__lookup-msg.is-ok {
+    color: #047857;
+}
+
+.bns-pay-now__result-card {
+    border: 1px solid rgba(15, 23, 42, 0.1);
+    border-radius: 14px;
+    padding: 16px;
+    background: #f8fafc;
+    margin-bottom: 12px;
+}
+
+.bns-pay-now__result-card p {
+    margin: 0 0 6px;
+    color: #334155;
+}
+
+.bns-pay-now__result-card strong {
+    color: #0a1d37;
+}
+
+.bns-pay-now__result-ref {
+    margin-bottom: 12px !important;
+}
+
+.bns-pay-now__edit-grid {
+    display: grid;
+    grid-template-columns: 1fr 1fr;
+    gap: 12px;
+    margin-bottom: 12px;
+}
+
+.bns-pay-now__edit-field label {
+    display: block;
+    margin-bottom: 4px;
+    font-size: 0.82rem;
+    font-weight: 700;
+    color: #0a1d37;
+}
+
+.bns-pay-now__edit-field .form-control,
+.bns-pay-now__edit-field .form-select {
+    min-height: 42px;
+    border-radius: 10px;
+    font-size: 0.92rem;
+}
+
+.bns-pay-now__edit-actions {
+    display: flex;
+    flex-wrap: wrap;
+    gap: 10px;
+    margin-bottom: 12px;
+}
+
+.bns-pay-now__update-msg {
+    margin: 0 0 12px;
+    font-size: 0.9rem;
+    font-weight: 600;
+}
+
+.bns-pay-now__update-msg.is-ok {
+    color: #047857;
+}
+
+.bns-pay-now__update-msg.is-error {
+    color: #b91c1c;
+}
+
+.bns-pay-now__result-amount {
+    font-size: 1.35rem;
+    font-weight: 800;
+    color: #0a1d37;
+    margin: 10px 0 14px !important;
+}
+
+@media (max-width: 575px) {
+    .bns-pay-now__edit-grid {
+        grid-template-columns: 1fr;
+    }
+
+    .bns-pay-now__actions {
+        flex-direction: column;
+    }
+
+    .bns-pay-now__btn {
+        width: 100%;
+    }
+}

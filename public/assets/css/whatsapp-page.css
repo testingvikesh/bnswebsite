@@ -1,0 +1,374 @@
+/* BNS — WhatsApp Support */
+.bns-whatsapp-page {
+    --bns-wa-space: 64px;
+    --bns-wa-pad: 40px;
+    background: linear-gradient(180deg, #e8edf4 0%, #f4f6f9 40%, #eef2f7 100%);
+    padding-bottom: 100px;
+}
+
+.bns-whatsapp-intro {
+    margin: 50px auto 48px;
+}
+
+.bns-whatsapp-intro .container {
+    max-width: 960px;
+    margin: 0 auto;
+    padding: 44px 40px;
+    background: #fff;
+    border-radius: 16px;
+    box-shadow: 0 10px 36px rgba(15, 23, 42, 0.08);
+    border: 1px solid rgba(15, 23, 42, 0.06);
+    text-align: center;
+}
+
+.bns-whatsapp-intro__subtitle {
+    font-size: clamp(1.25rem, 2.5vw, 1.6rem);
+    font-weight: 700;
+    color: #25d366;
+    margin: 0 0 16px;
+}
+
+.bns-whatsapp-intro__text {
+    margin: 0 0 14px;
+    font-size: 17px;
+    line-height: 1.75;
+    color: #363a40;
+}
+
+.bns-whatsapp-intro__text:last-child { margin-bottom: 0; }
+
+.bns-whatsapp-hub > .container > * {
+    margin-bottom: var(--bns-wa-space);
+}
+
+.bns-whatsapp-hub > .container > *:last-child {
+    margin-bottom: 50px;
+}
+
+.bns-whatsapp-card {
+    background: #fff;
+    border-radius: 16px;
+    padding: var(--bns-wa-pad);
+    box-shadow: 0 10px 36px rgba(15, 23, 42, 0.08);
+    border: 1px solid rgba(15, 23, 42, 0.06);
+}
+
+.bns-whatsapp-card__label {
+    display: inline-block;
+    font-size: 11px;
+    font-weight: 700;
+    letter-spacing: 0.12em;
+    text-transform: uppercase;
+    color: #25d366;
+    margin-bottom: 10px;
+}
+
+.bns-whatsapp-card__title {
+    font-size: 1.4rem;
+    font-weight: 700;
+    color: #0a1d37;
+    margin: 0 0 14px;
+    line-height: 1.3;
+}
+
+.bns-whatsapp-card__text {
+    color: #475569;
+    line-height: 1.7;
+    margin-bottom: 16px;
+}
+
+.bns-whatsapp-card--help .bns-whatsapp-card__title {
+    color: #fe5500;
+}
+
+.bns-whatsapp-checklist li {
+    display: flex;
+    align-items: flex-start;
+    gap: 10px;
+    margin-bottom: 10px;
+    font-size: 15px;
+    color: #363a40;
+}
+
+.bns-whatsapp-checklist li i {
+    color: #25d366;
+    margin-top: 3px;
+}
+
+.bns-whatsapp-card--chat {
+    background: linear-gradient(180deg, #075e54 0%, #128c7e 100%);
+    color: #fff;
+    border: none;
+    height: 100%;
+}
+
+.bns-whatsapp-card--chat .bns-whatsapp-card__label {
+    background: rgba(255, 255, 255, 0.15);
+    padding: 6px 12px;
+    border-radius: 999px;
+    color: #fff;
+}
+
+.bns-whatsapp-card--chat .bns-whatsapp-card__title {
+    color: #fff;
+}
+
+.bns-whatsapp-number {
+    display: flex;
+    align-items: flex-start;
+    gap: 14px;
+    margin-bottom: 20px;
+    padding: 18px;
+    background: rgba(255, 255, 255, 0.1);
+    border-radius: 12px;
+}
+
+.bns-whatsapp-number > i {
+    font-size: 2rem;
+    color: #25d366;
+    margin-top: 4px;
+}
+
+.bns-whatsapp-number__label {
+    display: block;
+    font-size: 12px;
+    text-transform: uppercase;
+    letter-spacing: 0.06em;
+    opacity: 0.8;
+    margin-bottom: 4px;
+}
+
+.bns-whatsapp-number__value {
+    font-size: 1.25rem;
+    font-weight: 700;
+    color: #fff;
+    text-decoration: none;
+}
+
+.bns-whatsapp-number__value:hover {
+    color: #dcf8c6;
+}
+
+.bns-whatsapp-availability {
+    margin-bottom: 24px;
+}
+
+.bns-whatsapp-availability__badge {
+    display: inline-flex;
+    align-items: center;
+    gap: 8px;
+    font-weight: 700;
+    margin-bottom: 8px;
+}
+
+.bns-whatsapp-availability__badge i {
+    color: #25d366;
+    font-size: 10px;
+}
+
+.bns-whatsapp-availability p {
+    margin: 0 0 4px;
+    opacity: 0.9;
+    font-size: 15px;
+}
+
+.bns-whatsapp-btn {
+    display: inline-flex;
+    align-items: center;
+    justify-content: center;
+    gap: 8px;
+    padding: 14px 22px;
+    border-radius: 12px;
+    font-weight: 700;
+    text-decoration: none;
+    border: none;
+    transition: all 0.2s ease;
+}
+
+.bns-whatsapp-btn--main {
+    width: 100%;
+    background: #25d366;
+    color: #fff;
+    font-size: 16px;
+}
+
+.bns-whatsapp-btn--main:hover {
+    background: #1ebe57;
+    color: #fff;
+}
+
+.bns-whatsapp-btn--sm {
+    background: #25d366;
+    color: #fff;
+    font-size: 14px;
+    padding: 10px 16px;
+}
+
+.bns-whatsapp-btn--sm:hover {
+    background: #1ebe57;
+    color: #fff;
+}
+
+.bns-whatsapp-card--tips {
+    height: 100%;
+}
+
+.bns-whatsapp-tips li {
+    display: flex;
+    align-items: center;
+    gap: 10px;
+    margin-bottom: 10px;
+    font-size: 15px;
+    color: #363a40;
+}
+
+.bns-whatsapp-tips li i {
+    color: #fe5500;
+    font-size: 8px;
+}
+
+.bns-whatsapp-option {
+    height: 100%;
+    padding: 24px 20px;
+    border-radius: 14px;
+    border: 1px solid rgba(15, 23, 42, 0.08);
+    background: #f8fafc;
+    text-align: center;
+    transition: all 0.2s ease;
+}
+
+.bns-whatsapp-option:hover {
+    border-color: #25d366;
+    box-shadow: 0 8px 24px rgba(37, 211, 102, 0.15);
+}
+
+.bns-whatsapp-option__icon {
+    font-size: 2rem;
+    margin-bottom: 10px;
+}
+
+.bns-whatsapp-option__title {
+    font-size: 15px;
+    font-weight: 700;
+    color: #0a1d37;
+    margin: 0 0 14px;
+    line-height: 1.4;
+    min-height: 42px;
+}
+
+.bns-whatsapp-card--tap {
+    text-align: center;
+}
+
+.bns-whatsapp-tap-actions {
+    display: flex;
+    flex-wrap: wrap;
+    justify-content: center;
+    gap: 12px;
+}
+
+.bns-whatsapp-tap-btn {
+    display: inline-flex;
+    align-items: center;
+    gap: 8px;
+    padding: 14px 20px;
+    border-radius: 12px;
+    background: #25d366;
+    color: #fff;
+    font-weight: 700;
+    text-decoration: none;
+    transition: all 0.2s ease;
+}
+
+.bns-whatsapp-tap-btn:hover {
+    background: #1ebe57;
+    color: #fff;
+}
+
+.bns-whatsapp-immediate {
+    text-align: center;
+    padding: 44px 32px;
+    background: #fff;
+    border-radius: 16px;
+    box-shadow: 0 12px 40px rgba(15, 23, 42, 0.08);
+}
+
+.bns-whatsapp-immediate h3 {
+    font-size: 1.35rem;
+    font-weight: 700;
+    margin: 0 0 24px;
+    color: #0a1d37;
+}
+
+.bns-whatsapp-immediate__actions {
+    display: flex;
+    flex-wrap: wrap;
+    justify-content: center;
+    gap: 12px;
+}
+
+.bns-whatsapp-immediate__btn {
+    display: inline-flex;
+    align-items: center;
+    gap: 8px;
+    padding: 14px 20px;
+    border-radius: 12px;
+    border: 2px solid #dde3ec;
+    background: #fff;
+    color: #0a1d37;
+    font-weight: 600;
+    text-decoration: none;
+    transition: all 0.2s ease;
+}
+
+.bns-whatsapp-immediate__btn:hover {
+    border-color: #25d366;
+    color: #128c7e;
+}
+
+.bns-whatsapp-tagline {
+    text-align: center;
+    padding: 44px 40px;
+    background: linear-gradient(135deg, #075e54 0%, #128c7e 100%);
+    border-radius: 16px;
+    color: #fff;
+    box-shadow: 0 16px 48px rgba(7, 94, 84, 0.25);
+}
+
+.bns-whatsapp-tagline__brand {
+    font-size: 13px;
+    font-weight: 700;
+    letter-spacing: 0.14em;
+    margin: 0 0 12px;
+    opacity: 0.9;
+}
+
+.bns-whatsapp-tagline__text {
+    font-size: clamp(1rem, 2.2vw, 1.25rem);
+    font-weight: 700;
+    margin: 0 0 10px;
+}
+
+.bns-whatsapp-tagline__sub {
+    margin: 0 0 8px;
+    font-size: 16px;
+    opacity: 0.95;
+}
+
+.bns-whatsapp-tagline__hindi {
+    margin: 0;
+    font-size: 18px;
+    font-weight: 600;
+    opacity: 0.9;
+}
+
+@media (max-width: 767px) {
+    .bns-whatsapp-page {
+        --bns-wa-space: 48px;
+        --bns-wa-pad: 28px;
+        padding-bottom: 80px;
+    }
+
+    .bns-whatsapp-intro { margin: 40px auto 40px; }
+    .bns-whatsapp-intro .container { padding: 32px 24px; }
+}

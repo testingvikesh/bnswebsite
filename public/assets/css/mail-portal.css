@@ -1,0 +1,648 @@
+/* BNS Mail Portal — login, hub, sequence chrome (reuses message-page.css) */
+
+.bns-mail-toolbar {
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    gap: 16px;
+    flex-wrap: wrap;
+    margin-bottom: 22px;
+}
+
+.bns-mail-toolbar__title {
+    margin: 6px 0 0;
+    color: #0a1d37;
+    font-size: clamp(1.35rem, 2.4vw, 1.75rem);
+    font-weight: 800;
+}
+
+.bns-mail-toolbar__links {
+    display: flex;
+    flex-wrap: wrap;
+    gap: 8px;
+}
+
+.bns-mail-toolbar__link {
+    display: inline-flex;
+    align-items: center;
+    gap: 8px;
+    padding: 10px 14px;
+    border-radius: 999px;
+    border: 1px solid rgba(15, 23, 42, 0.1);
+    background: #fff;
+    color: #0a1d37;
+    font-size: 0.88rem;
+    font-weight: 700;
+    text-decoration: none;
+    transition: 0.2s ease;
+}
+
+.bns-mail-toolbar__link:hover,
+.bns-mail-toolbar__link.is-active {
+    background: #0a1d37;
+    border-color: #0a1d37;
+    color: #fff;
+}
+
+.bns-mail-toolbar__logout {
+    display: inline-flex;
+    align-items: center;
+    gap: 8px;
+    padding: 10px 16px;
+    border-radius: 999px;
+    border: 0;
+    background: linear-gradient(135deg, #dc2626, #b91c1c);
+    color: #fff;
+    font-size: 0.88rem;
+    font-weight: 700;
+    cursor: pointer;
+}
+
+.bns-mail-login {
+    display: grid;
+    place-items: center;
+    padding: 12px 0 40px;
+}
+
+.bns-mail-login__card {
+    width: min(100%, 440px);
+    padding: 28px 24px;
+    border-radius: 22px;
+    border: 1px solid rgba(15, 23, 42, 0.08);
+    background:
+        radial-gradient(circle at 90% 0%, rgba(253, 110, 1, 0.12), transparent 42%),
+        linear-gradient(180deg, #fff, #f8fafc);
+    box-shadow: 0 18px 40px rgba(15, 23, 42, 0.08);
+}
+
+.bns-mail-login__badge {
+    display: inline-block;
+    margin-bottom: 12px;
+    padding: 6px 12px;
+    border-radius: 999px;
+    background: rgba(37, 99, 235, 0.1);
+    color: #1d4ed8;
+    font-size: 0.72rem;
+    font-weight: 800;
+    letter-spacing: 0.08em;
+    text-transform: uppercase;
+}
+
+.bns-mail-login__card h2 {
+    margin: 0 0 8px;
+    color: #0a1d37;
+    font-size: 1.55rem;
+    font-weight: 800;
+}
+
+.bns-mail-login__card > p {
+    margin: 0 0 18px;
+    color: #64748b;
+    font-size: 0.95rem;
+    line-height: 1.6;
+}
+
+.bns-mail-login__form {
+    display: grid;
+    gap: 8px;
+}
+
+.bns-mail-login__form label {
+    margin-top: 6px;
+    color: #0a1d37;
+    font-size: 0.82rem;
+    font-weight: 700;
+}
+
+.bns-mail-login__form input {
+    width: 100%;
+    padding: 12px 14px;
+    border-radius: 12px;
+    border: 1px solid #e2e8f0;
+    background: #fff;
+    color: #0a1d37;
+    font-size: 0.95rem;
+}
+
+.bns-mail-login__form input:focus {
+    outline: 2px solid rgba(253, 110, 1, 0.35);
+    border-color: #fd6e01;
+}
+
+.bns-mail-login__submit {
+    margin-top: 12px;
+    display: inline-flex;
+    align-items: center;
+    justify-content: center;
+    gap: 8px;
+    padding: 13px 16px;
+    border: 0;
+    border-radius: 999px;
+    background: linear-gradient(135deg, #fd8a2e, #fd6e01);
+    color: #fff;
+    font-size: 0.95rem;
+    font-weight: 800;
+    cursor: pointer;
+}
+
+.bns-mail-login__error {
+    color: #dc2626;
+    font-size: 0.82rem;
+    font-weight: 650;
+}
+
+.bns-mail-login__alert {
+    margin-bottom: 14px;
+    padding: 11px 12px;
+    border-radius: 12px;
+    background: #fef2f2;
+    border: 1px solid #fecaca;
+    color: #b91c1c;
+    font-size: 0.88rem;
+    font-weight: 650;
+}
+
+.bns-mail-login__alert--ok {
+    background: #f0fdf4;
+    border-color: #bbf7d0;
+    color: #15803d;
+}
+
+.bns-mail-hub {
+    display: grid;
+    grid-template-columns: repeat(2, minmax(0, 1fr));
+    gap: 18px;
+    margin-top: 8px;
+}
+
+.bns-mail-hub__card {
+    display: grid;
+    gap: 10px;
+    padding: 26px 22px;
+    border-radius: 22px;
+    text-decoration: none;
+    color: #fff;
+    min-height: 240px;
+    box-shadow: 0 18px 40px rgba(15, 23, 42, 0.12);
+    transition: transform 0.2s ease, box-shadow 0.2s ease;
+}
+
+.bns-mail-hub__card:hover {
+    transform: translateY(-3px);
+    box-shadow: 0 22px 48px rgba(15, 23, 42, 0.16);
+    color: #fff;
+}
+
+.bns-mail-hub__card--student {
+    background:
+        radial-gradient(circle at 88% 12%, rgba(34, 197, 94, 0.35), transparent 42%),
+        linear-gradient(135deg, #0a1d37 0%, #14532d 55%, #0d2944 100%);
+}
+
+.bns-mail-hub__card--coach {
+    background:
+        radial-gradient(circle at 88% 12%, rgba(59, 130, 246, 0.35), transparent 42%),
+        linear-gradient(135deg, #0a1d37 0%, #1e3a5f 52%, #312e81 100%);
+}
+
+.bns-mail-hub__icon {
+    display: inline-flex;
+    align-items: center;
+    justify-content: center;
+    width: 52px;
+    height: 52px;
+    border-radius: 16px;
+    background: rgba(255, 255, 255, 0.14);
+    font-size: 1.25rem;
+}
+
+.bns-mail-hub__badge {
+    display: inline-block;
+    width: fit-content;
+    padding: 5px 10px;
+    border-radius: 999px;
+    background: rgba(255, 255, 255, 0.16);
+    font-size: 0.72rem;
+    font-weight: 800;
+    letter-spacing: 0.08em;
+    text-transform: uppercase;
+}
+
+.bns-mail-hub__card strong {
+    font-size: clamp(1.25rem, 2.4vw, 1.55rem);
+    font-weight: 800;
+    line-height: 1.3;
+}
+
+.bns-mail-hub__card em {
+    font-style: normal;
+    color: rgba(255, 255, 255, 0.82);
+    font-size: 0.95rem;
+    line-height: 1.55;
+}
+
+.bns-mail-hub__cta {
+    margin-top: auto;
+    display: inline-flex;
+    align-items: center;
+    gap: 8px;
+    font-size: 0.9rem;
+    font-weight: 750;
+}
+
+.bns-mail-portal--coach .bns-message-intro__label {
+    color: #4f46e5;
+}
+
+.bns-mail-toolbar--compact {
+    margin-bottom: 18px;
+}
+
+/* Business Coach: Stage 1 box + message grid */
+.bns-mail-portal--coach .bns-message-overview--single {
+    grid-template-columns: minmax(0, 1fr);
+    max-width: 380px;
+}
+
+.bns-mail-box-grid {
+    display: grid !important;
+    grid-template-columns: repeat(2, minmax(0, 1fr));
+    gap: 14px;
+}
+
+.bns-mail-box {
+    min-height: 92px;
+    text-align: left;
+}
+
+@media (max-width: 767px) {
+    .bns-mail-box-grid {
+        grid-template-columns: 1fr;
+    }
+
+    .bns-mail-portal--coach .bns-message-overview--single {
+        max-width: none;
+    }
+}
+
+/* Keep overview identical to /message (Student) */
+.bns-mail-portal .bns-message-overview {
+    grid-template-columns: repeat(3, minmax(0, 1fr));
+    max-width: 1100px;
+}
+
+@media (max-width: 991px) {
+    .bns-mail-portal .bns-message-overview {
+        grid-template-columns: repeat(2, minmax(0, 1fr));
+    }
+}
+
+@media (max-width: 768px) {
+    .bns-mail-hub {
+        grid-template-columns: 1fr;
+    }
+}
+
+@media (max-width: 575px) {
+    .bns-mail-portal .bns-message-overview {
+        grid-template-columns: 1fr;
+        max-width: none;
+    }
+}
+
+/* Business Coach rich message UI (Student-style cards) */
+.bns-coach {
+    display: grid;
+    gap: 14px;
+}
+
+.bns-coach > * {
+    animation: bnsCoachIn 0.45s ease both;
+}
+
+@keyframes bnsCoachIn {
+    from { opacity: 0; transform: translateY(8px); }
+    to { opacity: 1; transform: translateY(0); }
+}
+
+.bns-coach > *:nth-child(1) { animation-delay: 0.02s; }
+.bns-coach > *:nth-child(2) { animation-delay: 0.06s; }
+.bns-coach > *:nth-child(3) { animation-delay: 0.1s; }
+.bns-coach > *:nth-child(4) { animation-delay: 0.14s; }
+.bns-coach > *:nth-child(5) { animation-delay: 0.18s; }
+.bns-coach > *:nth-child(6) { animation-delay: 0.22s; }
+.bns-coach > *:nth-child(7) { animation-delay: 0.26s; }
+
+.bns-coach__hero {
+    position: relative;
+    overflow: hidden;
+    padding: 26px 22px 24px;
+    border-radius: 20px;
+    text-align: center;
+    color: #fff;
+    background:
+        radial-gradient(circle at 88% 10%, rgba(253, 110, 1, 0.35), transparent 42%),
+        linear-gradient(135deg, #0a1d37 0%, #1e3a5f 48%, #312e81 100%);
+}
+
+.bns-coach__hero-badge {
+    display: inline-block;
+    margin-bottom: 12px;
+    padding: 6px 12px;
+    border-radius: 999px;
+    background: linear-gradient(135deg, #fd8a2e, #fd6e01);
+    font-size: 0.72rem;
+    font-weight: 800;
+    letter-spacing: 0.08em;
+    text-transform: uppercase;
+}
+
+.bns-coach__hero-icon {
+    display: inline-flex;
+    align-items: center;
+    justify-content: center;
+    width: 52px;
+    height: 52px;
+    margin-bottom: 12px;
+    border-radius: 16px;
+    background: rgba(255, 255, 255, 0.14);
+    font-size: 1.25rem;
+}
+
+.bns-coach__hero h3 {
+    margin: 0;
+    font-size: clamp(1.2rem, 2.4vw, 1.55rem);
+    font-weight: 800;
+    line-height: 1.35;
+    color: #ffffff !important;
+}
+
+.bns-coach__intro,
+.bns-coach__card,
+.bns-coach__footer {
+    padding: 18px;
+    border-radius: 18px;
+    border: 1px solid rgba(15, 23, 42, 0.08);
+    background: linear-gradient(180deg, #ffffff, #f8fafc);
+}
+
+.bns-coach__greeting {
+    margin: 0 0 10px;
+    color: #0a1d37;
+    font-size: 1rem;
+}
+
+.bns-coach__intro p,
+.bns-coach__card p,
+.bns-coach__footer p {
+    margin: 0 0 10px;
+    color: #334155;
+    font-size: 0.95rem;
+    line-height: 1.7;
+}
+
+.bns-coach__intro p:last-child,
+.bns-coach__card p:last-child,
+.bns-coach__footer p:last-child {
+    margin-bottom: 0;
+}
+
+.bns-coach__highlight {
+    display: flex;
+    gap: 12px;
+    margin-top: 12px;
+    padding: 14px;
+    border-radius: 14px;
+    background: rgba(34, 197, 94, 0.1);
+    border: 1px solid rgba(34, 197, 94, 0.22);
+}
+
+.bns-coach__highlight i {
+    color: #16a34a;
+    font-size: 1.15rem;
+    margin-top: 2px;
+}
+
+.bns-coach__highlight strong {
+    display: block;
+    margin-bottom: 4px;
+    color: #14532d;
+    font-size: 0.95rem;
+}
+
+.bns-coach__highlight p {
+    margin: 0;
+    color: #166534;
+}
+
+.bns-coach__card h4 {
+    display: block;
+    margin: 0 0 14px;
+    color: #0a1d37;
+    font-size: 1.02rem;
+    font-weight: 800;
+}
+
+.bns-coach__card-title-wrap {
+    display: inline-block;
+    padding-bottom: 6px;
+    border-bottom: 2px solid rgba(253, 110, 1, 0.45);
+}
+
+.bns-coach__card-emoji {
+    font-size: 1.1rem;
+}
+
+.bns-coach__inline-highlight {
+    margin: 0 0 12px !important;
+    padding: 10px 12px;
+    border-radius: 12px;
+    background: rgba(253, 110, 1, 0.1);
+    color: #9a3412 !important;
+    font-weight: 700;
+}
+
+.bns-coach__journeys {
+    list-style: none;
+    margin: 8px 0 12px;
+    padding: 0;
+    display: grid;
+    gap: 8px;
+}
+
+.bns-coach__journey {
+    display: grid;
+    grid-template-columns: 40px 1fr;
+    gap: 4px 10px;
+    align-items: center;
+    padding: 12px;
+    border-radius: 12px;
+    background: #f8fafc;
+    border: 1px solid #e5e7eb;
+}
+
+.bns-coach__journey-icon,
+.bns-coach__journey-fa,
+.bns-coach__journey-num {
+    display: inline-flex;
+    align-items: center;
+    justify-content: center;
+    width: 36px;
+    height: 36px;
+    border-radius: 12px;
+    background: #fff;
+    border: 1px solid rgba(15, 23, 42, 0.06);
+    font-size: 1.05rem;
+}
+
+.bns-coach__journey-fa {
+    color: #fd6e01;
+    font-size: 0.95rem;
+}
+
+.bns-coach__journey-num {
+    color: #c2410c;
+    background: rgba(253, 110, 1, 0.12);
+    border-color: transparent;
+    font-size: 0.78rem;
+    font-weight: 800;
+}
+
+.bns-coach__journey-copy {
+    display: grid;
+    gap: 2px;
+    min-width: 0;
+}
+
+.bns-coach__journey-label {
+    color: #94a3b8;
+    font-size: 0.72rem;
+    font-weight: 700;
+    letter-spacing: 0.04em;
+    text-transform: uppercase;
+}
+
+.bns-coach__journey-copy strong {
+    color: #0a1d37;
+    font-size: 0.95rem;
+    font-weight: 800;
+    line-height: 1.4;
+    word-break: break-word;
+}
+
+.bns-coach__fields,
+.bns-coach__checks,
+.bns-coach__numbered-list,
+.bns-coach__field,
+.bns-coach__check,
+.bns-coach__numbered,
+.bns-coach__check-icon {
+    display: none;
+}
+
+.bns-coach__reels {
+    display: grid;
+    gap: 10px;
+}
+
+.bns-coach__reel,
+.bns-coach__website {
+    display: flex;
+    align-items: center;
+    gap: 12px;
+    padding: 14px 16px;
+    border-radius: 16px;
+    text-decoration: none !important;
+    font-weight: 750;
+    transition: transform 0.18s ease, box-shadow 0.18s ease;
+}
+
+.bns-coach__reel {
+    color: #0a1d37;
+    background: linear-gradient(135deg, #fff7ed, #fff);
+    border: 1px solid rgba(253, 110, 1, 0.2);
+}
+
+.bns-coach__reel strong {
+    flex: 1;
+}
+
+.bns-coach__reel i,
+.bns-coach__website i {
+    color: #fd6e01;
+}
+
+.bns-coach__website {
+    justify-content: center;
+    color: #fff !important;
+    background: linear-gradient(135deg, #fd8a2e, #fd6e01);
+    box-shadow: 0 12px 24px rgba(253, 110, 1, 0.22);
+}
+
+.bns-coach__reel:hover,
+.bns-coach__website:hover {
+    transform: translateY(-2px);
+}
+
+.bns-coach__signers {
+    display: grid;
+    gap: 12px;
+    margin: 12px 0;
+}
+
+.bns-coach__signer {
+    display: grid;
+    gap: 2px;
+    padding: 14px;
+    border-radius: 14px;
+    background: #fff;
+    border: 1px solid rgba(15, 23, 42, 0.08);
+}
+
+.bns-coach__signer strong {
+    color: #0a1d37;
+    font-size: 1rem;
+}
+
+.bns-coach__signer span,
+.bns-coach__signer em {
+    color: #64748b;
+    font-style: normal;
+    font-size: 0.88rem;
+}
+
+.bns-coach__signer a,
+.bns-coach__signer > span:last-child {
+    margin-top: 6px;
+    color: #15803d;
+    font-weight: 700;
+    text-decoration: none;
+    font-size: 0.9rem;
+}
+
+.bns-coach__motto {
+    display: flex;
+    flex-wrap: wrap;
+    gap: 8px;
+    margin-top: 14px;
+}
+
+.bns-coach__motto span {
+    display: inline-flex;
+    padding: 8px 12px;
+    border-radius: 999px;
+    background: rgba(10, 29, 55, 0.06);
+    color: #0a1d37;
+    font-size: 0.82rem;
+    font-weight: 750;
+}
+
+@media (max-width: 575px) {
+    .bns-coach__hero,
+    .bns-coach__intro,
+    .bns-coach__card,
+    .bns-coach__footer {
+        padding: 16px;
+        border-radius: 16px;
+    }
+}

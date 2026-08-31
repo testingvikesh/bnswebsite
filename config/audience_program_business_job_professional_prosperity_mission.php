@@ -1,0 +1,52 @@
+<?php
+
+return [
+    'eyebrow' => 'Business Navachar School (BNS)',
+    'title' => "India's Prosperity Vision",
+    'subtitle' => 'For Job Excellence School & Business Empire School — Empowering Professionals. Strengthening Businesses. Building a Prosperous India.',
+    'intro' => [
+        'At Business Navachar School (BNS), we believe that India\'s prosperity depends on two powerful pillars—<strong>high-performing professionals</strong> and <strong>strong, scalable businesses</strong>.',
+        'When professionals continuously upgrade their skills and business owners continuously improve their businesses, organizations become stronger, industries become globally competitive, employment increases, innovation accelerates, and India moves closer to becoming a developed nation.',
+        'Through our executive business education programs, BNS is committed to building a new generation of <strong>professionals, entrepreneurs, and business leaders</strong> who will contribute to <strong>Viksit Bharat 2047</strong>.',
+    ],
+    'points_heading' => 'Our Vision for a Prosperous India',
+    'points' => [
+        ['icon' => 'fas fa-flag', 'title' => '🇮🇳 Develop world-class professionals with business excellence and leadership.'],
+        ['icon' => 'fas fa-flag', 'title' => '🇮🇳 Build stronger MSMEs, startups, family businesses, and growing enterprises.'],
+        ['icon' => 'fas fa-flag', 'title' => '🇮🇳 Transform businesses into scalable, profitable, and globally competitive organizations.'],
+        ['icon' => 'fas fa-flag', 'title' => '🇮🇳 Promote Artificial Intelligence (AI), digital transformation, innovation, and technology adoption across industries.'],
+        ['icon' => 'fas fa-flag', 'title' => '🇮🇳 Strengthen Marketing, Sales, Finance, Accounting, HR, Operations, Leadership, and Business Strategy.'],
+        ['icon' => 'fas fa-flag', 'title' => '🇮🇳 Improve productivity, profitability, quality, and operational excellence.'],
+        ['icon' => 'fas fa-flag', 'title' => '🇮🇳 Create more entrepreneurs, employers, and business leaders.'],
+        ['icon' => 'fas fa-flag', 'title' => '🇮🇳 Generate sustainable employment opportunities through business growth.'],
+        ['icon' => 'fas fa-flag', 'title' => '🇮🇳 Encourage ethical leadership, responsible business practices, and corporate governance.'],
+        ['icon' => 'fas fa-flag', 'title' => '🇮🇳 Develop future-ready professionals capable of leading organizations in the global economy.'],
+        ['icon' => 'fas fa-flag', 'title' => '🇮🇳 Deliver a structured syllabus and learning methodology developed with the guidance of Faculties of IIM, as per the applicable collaboration framework.'],
+        ['icon' => 'fas fa-flag', 'title' => '🇮🇳 Provide learning through BNS-trained faculties, business coaches, industry experts, with selected sessions by Faculties of IIM, where applicable.'],
+        ['icon' => 'fas fa-flag', 'title' => '🇮🇳 Recognize excellence through Program Completion Certificates, Skill Certificates, Project Certificates, and Participation/Appreciation Certificates by Faculties of IIM for eligible workshops, seminars, masterclasses, training programs, and events conducted under the applicable collaboration framework.'],
+        ['icon' => 'fas fa-flag', 'title' => '🇮🇳 Build a nationwide ecosystem of professionals, entrepreneurs, mentors, investors, business coaches, and industry experts.'],
+        ['icon' => 'fas fa-flag', 'title' => '🇮🇳 Contribute towards Viksit Bharat 2047 by creating globally competitive businesses, visionary leaders, and a stronger Indian economy.'],
+    ],
+    'become_heading' => 'Our Dream',
+    'become_points' => [
+        'Every Professional Continuously Learning.',
+        'Every Business Continuously Growing.',
+        'Every Organization Creating Value.',
+        'Every Enterprise Creating Employment.',
+        'Every Leader Contributing to India\'s Prosperity.',
+    ],
+    'belief_heading' => 'Our Belief',
+    'belief_lines' => [
+        'When Professionals Grow, Organizations Grow.',
+        'When Businesses Grow, Employment Grows.',
+        'When Employment Grows, Families Prosper.',
+        'When Families Prosper, India Becomes Stronger.',
+        'Together, We Build Viksit Bharat 2047.',
+    ],
+    'taglines' => [
+        'Learn More. Lead More.',
+        'Build Better Businesses. Build a Better India.',
+        'Business Excellence Creates National Prosperity.',
+        'Together Towards Viksit Bharat 2047.',
+    ],
+];

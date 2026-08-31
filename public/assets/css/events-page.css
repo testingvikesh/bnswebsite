@@ -1,0 +1,685 @@
+/* BNS Upcoming Events */
+
+.bns-events-page {
+    background: #f8fafc;
+}
+
+.bns-events-content {
+    padding: 60px 0 100px;
+}
+
+.bns-events-intro {
+    max-width: 820px;
+    margin: 0 auto 48px;
+    text-align: center;
+}
+
+.bns-events-intro__label {
+    display: inline-block;
+    margin-bottom: 12px;
+    padding: 6px 14px;
+    background: rgba(255, 85, 68, 0.1);
+    border-radius: 999px;
+    font-size: 12px;
+    font-weight: 700;
+    letter-spacing: 0.08em;
+    text-transform: uppercase;
+    color: var(--eduvers-base, #ff5544);
+}
+
+.bns-events-intro h2 {
+    margin: 0 0 14px;
+    font-size: clamp(1.5rem, 3vw, 2rem);
+    font-weight: 700;
+    color: #0a1d37;
+}
+
+.bns-events-intro p {
+    margin: 0;
+    font-size: 16px;
+    line-height: 1.75;
+    color: #475569;
+}
+
+/* Featured Induction Seminars */
+.bns-events-spotlight {
+    max-width: 1140px;
+    margin: 0 auto 56px;
+}
+
+.bns-events-spotlight__head {
+    text-align: center;
+    margin-bottom: 32px;
+}
+
+.bns-events-spotlight__eyebrow {
+    display: inline-flex;
+    align-items: center;
+    gap: 8px;
+    margin-bottom: 12px;
+    padding: 7px 16px;
+    border-radius: 999px;
+    background: rgba(255, 85, 68, 0.12);
+    color: var(--eduvers-base, #ff5544);
+    font-size: 12px;
+    font-weight: 700;
+    letter-spacing: 0.1em;
+    text-transform: uppercase;
+}
+
+.bns-events-spotlight__title {
+    margin: 0 0 10px;
+    font-size: clamp(1.45rem, 3vw, 2rem);
+    font-weight: 800;
+    color: #0a1d37;
+}
+
+.bns-events-spotlight__intro {
+    margin: 0 auto;
+    max-width: 680px;
+    font-size: 16px;
+    line-height: 1.7;
+    color: #5a5f66;
+}
+
+.bns-events-spotlight__grid {
+    display: grid;
+    grid-template-columns: repeat(2, minmax(0, 1fr));
+    gap: 28px;
+}
+
+.bns-event-spotlight {
+    display: flex;
+    flex-direction: column;
+    height: 100%;
+    border-radius: 22px;
+    overflow: hidden;
+    background: #fff;
+    border: 1px solid rgba(15, 23, 42, 0.08);
+    box-shadow: 0 16px 48px rgba(15, 23, 42, 0.1);
+    transition: transform 0.3s ease, box-shadow 0.3s ease;
+}
+
+.bns-event-spotlight:hover {
+    transform: translateY(-8px);
+    box-shadow: 0 24px 58px rgba(15, 23, 42, 0.14);
+}
+
+.bns-event-spotlight__top {
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    gap: 16px;
+    padding: 22px 24px;
+    background: linear-gradient(135deg, #061428 0%, #0a2240 50%, #123a5e 100%);
+    color: #fff;
+}
+
+.bns-event-spotlight__top-left {
+    display: inline-flex;
+    align-items: center;
+    gap: 12px;
+    flex-wrap: wrap;
+}
+
+.bns-event-spotlight__session-no {
+    display: inline-flex;
+    align-items: center;
+    justify-content: center;
+    min-width: 44px;
+    height: 44px;
+    border-radius: 12px;
+    background: rgba(255, 85, 68, 0.92);
+    border: 1px solid rgba(255, 255, 255, 0.24);
+    font-size: 1.3rem;
+    font-weight: 800;
+    line-height: 1;
+    flex-shrink: 0;
+    box-shadow: 0 8px 20px rgba(0, 0, 0, 0.18);
+}
+
+.bns-event-spotlight__badge {
+    display: inline-flex;
+    align-items: center;
+    gap: 8px;
+    padding: 8px 14px;
+    border-radius: 999px;
+    background: rgba(255, 85, 68, 0.2);
+    border: 1px solid rgba(255, 85, 68, 0.45);
+    font-size: 11px;
+    font-weight: 700;
+    letter-spacing: 0.06em;
+    text-transform: uppercase;
+    color: #fff;
+}
+
+.bns-event-spotlight__badge i {
+    color: #ffd166;
+}
+
+.bns-event-spotlight__date {
+    text-align: right;
+    line-height: 1.1;
+}
+
+.bns-event-spotlight__date-day {
+    display: block;
+    font-size: 2rem;
+    font-weight: 800;
+    color: var(--eduvers-base, #ff5544);
+}
+
+.bns-event-spotlight__date-rest {
+    display: block;
+    font-size: 13px;
+    font-weight: 600;
+    color: rgba(255, 255, 255, 0.88);
+    text-transform: uppercase;
+    letter-spacing: 0.04em;
+}
+
+.bns-event-spotlight__body {
+    flex: 1;
+    display: flex;
+    flex-direction: column;
+    padding: 26px 24px 28px;
+}
+
+.bns-event-spotlight__title {
+    margin: 0 0 10px;
+    font-size: 1.22rem;
+    font-weight: 700;
+    color: #0a1d37;
+    line-height: 1.4;
+}
+
+.bns-event-spotlight__tagline {
+    margin: 0 0 16px;
+    font-size: 1rem;
+    font-weight: 600;
+    line-height: 1.45;
+    color: var(--eduvers-base, #ff5544);
+}
+
+.bns-event-spotlight__meta {
+    display: flex;
+    flex-wrap: wrap;
+    gap: 10px;
+    margin-bottom: 18px;
+}
+
+.bns-event-spotlight__meta span {
+    display: inline-flex;
+    align-items: center;
+    gap: 8px;
+    padding: 8px 12px;
+    border-radius: 10px;
+    background: #f1f5f9;
+    font-size: 13px;
+    font-weight: 600;
+    color: #334155;
+}
+
+.bns-event-spotlight__meta i {
+    color: var(--eduvers-base, #ff5544);
+}
+
+.bns-event-spotlight__audience {
+    margin-bottom: 18px;
+    padding: 14px 16px;
+    border-radius: 14px;
+    background: linear-gradient(180deg, #fff8f5 0%, #fff 100%);
+    border: 1px solid rgba(255, 85, 68, 0.15);
+}
+
+.bns-event-spotlight__audience-label {
+    margin: 0 0 6px;
+    font-size: 11px;
+    font-weight: 700;
+    letter-spacing: 0.08em;
+    text-transform: uppercase;
+    color: #64748b;
+}
+
+.bns-event-spotlight__audience-text {
+    margin: 0;
+    font-size: 14px;
+    line-height: 1.6;
+    color: #363a40;
+    font-weight: 600;
+}
+
+.bns-event-spotlight__experience {
+    margin-bottom: 18px;
+}
+
+.bns-event-spotlight__experience h4 {
+    margin: 0 0 12px;
+    font-size: 14px;
+    font-weight: 700;
+    color: #0a1d37;
+}
+
+.bns-event-spotlight__experience ul {
+    margin: 0;
+    display: flex;
+    flex-direction: column;
+    gap: 10px;
+}
+
+.bns-event-spotlight__experience li {
+    display: flex;
+    align-items: flex-start;
+    gap: 10px;
+    font-size: 14px;
+    line-height: 1.55;
+    color: #454950;
+}
+
+.bns-event-spotlight__experience li i {
+    flex-shrink: 0;
+    margin-top: 3px;
+    color: var(--eduvers-base, #ff5544);
+    font-size: 13px;
+}
+
+.bns-event-spotlight__seats {
+    margin: 0 0 18px;
+    padding: 10px 14px;
+    border-radius: 10px;
+    background: rgba(255, 85, 68, 0.1);
+    font-size: 13px;
+    font-weight: 700;
+    color: var(--eduvers-base, #ff5544);
+    text-align: center;
+}
+
+.bns-event-spotlight__seats i {
+    margin-right: 6px;
+}
+
+.bns-event-spotlight__btn {
+    display: inline-flex;
+    align-items: center;
+    justify-content: center;
+    gap: 10px;
+    margin-top: auto;
+    width: 100%;
+    padding: 14px 20px;
+    border-radius: 12px;
+    font-size: 15px;
+    font-weight: 700;
+    text-decoration: none !important;
+    background: linear-gradient(135deg, var(--eduvers-base, #ff5544) 0%, #e04a3a 100%);
+    color: #fff !important;
+    border: none;
+    cursor: pointer;
+    box-shadow: 0 10px 24px rgba(255, 85, 68, 0.28);
+    transition: transform 0.2s ease, box-shadow 0.2s ease, background 0.2s ease;
+}
+
+.bns-event-spotlight__btn:hover {
+    transform: translateY(-2px);
+    box-shadow: 0 14px 30px rgba(255, 85, 68, 0.35);
+    color: #fff !important;
+    background: linear-gradient(135deg, #0a1d37 0%, #123a5e 100%);
+}
+
+.bns-events-more {
+    max-width: 1100px;
+    margin: 0 auto;
+}
+
+.bns-events-more__title {
+    margin: 0 0 28px;
+    text-align: center;
+    font-size: clamp(1.25rem, 2.5vw, 1.6rem);
+    font-weight: 700;
+    color: #0a1d37;
+}
+
+.bns-events-grid {
+    display: grid;
+    grid-template-columns: repeat(2, minmax(0, 1fr));
+    gap: 24px;
+    max-width: 1100px;
+    margin: 0 auto;
+}
+
+.bns-event-card {
+    background: #fff;
+    border-radius: 16px;
+    padding: 24px 22px;
+    border: 1px solid rgba(15, 23, 42, 0.08);
+    box-shadow: 0 8px 28px rgba(15, 23, 42, 0.05);
+    display: flex;
+    flex-direction: column;
+}
+
+.bns-event-card--featured {
+    grid-column: 1 / -1;
+    border-color: rgba(255, 85, 68, 0.25);
+    background: linear-gradient(180deg, #fff8f5 0%, #fff 100%);
+}
+
+.bns-event-card__header {
+    margin-bottom: 16px;
+}
+
+.bns-event-card__type {
+    display: inline-block;
+    margin-bottom: 8px;
+    padding: 4px 10px;
+    background: rgba(10, 34, 64, 0.08);
+    border-radius: 6px;
+    font-size: 11px;
+    font-weight: 700;
+    letter-spacing: 0.06em;
+    text-transform: uppercase;
+    color: #0a2240;
+}
+
+.bns-event-card--introduction .bns-event-card__type { background: rgba(255, 85, 68, 0.12); color: var(--eduvers-base, #ff5544); }
+.bns-event-card--induction .bns-event-card__type { background: rgba(255, 85, 68, 0.12); color: var(--eduvers-base, #ff5544); }
+.bns-event-card--workshop .bns-event-card__type { background: rgba(59, 130, 246, 0.12); color: #2563eb; }
+.bns-event-card--seminar .bns-event-card__type { background: rgba(16, 185, 129, 0.12); color: #059669; }
+.bns-event-card--bootcamp .bns-event-card__type { background: rgba(139, 92, 246, 0.12); color: #7c3aed; }
+.bns-event-card--networking .bns-event-card__type { background: rgba(245, 158, 11, 0.15); color: #d97706; }
+
+.bns-event-card__header h3 {
+    margin: 0;
+    font-size: 1.15rem;
+    font-weight: 700;
+    color: #0a1d37;
+    line-height: 1.35;
+}
+
+.bns-event-card__meta {
+    margin: 0 0 16px;
+    display: flex;
+    flex-direction: column;
+    gap: 8px;
+}
+
+.bns-event-card__meta li {
+    font-size: 14px;
+    line-height: 1.55;
+    color: #363a40;
+}
+
+.bns-event-card__meta i {
+    width: 18px;
+    color: var(--eduvers-base, #ff5544);
+    margin-right: 4px;
+}
+
+.bns-event-card__section {
+    margin-bottom: 14px;
+}
+
+.bns-event-card__section h4 {
+    margin: 0 0 10px;
+    font-size: 14px;
+    font-weight: 700;
+    color: #0a1d37;
+}
+
+.bns-event-card__section h4 i {
+    color: var(--eduvers-base, #ff5544);
+    margin-right: 6px;
+}
+
+.bns-event-card__section ul {
+    margin: 0;
+    display: flex;
+    flex-direction: column;
+    gap: 6px;
+}
+
+.bns-event-card__section li {
+    font-size: 13px;
+    color: #475569;
+    display: flex;
+    align-items: flex-start;
+    gap: 8px;
+}
+
+.bns-event-card__section li i {
+    color: var(--eduvers-base, #ff5544);
+    margin-top: 4px;
+    font-size: 11px;
+}
+
+.bns-event-card__section p {
+    margin: 0 0 8px;
+    font-size: 13px;
+    line-height: 1.6;
+    color: #475569;
+}
+
+.bns-event-card__section p i {
+    color: var(--eduvers-base, #ff5544);
+    margin-right: 6px;
+}
+
+.bns-event-card__cert,
+.bns-event-card__seats {
+    margin: 0 0 10px;
+    font-size: 13px;
+    font-weight: 600;
+    color: #363a40;
+}
+
+.bns-event-card__cert i,
+.bns-event-card__seats i {
+    color: var(--eduvers-base, #ff5544);
+    margin-right: 6px;
+}
+
+.bns-event-card__seats {
+    color: var(--eduvers-base, #ff5544);
+}
+
+.bns-event-card__btn {
+    display: inline-flex;
+    align-items: center;
+    justify-content: center;
+    gap: 8px;
+    margin-top: auto;
+    padding: 12px 20px;
+    border-radius: 8px;
+    font-size: 14px;
+    font-weight: 600;
+    text-decoration: none !important;
+    background: var(--eduvers-base, #ff5544);
+    color: #fff !important;
+    border: 2px solid var(--eduvers-base, #ff5544);
+    transition: all 0.25s ease;
+    align-self: flex-start;
+}
+
+.bns-event-card__btn:hover {
+    background: #0a1d37;
+    border-color: #0a1d37;
+    color: #fff !important;
+}
+
+/* Calendar */
+.bns-events-calendar {
+    max-width: 1100px;
+    margin: 56px auto 0;
+    background: #fff;
+    border-radius: 16px;
+    padding: 28px 24px;
+    border: 1px solid rgba(15, 23, 42, 0.08);
+    box-shadow: 0 8px 28px rgba(15, 23, 42, 0.05);
+}
+
+.bns-events-calendar__header {
+    display: flex;
+    flex-wrap: wrap;
+    align-items: center;
+    justify-content: space-between;
+    gap: 12px;
+    margin-bottom: 20px;
+}
+
+.bns-events-calendar__header h3 {
+    margin: 0;
+    font-size: 1.2rem;
+    font-weight: 700;
+    color: #0a1d37;
+}
+
+.bns-events-calendar__month {
+    padding: 6px 14px;
+    background: rgba(255, 85, 68, 0.1);
+    border-radius: 999px;
+    font-size: 13px;
+    font-weight: 700;
+    color: var(--eduvers-base, #ff5544);
+}
+
+.bns-events-calendar__table-wrap {
+    overflow-x: auto;
+}
+
+.bns-events-calendar__table {
+    width: 100%;
+    border-collapse: collapse;
+    min-width: 520px;
+}
+
+.bns-events-calendar__table th,
+.bns-events-calendar__table td {
+    padding: 14px 16px;
+    text-align: left;
+    font-size: 14px;
+    border-bottom: 1px solid rgba(15, 23, 42, 0.08);
+}
+
+.bns-events-calendar__table th {
+    font-weight: 700;
+    color: #0a1d37;
+    background: #f8fafc;
+}
+
+.bns-events-calendar__table tbody tr:hover {
+    background: #fafbfc;
+}
+
+.bns-events-calendar__status {
+    display: inline-flex;
+    padding: 6px 12px;
+    background: var(--eduvers-base, #ff5544);
+    color: #fff !important;
+    border: none;
+    border-radius: 6px;
+    font-size: 12px;
+    font-weight: 700;
+    text-decoration: none !important;
+    cursor: pointer;
+    transition: background 0.2s ease;
+}
+
+.bns-events-calendar__status:hover {
+    background: #0a1d37;
+    color: #fff !important;
+}
+
+/* Categories */
+.bns-events-categories {
+    max-width: 1100px;
+    margin: 48px auto 0;
+    text-align: center;
+}
+
+.bns-events-categories h3 {
+    margin: 0 0 24px;
+    font-size: 1.2rem;
+    font-weight: 700;
+    color: #0a1d37;
+}
+
+.bns-events-categories__grid {
+    display: flex;
+    flex-wrap: wrap;
+    justify-content: center;
+    gap: 12px;
+}
+
+.bns-events-category-tag {
+    display: inline-flex;
+    align-items: center;
+    gap: 8px;
+    padding: 10px 16px;
+    background: #fff;
+    border: 1px solid rgba(15, 23, 42, 0.1);
+    border-radius: 999px;
+    font-size: 14px;
+    font-weight: 600;
+    color: #363a40;
+    box-shadow: 0 4px 12px rgba(15, 23, 42, 0.04);
+}
+
+/* CTA */
+.bns-events-cta {
+    max-width: 760px;
+    margin: 48px auto 0;
+    padding: 36px 28px;
+    text-align: center;
+    background: linear-gradient(135deg, #0a2240 0%, #123a5e 100%);
+    border-radius: 16px;
+    color: #fff;
+}
+
+.bns-events-cta h3 {
+    margin: 0 0 12px;
+    font-size: 1.25rem;
+    font-weight: 700;
+    color: var(--eduvers-base, #ff5544);
+}
+
+.bns-events-cta p {
+    margin: 0 0 24px;
+    font-size: 15px;
+    line-height: 1.7;
+    color: rgba(255, 255, 255, 0.92);
+}
+
+.bns-events-cta__btn {
+    display: inline-flex;
+    align-items: center;
+    gap: 10px;
+    padding: 14px 24px;
+    border-radius: 8px;
+    font-size: 15px;
+    font-weight: 600;
+    text-decoration: none !important;
+    background: var(--eduvers-base, #ff5544);
+    color: #fff !important;
+    border: 2px solid var(--eduvers-base, #ff5544);
+    transition: all 0.25s ease;
+}
+
+.bns-events-cta__btn:hover {
+    background: #fff;
+    color: var(--eduvers-base, #ff5544) !important;
+}
+
+@media (max-width: 991px) {
+    .bns-events-spotlight__grid,
+    .bns-events-grid {
+        grid-template-columns: 1fr;
+    }
+
+    .bns-event-card--featured {
+        grid-column: auto;
+    }
+}
+
+@media (max-width: 575px) {
+    .bns-event-card {
+        padding: 20px 16px;
+    }
+}

@@ -1,0 +1,41 @@
+/**
+ * BNS dark panels — theme h1–h6 use --eduvers-black (#0d2944), which is nearly
+ * invisible on navy gradient backgrounds. Inherit the panel's light text color
+ * unless a page-specific rule sets an accent (orange) afterward.
+ */
+:is(
+    .bns-team-collab,
+    .bns-register-hero,
+    .bns-register-panel__header,
+    .bns-testimonials-hero,
+    .bns-about-philosophy__inner,
+    .bns-events-cta,
+    .bns-stat-card--featured,
+    .bns-programs-benefits,
+    .bns-vision-statement,
+    .bns-values-statement,
+    .bns-why-closing,
+    .bns-why-belief,
+    .bns-prosperity-viksit,
+    .bns-vision2047-highlight,
+    .bns-admission-card--office,
+    .bns-admission-tagline,
+    .bns-eligibility-program__header,
+    .bns-eligibility-closing,
+    .bns-process-section--ready,
+    .bns-faculty-tagline,
+    .bns-faculty-profile__aside,
+    .bns-contact-banner,
+    .bns-contact-card--office,
+    .bns-contact-tagline,
+    .bns-social-banner,
+    .bns-whatsapp-card--chat,
+    .bns-whatsapp-tagline
+) :is(h1, h2, h3, h4, h5, h6) {
+    color: inherit;
+}
+
+/* Team IIM collaboration — primary title emphasis */
+.bns-team-collab h2.bns-team-collab__title {
+    color: #ffffff;
+}

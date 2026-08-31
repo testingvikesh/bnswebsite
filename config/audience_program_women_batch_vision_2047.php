@@ -1,0 +1,52 @@
+<?php
+
+return [
+    'eyebrow' => 'Business Navachar School (BNS) – Women Business School',
+    'title' => 'Vision 2047',
+    'subtitle' => 'Empowering Women. Building Businesses. Transforming India.',
+    'intro' => [
+        'At Business Navachar School (BNS), we envision an India where every woman has the confidence, knowledge, leadership, and entrepreneurial mindset to build successful businesses, achieve financial independence, create employment, and become a driving force in the nation\'s economic growth.',
+        'Our Vision 2047 is to create a nationwide ecosystem of women entrepreneurs who transform Dreams into Ideas, Ideas into Startups, Startups into Successful Businesses, and Businesses into Sustainable Growth Enterprises, contributing to the vision of Viksit Bharat 2047.',
+    ],
+    'points_heading' => 'Our Vision 2047',
+    'points' => [
+        ['icon' => 'fas fa-flag', 'text' => '🇮🇳 To empower millions of women with practical business education and entrepreneurial skills.'],
+        ['icon' => 'fas fa-flag', 'text' => '🇮🇳 To transform women from job seekers into business owners, startup founders, and employers.'],
+        ['icon' => 'fas fa-flag', 'text' => '🇮🇳 To inspire women to build sustainable, profitable, and globally competitive businesses.'],
+        ['icon' => 'fas fa-flag', 'text' => '🇮🇳 To promote financial independence and economic empowerment for every woman.'],
+        ['icon' => 'fas fa-flag', 'text' => '🇮🇳 To strengthen women-led MSMEs, startups, family businesses, home-based enterprises, and digital businesses.'],
+        ['icon' => 'fas fa-flag', 'text' => '🇮🇳 To develop future-ready women leaders with expertise in Marketing, Sales, Branding, Digital Marketing, Artificial Intelligence (AI), Finance, Accounting, Human Resources, Operations, Leadership, Business Strategy, and Innovation.'],
+        ['icon' => 'fas fa-flag', 'text' => '🇮🇳 To prepare women for the AI-powered, digital, and global business economy.'],
+        ['icon' => 'fas fa-flag', 'text' => '🇮🇳 To create a nationwide network of women entrepreneurs, business coaches, mentors, investors, industry experts, and business leaders.'],
+        ['icon' => 'fas fa-flag', 'text' => '🇮🇳 To deliver a structured syllabus and learning methodology developed with the guidance of Faculties of IIM, as per the applicable collaboration framework.'],
+        ['icon' => 'fas fa-flag', 'text' => '🇮🇳 To provide learning through BNS-trained faculties, business coaches, industry experts, with selected sessions by Faculties of IIM, where applicable.'],
+        ['icon' => 'fas fa-flag', 'text' => '🇮🇳 To recognize learning through Year-wise Certificates, Program Completion Certificates, Skill Certificates, Project Certificates, and Participation/Appreciation Certificates by Faculties of IIM for eligible workshops, seminars, masterclasses, training programs, and events conducted under the applicable collaboration framework.'],
+        ['icon' => 'fas fa-flag', 'text' => '🇮🇳 To encourage innovation, digital transformation, responsible leadership, and lifelong learning.'],
+        ['icon' => 'fas fa-flag', 'text' => '🇮🇳 To support women in creating employment opportunities and strengthening local economies.'],
+        ['icon' => 'fas fa-flag', 'text' => '🇮🇳 To build businesses that create social impact while generating sustainable wealth.'],
+        ['icon' => 'fas fa-flag', 'text' => '🇮🇳 To contribute towards Viksit Bharat 2047 by making women entrepreneurship one of the strongest pillars of India\'s economic development.'],
+    ],
+    'dream_heading' => 'Our Dream by 2047',
+    'dream_lines' => [
+        'Millions of Empowered Women Entrepreneurs.',
+        'Thousands of Women-Led Startups.',
+        'Thousands of Successful Women-Owned Businesses.',
+        'Millions of Employment Opportunities Created by Women.',
+        'Globally Recognized Women-Led Indian Brands.',
+        'Financially Independent Families.',
+        'Strong Local Economies.',
+        'Ethical & Innovative Women Business Leaders.',
+        'A Prosperous, Inclusive, and Developed India.',
+    ],
+    'statement_heading' => 'Vision Statement',
+    'statement' => [
+        '"By 2047, Business Navachar School aspires to become India\'s leading Women Business Education Ecosystem, empowering every woman to transform a Dream into an Idea, an Idea into a Startup, a Startup into a Successful Business, and a Business into a sustainable enterprise that creates prosperity for families, society, and the nation."',
+    ],
+    'taglines' => [
+        'Dream Big. Start Smart. Grow Strong.',
+        'Empowered Women. Prosperous Families.',
+        'Women Entrepreneurs. Strong India.',
+        'Learn. Launch. Grow. Lead.',
+        'Together Towards Viksit Bharat 2047.',
+    ],
+];

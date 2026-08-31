@@ -1,0 +1,51 @@
+<?php
+
+return [
+    'eyebrow' => 'Business Navachar School (BNS) – Youth Business School',
+    'title' => 'Vision 2047',
+    'subtitle' => 'From Campus to Corporate. From Idea to IPO. Towards Viksit Bharat 2047.',
+    'intro' => [
+        'At Business Navachar School (BNS), we envision a future where every young mind has the <strong>confidence, knowledge, and entrepreneurial mindset</strong> to transform <strong>ideas into startups, startups into successful businesses, businesses into global enterprises, and enterprises into IPO-ready companies</strong>.',
+        'Our Vision 2047 is to create a generation of <strong>entrepreneurs, innovators, business leaders, and wealth creators</strong> who will accelerate India\'s journey towards becoming a <strong>developed nation</strong>.',
+    ],
+    'points_heading' => 'Our Vision 2047',
+    'points' => [
+        ['icon' => 'fas fa-flag', 'text' => '🇮🇳 To empower college students with <strong>practical business education</strong> beyond traditional academic learning.'],
+        ['icon' => 'fas fa-flag', 'text' => '🇮🇳 To transform <strong>Ideas into Startups, Startups into Successful Businesses, Businesses into Scale-up Enterprises, and Businesses into IPO-ready Companies</strong>.'],
+        ['icon' => 'fas fa-flag', 'text' => '🇮🇳 To create future <strong>entrepreneurs, startup founders, CEOs, innovators, and global business leaders</strong>.'],
+        ['icon' => 'fas fa-flag', 'text' => '🇮🇳 To develop <strong>entrepreneurial thinking, leadership, innovation, and business excellence</strong> among youth.'],
+        ['icon' => 'fas fa-flag', 'text' => '🇮🇳 To prepare students for the <strong>AI-powered, digital, and global business economy</strong>.'],
+        ['icon' => 'fas fa-flag', 'text' => '🇮🇳 To bridge the gap between <strong>college education and real-world business</strong>.'],
+        ['icon' => 'fas fa-flag', 'text' => '🇮🇳 To deliver a <strong>structured syllabus and learning methodology</strong> developed with the guidance of <strong>Faculties of IIM</strong>, as per the applicable collaboration framework.'],
+        ['icon' => 'fas fa-flag', 'text' => '🇮🇳 To provide learning through <strong>BNS-trained faculties, business coaches, industry experts</strong>, with selected sessions by <strong>Faculties of IIM</strong>, where applicable.'],
+        ['icon' => 'fas fa-flag', 'text' => '🇮🇳 To build strong capabilities in <strong>Entrepreneurship, Marketing, Digital Marketing, AI, Finance, Accounting, HR, Sales, Leadership, Operations, Corporate Management, and Business Strategy</strong>.'],
+        ['icon' => 'fas fa-flag', 'text' => '🇮🇳 To inspire students to create <strong>startups that solve real-world problems and generate employment</strong>.'],
+        ['icon' => 'fas fa-flag', 'text' => '🇮🇳 To build a nationwide ecosystem of <strong>young entrepreneurs, mentors, investors, business coaches, innovators, and industry leaders</strong>.'],
+        ['icon' => 'fas fa-flag', 'text' => '🇮🇳 To encourage <strong>innovation, technology adoption, digital transformation, and responsible entrepreneurship</strong>.'],
+        ['icon' => 'fas fa-flag', 'text' => '🇮🇳 To recognize excellence through <strong>Program Completion Certificates, Skill Certificates, Project Certificates</strong>, and <strong>Participation/Appreciation Certificates by Faculties of IIM</strong> for eligible workshops, seminars, masterclasses, training programs, and events conducted under the applicable collaboration framework.'],
+        ['icon' => 'fas fa-flag', 'text' => '🇮🇳 To contribute to <strong>Viksit Bharat 2047</strong> by creating businesses that strengthen India\'s economy, create jobs, and compete globally.'],
+    ],
+    'dream_heading' => 'Our Dream by 2047',
+    'dream_lines' => [
+        'Millions of Entrepreneurial Youth.',
+        'Thousands of Successful Startups.',
+        'Thousands of Scalable Businesses.',
+        'Hundreds of High-Growth Companies.',
+        'Globally Competitive Indian Brands.',
+        'Millions of Employment Opportunities.',
+        'Future CEOs and Business Leaders.',
+        'Stronger MSMEs and Startup Ecosystem.',
+        'A Prosperous, Innovative, and Developed India.',
+    ],
+    'statement_heading' => 'Vision Statement',
+    'statement' => [
+        '"By 2047, Business Navachar School aspires to become India\'s leading youth business education ecosystem, empowering every college student to transform an <strong>Idea into a Startup, a Startup into a Business, a Business into a Corporate, and a Corporate into an IPO-ready enterprise</strong>."',
+    ],
+    'taglines' => [
+        'Dream Big. Build Bigger.',
+        'From Idea to Startup.',
+        'From Startup to IPO.',
+        'Young Minds. Strong Nation. Viksit Bharat 2047.',
+        'Learn Today. Launch Tomorrow. Scale Forever.',
+    ],
+];

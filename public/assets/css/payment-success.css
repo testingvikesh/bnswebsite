@@ -1,0 +1,379 @@
+/* Payment Success + Receipt */
+
+.bns-payment-success {
+    padding: 36px 0 72px;
+    background: linear-gradient(180deg, #f4f7fb 0%, #fff 48%);
+}
+
+.bns-payment-success__hero {
+    text-align: center;
+    margin-bottom: 28px;
+}
+
+.bns-payment-success__badge {
+    width: 88px;
+    height: 88px;
+    margin: 0 auto 18px;
+    border-radius: 50%;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    background: linear-gradient(145deg, #16a34a 0%, #15803d 100%);
+    color: #fff;
+    font-size: 2.4rem;
+    box-shadow: 0 16px 36px rgba(22, 163, 74, 0.28);
+}
+
+.bns-payment-success__eyebrow {
+    display: inline-block;
+    margin-bottom: 8px;
+    padding: 6px 14px;
+    border-radius: 999px;
+    background: rgba(22, 163, 74, 0.1);
+    color: #15803d;
+    font-size: 0.82rem;
+    font-weight: 800;
+    letter-spacing: 0.06em;
+    text-transform: uppercase;
+}
+
+.bns-payment-success__hero h1 {
+    margin: 0 0 10px;
+    font-size: clamp(1.55rem, 3vw, 2.1rem);
+    font-weight: 800;
+    color: #0a1d37;
+}
+
+.bns-payment-success__lead {
+    margin: 0 auto;
+    max-width: 560px;
+    color: #64748b;
+    font-size: 1.02rem;
+    line-height: 1.65;
+}
+
+.bns-payment-success__receipt {
+    background: #fff;
+    border: 1px solid rgba(15, 23, 42, 0.08);
+    border-radius: 22px;
+    overflow: hidden;
+    box-shadow: 0 18px 48px rgba(15, 23, 42, 0.08);
+    margin-bottom: 24px;
+}
+
+.bns-payment-success__receipt-head {
+    display: flex;
+    flex-wrap: wrap;
+    align-items: center;
+    justify-content: space-between;
+    gap: 16px;
+    padding: 22px 24px;
+    background: linear-gradient(135deg, #0a2240 0%, #123a5e 100%);
+    color: #fff;
+}
+
+.bns-payment-success__brand {
+    margin: 0 0 4px;
+    font-size: 0.85rem;
+    font-weight: 700;
+    letter-spacing: 0.04em;
+    color: #fbbf24;
+    text-transform: uppercase;
+}
+
+.bns-payment-success__receipt-title {
+    margin: 0;
+    font-size: 1.35rem;
+    font-weight: 800;
+}
+
+.bns-payment-success__status {
+    display: inline-flex;
+    align-items: center;
+    gap: 8px;
+    padding: 8px 14px;
+    border-radius: 999px;
+    background: rgba(34, 197, 94, 0.18);
+    color: #86efac;
+    font-weight: 800;
+    font-size: 0.9rem;
+}
+
+.bns-payment-success__amount-bar {
+    display: flex;
+    flex-wrap: wrap;
+    align-items: center;
+    justify-content: space-between;
+    gap: 12px;
+    padding: 20px 24px;
+    background: linear-gradient(180deg, #fff8f5 0%, #fff 100%);
+    border-bottom: 1px solid rgba(255, 85, 68, 0.12);
+}
+
+.bns-payment-success__amount-label {
+    margin: 0;
+    color: #64748b;
+    font-weight: 700;
+}
+
+.bns-payment-success__amount-value {
+    margin: 0;
+    font-size: clamp(1.6rem, 3vw, 2rem);
+    font-weight: 800;
+    color: var(--eduvers-base, #ff5544);
+}
+
+.bns-payment-success__grid {
+    display: grid;
+    grid-template-columns: repeat(2, minmax(0, 1fr));
+    gap: 0;
+}
+
+.bns-payment-success__item {
+    padding: 18px 24px;
+    border-bottom: 1px solid rgba(15, 23, 42, 0.06);
+    border-right: 1px solid rgba(15, 23, 42, 0.06);
+}
+
+.bns-payment-success__item:nth-child(2n) {
+    border-right: 0;
+}
+
+.bns-payment-success__item-label {
+    display: block;
+    margin-bottom: 4px;
+    font-size: 0.78rem;
+    font-weight: 700;
+    letter-spacing: 0.04em;
+    text-transform: uppercase;
+    color: #94a3b8;
+}
+
+.bns-payment-success__item-value {
+    margin: 0;
+    font-size: 1.02rem;
+    font-weight: 700;
+    color: #0a1d37;
+    word-break: break-word;
+}
+
+.bns-payment-success__actions {
+    display: flex;
+    flex-wrap: wrap;
+    gap: 12px;
+    padding: 22px 24px;
+    background: #f8fafc;
+}
+
+.bns-payment-success__btn {
+    display: inline-flex;
+    align-items: center;
+    justify-content: center;
+    gap: 8px;
+    min-height: 48px;
+    padding: 12px 18px;
+    border-radius: 12px;
+    border: 1px solid rgba(15, 23, 42, 0.12);
+    background: #fff;
+    color: #0a1d37;
+    font-weight: 800;
+    text-decoration: none !important;
+    cursor: pointer;
+}
+
+.bns-payment-success__btn--primary {
+    background: var(--eduvers-base, #ff5544);
+    border-color: var(--eduvers-base, #ff5544);
+    color: #fff;
+}
+
+.bns-payment-success__btn--dark {
+    background: #0a2240;
+    border-color: #0a2240;
+    color: #fff;
+}
+
+.bns-payment-success__note {
+    margin-top: 8px;
+    padding: 16px 18px;
+    border-radius: 14px;
+    background: rgba(15, 23, 42, 0.04);
+    color: #475569;
+    font-size: 0.95rem;
+    line-height: 1.6;
+}
+
+/* Printable receipt page */
+.bns-payment-receipt-page {
+    min-height: 100vh;
+    padding: 32px 16px 48px;
+    background: #eef2f7;
+}
+
+.bns-payment-receipt-page__toolbar {
+    max-width: 800px;
+    margin: 0 auto 18px;
+    display: flex;
+    flex-wrap: wrap;
+    gap: 10px;
+    justify-content: flex-end;
+}
+
+.bns-payment-receipt {
+    max-width: 800px;
+    margin: 0 auto;
+    background: #fff;
+    border-radius: 18px;
+    overflow: hidden;
+    box-shadow: 0 18px 48px rgba(15, 23, 42, 0.1);
+}
+
+.bns-payment-receipt__top {
+    padding: 28px 28px 22px;
+    background: linear-gradient(135deg, #0a2240 0%, #123a5e 100%);
+    color: #fff;
+    text-align: center;
+}
+
+.bns-payment-receipt__top-brand {
+    margin: 0 0 8px;
+    color: #fbbf24;
+    font-weight: 800;
+    letter-spacing: 0.06em;
+    text-transform: uppercase;
+    font-size: 0.9rem;
+}
+
+.bns-payment-receipt__top h1 {
+    margin: 0 0 8px;
+    font-size: 1.7rem;
+    font-weight: 800;
+    color: #fff;
+    line-height: 1.25;
+}
+
+.bns-payment-receipt__top p {
+    margin: 0;
+    color: rgba(255, 255, 255, 0.9);
+}
+
+.bns-payment-receipt__paid {
+    margin: 18px auto 0;
+    display: inline-flex;
+    align-items: center;
+    gap: 8px;
+    padding: 8px 16px;
+    border-radius: 999px;
+    background: rgba(34, 197, 94, 0.2);
+    color: #86efac;
+    font-weight: 800;
+}
+
+.bns-payment-receipt__body {
+    padding: 24px 28px 10px;
+}
+
+.bns-payment-receipt__amount {
+    text-align: center;
+    margin-bottom: 22px;
+    padding-bottom: 18px;
+    border-bottom: 1px dashed rgba(15, 23, 42, 0.15);
+}
+
+.bns-payment-receipt__amount span {
+    display: block;
+    color: #64748b;
+    font-weight: 700;
+    margin-bottom: 4px;
+}
+
+.bns-payment-receipt__amount strong {
+    font-size: 2rem;
+    color: #0a1d37;
+}
+
+.bns-payment-receipt__table {
+    width: 100%;
+    border-collapse: collapse;
+    margin-bottom: 18px;
+}
+
+.bns-payment-receipt__table th,
+.bns-payment-receipt__table td {
+    padding: 12px 0;
+    border-bottom: 1px solid rgba(15, 23, 42, 0.08);
+    text-align: left;
+    vertical-align: top;
+    font-size: 0.98rem;
+}
+
+.bns-payment-receipt__table th {
+    width: 42%;
+    color: #64748b;
+    font-weight: 700;
+}
+
+.bns-payment-receipt__table td {
+    color: #0a1d37;
+    font-weight: 700;
+}
+
+.bns-payment-receipt__footer {
+    padding: 8px 28px 28px;
+    text-align: center;
+    color: #64748b;
+    font-size: 0.92rem;
+    line-height: 1.6;
+}
+
+@media (max-width: 767.98px) {
+    .bns-payment-success__grid {
+        grid-template-columns: 1fr;
+    }
+
+    .bns-payment-success__item {
+        border-right: 0;
+    }
+}
+
+@media print {
+    body * {
+        visibility: hidden;
+    }
+
+    .bns-payment-receipt-page,
+    .bns-payment-receipt-page * ,
+    .bns-payment-success__print-area,
+    .bns-payment-success__print-area * {
+        visibility: visible;
+    }
+
+    .bns-payment-receipt-page__toolbar,
+    .bns-payment-success__actions,
+    .bns-pay-now__banner,
+    .page-header,
+    .main-header,
+    .site-footer,
+    .bns-sticky-cta,
+    .chat-icon,
+    .scroll-to-top {
+        display: none !important;
+    }
+
+    .bns-payment-receipt-page,
+    .bns-payment-success__print-area {
+        position: absolute;
+        left: 0;
+        top: 0;
+        width: 100%;
+        background: #fff;
+        padding: 0;
+    }
+
+    .bns-payment-receipt,
+    .bns-payment-success__receipt {
+        box-shadow: none;
+        border: 0;
+        border-radius: 0;
+    }
+}

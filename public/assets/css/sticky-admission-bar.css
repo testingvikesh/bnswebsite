@@ -1,0 +1,452 @@
+.bns-sticky-cta {
+    position: fixed;
+    left: 0;
+    right: 0;
+    bottom: 0;
+    z-index: 120;
+    background: #fff;
+    box-shadow: 0 -4px 24px rgba(15, 23, 42, 0.14);
+    border-top: 1px solid rgba(15, 23, 42, 0.08);
+}
+
+.bns-sticky-cta__inner {
+    display: grid;
+    grid-template-columns: 1fr 1fr 1fr;
+    width: 100%;
+    max-width: 100%;
+}
+
+.bns-sticky-cta__inner--cols-2 {
+    grid-template-columns: 1fr 1fr;
+}
+
+.bns-sticky-cta__inner--cols-4 {
+    grid-template-columns: repeat(4, 1fr);
+}
+
+.bns-sticky-cta__inner--cols-5 {
+    grid-template-columns: repeat(5, 1fr);
+}
+
+.bns-sticky-cta__btn {
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    width: 100%;
+    min-height: 54px;
+    padding: 12px 10px;
+    border: 0;
+    font-size: clamp(0.72rem, 2.4vw, 0.95rem);
+    font-weight: 800;
+    line-height: 1.25;
+    letter-spacing: 0.04em;
+    text-transform: uppercase;
+    text-align: center;
+    text-decoration: none !important;
+    cursor: pointer;
+    transition: background-color 0.2s ease, color 0.2s ease, box-shadow 0.2s ease;
+    box-shadow: inset 0 0 0 0 transparent;
+}
+
+.bns-sticky-cta__label--short {
+    display: none;
+}
+
+.bns-intro-session-modal .modal-dialog {
+    max-width: 640px;
+}
+
+.bns-intro-session-modal__event {
+    margin: 0 0 18px;
+    padding: 16px 18px;
+    border: 1px solid rgba(255, 85, 68, 0.18);
+    border-radius: 14px;
+    background: linear-gradient(180deg, rgba(255, 85, 68, 0.06) 0%, rgba(255, 255, 255, 0.98) 100%);
+}
+
+.bns-intro-session-modal__event-label {
+    margin: 0 0 6px;
+    font-size: 0.72rem;
+    font-weight: 800;
+    letter-spacing: 0.1em;
+    text-transform: uppercase;
+    color: var(--eduvers-base, #ff5544);
+}
+
+.bns-intro-session-modal__event-title {
+    margin: 0 0 12px;
+    font-size: 1.05rem;
+    font-weight: 800;
+    line-height: 1.4;
+    color: #0a1d37;
+}
+
+.bns-intro-session-modal__options {
+    display: grid;
+    gap: 10px;
+    margin: 0 0 14px;
+}
+
+@media (min-width: 520px) {
+    .bns-intro-session-modal__options {
+        grid-template-columns: 1fr 1fr;
+    }
+}
+
+.bns-intro-session-modal__option {
+    padding: 12px 14px;
+    border: 1px solid rgba(15, 23, 42, 0.1);
+    border-radius: 12px;
+    background: #fff;
+}
+
+.bns-intro-session-modal__option--selectable {
+    position: relative;
+    cursor: pointer;
+    transition: border-color 0.2s ease, box-shadow 0.2s ease, background-color 0.2s ease;
+}
+
+.bns-intro-session-modal__option--selectable:hover {
+    border-color: rgba(255, 85, 68, 0.45);
+}
+
+.bns-intro-session-modal__option--selectable.is-selected,
+.bns-intro-session-modal__option--selectable:has(.bns-intro-session-modal__option-input:checked) {
+    border-color: var(--eduvers-base, #ff5544);
+    background: rgba(255, 85, 68, 0.06);
+    box-shadow: 0 0 0 1px var(--eduvers-base, #ff5544);
+}
+
+.bns-intro-session-modal__option-input {
+    position: absolute;
+    inset: 0;
+    width: 100%;
+    height: 100%;
+    margin: 0;
+    opacity: 0;
+    cursor: pointer;
+    z-index: 1;
+}
+
+.bns-intro-session-modal__option-badge {
+    display: inline-block;
+    margin-bottom: 8px;
+    padding: 3px 9px;
+    border-radius: 999px;
+    background: rgba(255, 85, 68, 0.12);
+    color: var(--eduvers-base, #ff5544);
+    font-size: 0.72rem;
+    font-weight: 800;
+    letter-spacing: 0.04em;
+    text-transform: uppercase;
+}
+
+.bns-intro-session-modal__option-date,
+.bns-intro-session-modal__option-time {
+    display: flex;
+    align-items: flex-start;
+    gap: 8px;
+    margin: 0 0 6px;
+    font-size: 0.88rem;
+    line-height: 1.45;
+    color: #334155;
+}
+
+.bns-intro-session-modal__option-time {
+    margin-bottom: 0;
+}
+
+.bns-intro-session-modal__option-date i,
+.bns-intro-session-modal__option-time i {
+    margin-top: 3px;
+    flex-shrink: 0;
+    width: 14px;
+    color: var(--eduvers-base, #ff5544);
+}
+
+.bns-intro-session-modal__event-meta {
+    margin: 0;
+    display: grid;
+    gap: 10px;
+}
+
+.bns-intro-session-modal__event-meta li {
+    display: flex;
+    align-items: flex-start;
+    gap: 10px;
+    font-size: 0.92rem;
+    line-height: 1.55;
+    color: #334155;
+}
+
+.bns-intro-session-modal__event-meta i {
+    margin-top: 3px;
+    flex-shrink: 0;
+    width: 16px;
+    color: var(--eduvers-base, #ff5544);
+}
+
+.bns-intro-session-modal__event-map {
+    display: inline-flex;
+    align-items: center;
+    gap: 8px;
+    margin-top: 14px;
+    padding: 10px 14px;
+    border-radius: 999px;
+    background: var(--eduvers-base, #ff5544);
+    color: #fff !important;
+    font-size: 0.84rem;
+    font-weight: 700;
+    text-decoration: none !important;
+    transition: background-color 0.2s ease, transform 0.2s ease;
+}
+
+.bns-intro-session-modal__event-map:hover {
+    background: #e84a3a;
+    transform: translateY(-1px);
+}
+
+.bns-intro-session-modal__intro {
+    margin: 0 0 18px;
+    font-size: 0.95rem;
+    line-height: 1.65;
+    color: #475569;
+}
+
+.bns-intro-session-modal__alert {
+    font-size: 0.92rem;
+}
+
+.bns-intro-session-form__btn {
+    margin-top: 18px;
+    width: 100%;
+    justify-content: center;
+    position: relative;
+}
+
+.bns-intro-session-form__btn .bns-intro-session-form__btn-loader {
+    display: none !important;
+    align-items: center;
+    justify-content: center;
+    gap: 10px;
+}
+
+.bns-intro-session-form.is-submitting,
+.bns-intro-session-form__btn.is-loading {
+    pointer-events: none !important;
+}
+
+.bns-intro-session-form.is-submitting .bns-intro-session-form__btn,
+.bns-intro-session-form__btn.is-loading {
+    pointer-events: none !important;
+    opacity: 0.85;
+    cursor: wait !important;
+}
+
+.bns-intro-session-form.is-submitting .bns-intro-session-form__btn-label,
+.bns-intro-session-form__btn.is-loading .bns-intro-session-form__btn-label {
+    display: none !important;
+}
+
+.bns-intro-session-form.is-submitting .bns-intro-session-form__btn-loader,
+.bns-intro-session-form__btn.is-loading .bns-intro-session-form__btn-loader {
+    display: inline-flex !important;
+}
+
+.bns-intro-session-form__spinner {
+    width: 16px;
+    height: 16px;
+    border: 2px solid rgba(255, 255, 255, 0.35);
+    border-top-color: #fff;
+    border-radius: 50%;
+    animation: bns-intro-btn-spin 0.7s linear infinite;
+    flex-shrink: 0;
+}
+
+@keyframes bns-intro-btn-spin {
+    to { transform: rotate(360deg); }
+}
+
+.bns-sticky-cta__btn--outline {
+    color: var(--eduvers-base, #ff5544);
+    background: #fff;
+    border-right: 1px solid rgba(15, 23, 42, 0.08);
+    text-decoration: none !important;
+}
+
+.bns-sticky-cta__btn--outline:hover {
+    color: #fff;
+    background: var(--eduvers-base, #ff5544);
+    box-shadow: none;
+}
+
+.bns-sticky-cta__btn--primary {
+    color: #fff;
+    background: var(--eduvers-base, #ff5544);
+    border-right: 1px solid rgba(255, 255, 255, 0.12);
+}
+
+.bns-sticky-cta__btn--primary:hover {
+    color: #fff;
+    background: #e84a3a;
+    box-shadow: inset 0 0 0 2px #fff;
+}
+
+.bns-sticky-cta__btn--secondary {
+    color: #fff;
+    background: rgb(51, 61, 97);
+}
+
+.bns-sticky-cta__btn--secondary:hover {
+    color: #fff;
+    background: rgb(51, 61, 97);
+    box-shadow: inset 0 0 0 2px #fff;
+}
+
+.bns-sticky-cta__btn--pay {
+    color: #fff;
+    background: #0f766e;
+}
+
+.bns-sticky-cta__btn--pay:hover {
+    color: #fff;
+    background: #0d9488;
+    box-shadow: inset 0 0 0 2px #fff;
+}
+
+.bns-sticky-cta__btn--attendance {
+    color: #fff;
+    background: #1d4ed8;
+}
+
+.bns-sticky-cta__btn--attendance:hover {
+    color: #fff;
+    background: #2563eb;
+    box-shadow: inset 0 0 0 2px #fff;
+}
+
+body.has-bns-sticky-cta {
+    padding-bottom: 54px;
+}
+
+body.has-bns-sticky-cta .scroll-to-top.show {
+    bottom: 74px;
+}
+
+body.has-bns-sticky-cta .chat-icon {
+    bottom: 64px;
+}
+
+@media (min-width: 768px) {
+    .bns-sticky-cta__btn {
+        min-height: 58px;
+        padding: 14px 16px;
+        font-size: 0.95rem;
+    }
+
+    body.has-bns-sticky-cta {
+        padding-bottom: 58px;
+    }
+
+    body.has-bns-sticky-cta .scroll-to-top.show {
+        bottom: 78px;
+    }
+
+    body.has-bns-sticky-cta .chat-icon {
+        bottom: 68px;
+    }
+}
+
+@media (max-width: 767px) {
+    .bns-sticky-cta {
+        padding: 6px 6px calc(6px + env(safe-area-inset-bottom, 0px));
+        background: rgba(255, 255, 255, 0.96);
+        backdrop-filter: blur(10px);
+        -webkit-backdrop-filter: blur(10px);
+    }
+
+    .bns-sticky-cta__inner {
+        gap: 6px;
+    }
+
+    .bns-sticky-cta__inner--cols-2 {
+        grid-template-columns: 1fr 1fr;
+    }
+
+    .bns-sticky-cta__inner--cols-3 {
+        grid-template-columns: 1fr 1fr;
+    }
+
+    .bns-sticky-cta__inner--cols-3 .bns-sticky-cta__btn:last-child {
+        grid-column: 1 / -1;
+    }
+
+    .bns-sticky-cta__inner--cols-4 {
+        grid-template-columns: repeat(2, minmax(0, 1fr));
+    }
+
+    .bns-sticky-cta__inner--cols-4 .bns-sticky-cta__btn {
+        width: 100%;
+        max-width: 100%;
+    }
+
+    .bns-sticky-cta__inner--cols-5 {
+        grid-template-columns: 1fr 1fr;
+    }
+
+    .bns-sticky-cta__inner--cols-5 .bns-sticky-cta__btn:last-child {
+        grid-column: 1 / -1;
+    }
+
+    .bns-sticky-cta__btn {
+        min-height: 44px;
+        padding: 10px 8px;
+        border-radius: 10px;
+        border-right: 0 !important;
+        border-bottom: 0 !important;
+        font-size: 0.72rem;
+        letter-spacing: 0.03em;
+        box-shadow: 0 1px 2px rgba(15, 23, 42, 0.08);
+    }
+
+    .bns-sticky-cta__label--full {
+        display: none;
+    }
+
+    .bns-sticky-cta__label--short {
+        display: inline;
+    }
+
+    body.has-bns-sticky-cta {
+        padding-bottom: 160px;
+    }
+
+    body.has-bns-sticky-cta .scroll-to-top.show {
+        bottom: 170px;
+    }
+
+    body.has-bns-sticky-cta .chat-icon {
+        bottom: 160px;
+    }
+}
+
+@media (max-width: 399px) {
+    .bns-sticky-cta__btn {
+        min-height: 42px;
+        padding: 8px 6px;
+        font-size: 0.66rem;
+        letter-spacing: 0.02em;
+    }
+
+    body.has-bns-sticky-cta {
+        padding-bottom: 150px;
+    }
+
+    body.has-bns-sticky-cta .scroll-to-top.show {
+        bottom: 160px;
+    }
+
+    body.has-bns-sticky-cta .chat-icon {
+        bottom: 150px;
+    }
+}

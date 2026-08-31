@@ -1,0 +1,1444 @@
+/* BNS — About Us page */
+
+.bns-about-page {
+    overflow-x: hidden;
+}
+
+.bns-about-page .section-title__title span {
+    color: var(--eduvers-base, #ff5544);
+}
+
+/* Intro — matches home about-one (dark panel + shape) */
+.bns-about-page__intro {
+    position: relative;
+    z-index: 1;
+}
+
+.bns-about-page__intro .about-one__bg {
+    opacity: 0.5;
+}
+
+.bns-about-page__intro .about-one__right {
+    border-radius: 0 20px 20px 0;
+}
+
+.bns-about-page__intro .about-one__text strong,
+.bns-about-page__intro .about-one__text--focus strong,
+.bns-about-page__intro .about-one__points h3 strong {
+    color: rgba(255, 255, 255, 0.95);
+    font-weight: 700;
+}
+
+.bns-about-page strong,
+.bns-about-page b,
+.about-one strong,
+.about-one b {
+    font-weight: 700;
+}
+
+.bns-about-collab p strong,
+.bns-about-pillar p strong,
+.bns-about-values__card p strong,
+.bns-vision-intro strong,
+.bns-mission-intro strong,
+.bns-vision-points li strong,
+.bns-why-reason__body p strong,
+.bns-why-reason__body li strong,
+.bns-founder-paragraph strong,
+.bns-values-item p strong,
+.bns-prosperity-section__intro strong,
+.bns-prosperity-list li strong,
+.bns-why-checklist li strong {
+    color: #0a1d37;
+    font-weight: 700;
+}
+
+/* Mission & Vision */
+.bns-about-mv {
+    padding: 80px 0;
+    background: #eef2f7;
+}
+
+.bns-about-mv__card {
+    height: 100%;
+    background: #fff;
+    border-radius: 16px;
+    padding: 36px 32px 36px 36px;
+    border: 1px solid rgba(15, 23, 42, 0.06);
+    border-left: 4px solid var(--eduvers-base, #ff5544);
+    box-shadow: 0 12px 40px rgba(15, 23, 42, 0.07);
+    transition: transform 0.25s ease, box-shadow 0.25s ease;
+}
+
+.bns-about-mv__card:hover {
+    transform: translateY(-4px);
+    box-shadow: 0 18px 48px rgba(15, 23, 42, 0.1);
+}
+
+.bns-about-mv__label {
+    display: inline-block;
+    font-size: 0.75rem;
+    font-weight: 700;
+    text-transform: uppercase;
+    letter-spacing: 0.12em;
+    color: var(--eduvers-base, #ff5544);
+    margin-bottom: 0.85rem;
+}
+
+.bns-about-mv__card h2 {
+    font-size: 1.65rem;
+    font-weight: 700;
+    color: #0a1d37;
+    margin-bottom: 1rem;
+    line-height: 1.3;
+}
+
+.bns-about-mv__card p {
+    color: #475569;
+    line-height: 1.75;
+    margin: 0;
+    font-size: 1rem;
+}
+
+.bns-about-mv__link {
+    display: inline-flex;
+    align-items: center;
+    gap: 8px;
+    margin-top: 18px;
+    font-weight: 700;
+    font-size: 14px;
+    color: var(--eduvers-base, #ff5544);
+    text-decoration: none;
+}
+
+.bns-about-mv__link:hover {
+    color: #e04a3a;
+}
+
+/* Programs strip */
+.bns-about-programs {
+    padding: 40px 0;
+    background: #fff;
+}
+
+.bns-about-programs__label {
+    text-align: center;
+    font-weight: 700;
+    color: #64748b;
+    font-size: 14px;
+    text-transform: uppercase;
+    letter-spacing: 0.08em;
+    margin: 0 0 16px;
+}
+
+.bns-about-programs__grid {
+    display: flex;
+    flex-wrap: wrap;
+    justify-content: center;
+    gap: 12px;
+}
+
+.bns-about-programs__chip {
+    display: inline-flex;
+    align-items: center;
+    gap: 8px;
+    padding: 12px 18px;
+    background: #f8fafc;
+    border: 1px solid rgba(255, 85, 68, 0.2);
+    border-radius: 999px;
+    font-weight: 600;
+    font-size: 14px;
+    color: #0a1d37;
+}
+
+.bns-about-programs__icon {
+    font-size: 1.1rem;
+}
+
+/* IIM collaboration */
+.bns-about-collab {
+    padding: 0 0 60px;
+    background: #fff;
+}
+
+.bns-about-collab__inner {
+    display: flex;
+    align-items: center;
+    gap: 24px;
+    padding: 28px 32px;
+    background: linear-gradient(135deg, #fff8f5 0%, #fff 100%);
+    border: 1px solid rgba(255, 85, 68, 0.25);
+    border-radius: 16px;
+    border-left: 4px solid var(--eduvers-base, #ff5544);
+}
+
+.bns-about-collab__logo {
+    flex-shrink: 0;
+    width: 96px;
+    height: 96px;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    padding: 8px;
+    border-radius: 12px;
+    background: #ffffff;
+    border: 1px solid rgba(15, 23, 42, 0.08);
+    box-shadow: 0 8px 20px rgba(15, 23, 42, 0.06);
+}
+
+.bns-about-collab__logo img {
+    display: block;
+    width: 100%;
+    height: 100%;
+    object-fit: contain;
+}
+
+.bns-about-collab__icon {
+    flex-shrink: 0;
+    width: 52px;
+    height: 52px;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    border-radius: 12px;
+    background: var(--eduvers-base, #ff5544);
+    color: #fff;
+    font-size: 1.25rem;
+}
+
+.bns-about-collab__inner h3 {
+    margin: 0 0 8px;
+    font-size: 1.1rem;
+    font-weight: 700;
+    color: #0a1d37;
+}
+
+.bns-about-collab__inner p {
+    margin: 0;
+    font-size: 15px;
+    line-height: 1.7;
+    color: #475569;
+}
+
+/* Mission / Vision / Values pillars */
+.bns-about-pillars {
+    padding: 70px 0;
+    background: #eef2f7;
+}
+
+.bns-about-pillar {
+    display: flex;
+    flex-direction: column;
+    height: 100%;
+    padding: 32px 28px;
+    background: #fff;
+    border-radius: 16px;
+    border: 1px solid rgba(15, 23, 42, 0.08);
+    box-shadow: 0 10px 36px rgba(15, 23, 42, 0.06);
+    text-decoration: none;
+    color: inherit;
+    transition: all 0.2s ease;
+}
+
+.bns-about-pillar:hover {
+    border-color: var(--eduvers-base, #ff5544);
+    transform: translateY(-4px);
+    box-shadow: 0 16px 44px rgba(255, 85, 68, 0.12);
+    color: inherit;
+}
+
+.bns-about-pillar__icon {
+    width: 52px;
+    height: 52px;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    border-radius: 12px;
+    background: rgba(255, 85, 68, 0.1);
+    color: var(--eduvers-base, #ff5544);
+    font-size: 1.2rem;
+    margin-bottom: 18px;
+}
+
+.bns-about-pillar h3 {
+    margin: 0 0 10px;
+    font-size: 1.2rem;
+    font-weight: 700;
+    color: #0a1d37;
+}
+
+.bns-about-pillar p {
+    margin: 0 0 16px;
+    flex-grow: 1;
+    font-size: 14px;
+    line-height: 1.65;
+    color: #64748b;
+}
+
+.bns-about-pillar__link {
+    font-size: 13px;
+    font-weight: 700;
+    color: var(--eduvers-base, #ff5544);
+}
+
+/* Philosophy strip on about hub */
+.bns-about-philosophy {
+    padding: 0 0 60px;
+    background: #fff;
+}
+
+.bns-about-philosophy__inner {
+    text-align: center;
+    padding: 36px 32px;
+    background: linear-gradient(135deg, #0a2240 0%, #123a5e 100%);
+    border-radius: 16px;
+    color: #fff;
+}
+
+.bns-about-philosophy__hindi {
+    margin: 0 0 10px;
+    font-size: 1.35rem;
+    font-weight: 700;
+}
+
+.bns-about-philosophy__english {
+    margin: 0;
+    font-size: 1.05rem;
+    font-weight: 600;
+    color: var(--eduvers-base, #ff5544);
+}
+
+.bns-about-links {
+    padding: 70px 0 100px;
+    background: #eef2f7;
+}
+
+.bns-about-links .section-title {
+    margin-bottom: 36px;
+}
+
+/* Core values section */
+.bns-about-values {
+    padding: 90px 0 60px;
+    background: #fff;
+}
+
+.bns-about-values .section-title {
+    margin-bottom: 44px;
+}
+
+.bns-about-values__grid {
+    margin-bottom: 0;
+}
+
+.bns-about-links__grid {
+    margin-top: 0;
+    padding: 0;
+}
+
+.bns-about-values__card {
+    height: 100%;
+    text-align: center;
+    padding: 36px 28px 32px;
+    background: #fff;
+    border-radius: 16px;
+    border: 1px solid rgba(15, 23, 42, 0.07);
+    box-shadow: 0 10px 36px rgba(15, 23, 42, 0.06);
+    transition: transform 0.25s ease, box-shadow 0.25s ease;
+}
+
+.bns-about-values__card:hover {
+    transform: translateY(-4px);
+    box-shadow: 0 16px 44px rgba(15, 23, 42, 0.1);
+}
+
+.bns-about-values__icon {
+    width: 56px;
+    height: 56px;
+    margin: 0 auto 1.25rem;
+    border-radius: 50%;
+    background: var(--eduvers-base, #ff5544);
+    color: #fff;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    font-size: 1rem;
+    font-weight: 800;
+}
+
+.bns-about-values__card h3 {
+    font-size: 1.15rem;
+    font-weight: 700;
+    color: #0a1d37;
+    margin-bottom: 0.65rem;
+}
+
+.bns-about-values__card p {
+    color: #64748b;
+    margin: 0;
+    line-height: 1.65;
+    font-size: 0.95rem;
+}
+
+/* CTA buttons */
+.bns-about-links--solo {
+    padding: 70px 0 100px;
+    background: #fff;
+}
+
+.bns-about-links__btn {
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    gap: 0.65rem;
+    width: 100%;
+    min-height: 58px;
+    padding: 16px 18px;
+    border-radius: 12px;
+    border: 2px solid #dde3ec;
+    background: #fff;
+    color: #0a1d37;
+    font-weight: 600;
+    font-size: 0.95rem;
+    text-align: center;
+    text-decoration: none;
+    box-shadow: 0 4px 16px rgba(15, 23, 42, 0.04);
+    transition: border-color 0.22s ease, color 0.22s ease, box-shadow 0.22s ease;
+}
+
+.bns-about-links__btn i {
+    color: var(--eduvers-base, #ff5544);
+    font-size: 1.05rem;
+}
+
+.bns-about-links__btn:hover {
+    border-color: var(--eduvers-base, #ff5544);
+    color: var(--eduvers-base, #ff5544);
+    box-shadow: 0 10px 28px rgba(255, 85, 68, 0.15);
+}
+
+.bns-about-links__btn--primary {
+    background: var(--eduvers-base, #ff5544);
+    border-color: var(--eduvers-base, #ff5544);
+    color: #fff;
+    box-shadow: 0 8px 24px rgba(255, 85, 68, 0.35);
+}
+
+.bns-about-links__btn--primary i {
+    color: #fff;
+}
+
+.bns-about-links__btn--primary:hover {
+    background: #e04a3a;
+    border-color: #e04a3a;
+    color: #fff;
+}
+
+@media (max-width: 1199px) {
+    .bns-about-page__intro .about-one__right {
+        border-radius: 16px;
+    }
+}
+
+@media (max-width: 767px) {
+    .bns-about-mv {
+        padding: 60px 0;
+    }
+
+    .bns-about-values {
+        padding: 70px 0 0;
+    }
+
+    .bns-about-links__grid {
+        margin-top: 32px;
+        padding: 24px 0 80px;
+    }
+
+    .bns-about-links--solo {
+        padding: 56px 0 80px;
+    }
+}
+
+/* Vision page */
+.bns-vision-content {
+    padding: 60px 0 100px;
+    background: linear-gradient(180deg, #e8edf4 0%, #f4f6f9 50%, #eef2f7 100%);
+}
+
+.bns-vision-card {
+    max-width: 960px;
+    margin: 0 auto;
+    background: #fff;
+    border-radius: 20px;
+    padding: 44px 48px;
+    box-shadow: 0 16px 48px rgba(15, 23, 42, 0.08);
+    border: 1px solid rgba(15, 23, 42, 0.06);
+}
+
+.bns-vision-back {
+    display: inline-flex;
+    align-items: center;
+    gap: 8px;
+    font-weight: 600;
+    color: var(--eduvers-base, #ff5544);
+    text-decoration: none;
+    margin-bottom: 28px;
+}
+
+.bns-vision-header {
+    margin-bottom: 32px;
+    padding-bottom: 24px;
+    border-bottom: 2px solid rgba(255, 85, 68, 0.2);
+}
+
+.bns-vision-header__label {
+    display: inline-block;
+    font-size: 0.75rem;
+    font-weight: 700;
+    text-transform: uppercase;
+    letter-spacing: 0.12em;
+    color: var(--eduvers-base, #ff5544);
+    margin-bottom: 10px;
+}
+
+.bns-vision-header h2 {
+    margin: 0;
+    font-size: clamp(1.5rem, 3vw, 2rem);
+    font-weight: 700;
+    color: #0a1d37;
+}
+
+.bns-vision-intro {
+    margin: 0 0 28px;
+    font-size: 17px;
+    line-height: 1.8;
+    color: #475569;
+}
+
+.bns-vision-points {
+    margin: 0 0 40px;
+    padding: 0;
+    list-style: none;
+    counter-reset: vision;
+}
+
+.bns-vision-points li {
+    counter-increment: vision;
+    position: relative;
+    padding: 18px 20px 18px 64px;
+    margin-bottom: 12px;
+    background: #f8fafc;
+    border-radius: 12px;
+    border: 1px solid rgba(15, 23, 42, 0.06);
+    font-size: 16px;
+    line-height: 1.7;
+    color: #363a40;
+}
+
+.bns-vision-points li::before {
+    content: counter(vision);
+    position: absolute;
+    left: 18px;
+    top: 50%;
+    transform: translateY(-50%);
+    width: 36px;
+    height: 36px;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    border-radius: 50%;
+    background: var(--eduvers-base, #ff5544);
+    color: #fff;
+    font-weight: 800;
+    font-size: 14px;
+}
+
+.bns-vision-statement {
+    margin: 0 0 36px;
+    padding: 36px 32px;
+    background: linear-gradient(135deg, #0a2240 0%, #123a5e 100%);
+    border-radius: 16px;
+    color: #fff;
+    border: none;
+}
+
+.bns-vision-statement h3 {
+    margin: 0 0 16px;
+    font-size: 1.15rem;
+    font-weight: 700;
+    color: var(--eduvers-base, #ff5544);
+}
+
+.bns-vision-statement p {
+    margin: 0;
+    font-size: 1.1rem;
+    line-height: 1.75;
+    font-weight: 500;
+    font-style: italic;
+}
+
+.bns-vision-taglines {
+    margin: 0 0 40px;
+    padding: 24px 22px;
+    border-radius: 14px;
+    text-align: center;
+    background: linear-gradient(135deg, rgb(51, 61, 97) 0%, #1e293b 100%);
+}
+
+.bns-vision-tagline {
+    margin: 0 0 8px;
+    font-size: clamp(0.95rem, 2.2vw, 1.08rem);
+    font-weight: 800;
+    letter-spacing: 0.03em;
+    color: #fff;
+    line-height: 1.45;
+}
+
+.bns-vision-tagline:last-child {
+    margin-bottom: 0;
+}
+
+.bns-vision-actions {
+    display: flex;
+    flex-wrap: wrap;
+    gap: 14px;
+}
+
+.bns-vision-actions__btn {
+    display: inline-flex;
+    align-items: center;
+    gap: 10px;
+    padding: 14px 24px;
+    border-radius: 12px;
+    font-weight: 700;
+    text-decoration: none;
+    border: 2px solid rgba(15, 23, 42, 0.12);
+    color: #0a1d37;
+    transition: all 0.2s ease;
+}
+
+.bns-vision-actions__btn:hover {
+    border-color: var(--eduvers-base, #ff5544);
+    color: var(--eduvers-base, #ff5544);
+}
+
+.bns-vision-actions__btn--primary {
+    background: var(--eduvers-base, #ff5544);
+    border-color: var(--eduvers-base, #ff5544);
+    color: #fff;
+}
+
+.bns-vision-actions__btn--primary:hover {
+    background: #e04a3a;
+    border-color: #e04a3a;
+    color: #fff;
+}
+
+@media (max-width: 767px) {
+    .bns-vision-card {
+        padding: 28px 24px;
+    }
+
+    .bns-vision-points li {
+        padding-left: 56px;
+        font-size: 15px;
+    }
+
+    .bns-vision-points li::before {
+        width: 32px;
+        height: 32px;
+        font-size: 13px;
+        left: 14px;
+    }
+}
+
+/* Mission page */
+.bns-mission-intro {
+    font-size: 16px;
+    line-height: 1.75;
+    color: #475569;
+    margin: 0 0 18px;
+}
+
+.bns-mission-goals-heading {
+    font-size: 1.2rem;
+    font-weight: 700;
+    color: #0a1d37;
+    margin: 32px 0 20px;
+}
+
+.bns-mission-goals li {
+    padding-bottom: 22px;
+}
+
+.bns-mission-programs {
+    display: grid;
+    grid-template-columns: repeat(auto-fill, minmax(200px, 1fr));
+    gap: 10px;
+    margin: 14px 0 0;
+    padding: 0;
+}
+
+.bns-mission-programs li {
+    display: flex;
+    align-items: center;
+    gap: 10px;
+    padding: 12px 14px;
+    margin: 0;
+    background: #fff;
+    border: 1px solid rgba(255, 85, 68, 0.2);
+    border-radius: 10px;
+    font-size: 14px;
+    font-weight: 600;
+    color: #0a1d37;
+}
+
+.bns-mission-programs li::before {
+    display: none;
+}
+
+.bns-mission-programs__icon {
+    font-size: 1.2rem;
+    line-height: 1;
+}
+
+.bns-mission-cert {
+    margin: 40px 0;
+    padding: 32px 28px;
+    background: linear-gradient(180deg, #fff8f5 0%, #fff 100%);
+    border: 1px solid rgba(255, 85, 68, 0.25);
+    border-radius: 16px;
+}
+
+.bns-mission-cert h3 {
+    margin: 0 0 14px;
+    font-size: 1.2rem;
+    font-weight: 700;
+    color: #0a1d37;
+}
+
+.bns-mission-cert__intro,
+.bns-mission-cert__outro {
+    font-size: 15px;
+    line-height: 1.7;
+    color: #363a40;
+    margin: 0 0 16px;
+}
+
+.bns-mission-cert__outro {
+    margin-bottom: 0;
+    font-style: italic;
+    color: #64748b;
+}
+
+.bns-mission-cert__items {
+    display: flex;
+    flex-direction: column;
+    gap: 10px;
+    margin: 0 0 16px;
+}
+
+.bns-mission-cert__items li {
+    display: flex;
+    align-items: center;
+    gap: 10px;
+    padding: 12px 16px;
+    background: #fff;
+    border-radius: 10px;
+    border: 1px solid rgba(15, 23, 42, 0.06);
+    font-weight: 600;
+    color: #363a40;
+}
+
+.bns-mission-cert__icon {
+    font-size: 1.2rem;
+}
+
+/* Core Values page */
+.bns-values-card {
+    max-width: 1100px;
+}
+
+.bns-values-subtitle {
+    margin: 10px 0 0;
+    font-size: 1.05rem;
+    color: #64748b;
+    font-weight: 500;
+    line-height: 1.5;
+}
+
+.bns-values-grid {
+    margin-top: 36px;
+}
+
+.bns-values-item {
+    display: flex;
+    gap: 16px;
+    height: 100%;
+    padding: 24px;
+    background: #f8fafc;
+    border: 1px solid rgba(15, 23, 42, 0.08);
+    border-radius: 14px;
+    border-left: 4px solid var(--eduvers-base, #ff5544);
+    transition: transform 0.2s ease, box-shadow 0.2s ease;
+}
+
+.bns-values-item:hover {
+    transform: translateY(-3px);
+    box-shadow: 0 12px 32px rgba(15, 23, 42, 0.08);
+}
+
+.bns-values-item__number {
+    flex-shrink: 0;
+    width: 40px;
+    height: 40px;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    border-radius: 50%;
+    background: var(--eduvers-base, #ff5544);
+    color: #fff;
+    font-weight: 800;
+    font-size: 15px;
+}
+
+.bns-values-item h3 {
+    margin: 0 0 8px;
+    font-size: 1.05rem;
+    font-weight: 700;
+    color: #0a1d37;
+}
+
+.bns-values-item p {
+    margin: 0;
+    font-size: 14px;
+    line-height: 1.65;
+    color: #475569;
+}
+
+.bns-values-statement {
+    margin: 48px 0 32px;
+    padding: 32px 28px;
+    background: linear-gradient(135deg, #0a2240 0%, #123a5e 100%);
+    border-radius: 16px;
+    color: #fff;
+    text-align: center;
+}
+
+.bns-values-statement h3 {
+    margin: 0 0 20px;
+    font-size: 1.2rem;
+    font-weight: 700;
+    color: var(--eduvers-base, #ff5544);
+}
+
+.bns-values-statement__lines li {
+    font-size: 1.05rem;
+    line-height: 1.8;
+    font-weight: 500;
+    padding: 6px 0;
+}
+
+.bns-values-philosophy {
+    text-align: center;
+    padding: 36px 28px;
+    background: linear-gradient(180deg, #fff8f5 0%, #fff 100%);
+    border: 1px solid rgba(255, 85, 68, 0.25);
+    border-radius: 16px;
+    margin-bottom: 36px;
+}
+
+.bns-values-philosophy h3 {
+    margin: 0 0 16px;
+    font-size: 1.15rem;
+    font-weight: 700;
+    color: #0a1d37;
+}
+
+.bns-values-philosophy__hindi {
+    margin: 0 0 10px;
+    font-size: 1.35rem;
+    font-weight: 700;
+    color: #0a1d37;
+}
+
+.bns-values-philosophy__english {
+    margin: 0;
+    font-size: 1.1rem;
+    font-weight: 600;
+    color: var(--eduvers-base, #ff5544);
+}
+
+.bns-about-values__more {
+    margin-top: 28px;
+    padding-bottom: 8px;
+}
+
+/* Founder's Message page */
+.bns-founder-card {
+    max-width: 860px;
+}
+
+.bns-founder-letter {
+    border-left: 4px solid var(--eduvers-base, #ff5544);
+    padding-left: 32px;
+}
+
+.bns-founder-letter__header {
+    margin-bottom: 28px;
+}
+
+.bns-founder-letter__header h2 {
+    margin: 8px 0 0;
+    font-size: clamp(1.5rem, 3vw, 1.85rem);
+    font-weight: 700;
+    color: #0a1d37;
+}
+
+.bns-founder-salutation {
+    font-size: 1.05rem;
+    font-weight: 600;
+    color: #0a1d37;
+    margin: 0 0 24px;
+    font-style: italic;
+}
+
+.bns-founder-paragraph {
+    font-size: 16px;
+    line-height: 1.85;
+    color: #363a40;
+    margin: 0 0 18px;
+}
+
+.bns-founder-highlight {
+    margin: 32px 0;
+    padding: 24px 28px;
+    background: linear-gradient(180deg, #fff8f5 0%, #fff 100%);
+    border: 1px solid rgba(255, 85, 68, 0.25);
+    border-radius: 14px;
+}
+
+.bns-founder-highlight__label {
+    margin: 0 0 10px;
+    font-weight: 700;
+    color: #0a1d37;
+    font-size: 16px;
+}
+
+.bns-founder-highlight__text {
+    margin: 0;
+    font-size: 1.05rem;
+    font-weight: 600;
+    line-height: 1.7;
+    color: var(--eduvers-base, #ff5544);
+}
+
+.bns-founder-invitation {
+    font-size: 17px;
+    font-weight: 700;
+    color: #0a1d37;
+    margin: 28px 0 20px;
+}
+
+.bns-founder-closing {
+    margin: 0 0 36px;
+    padding: 24px 28px;
+    background: linear-gradient(135deg, #0a2240 0%, #123a5e 100%);
+    border-radius: 14px;
+}
+
+.bns-founder-closing li {
+    font-size: 1.05rem;
+    font-weight: 600;
+    color: #fff;
+    padding: 8px 0;
+    border-bottom: 1px solid rgba(255, 255, 255, 0.1);
+}
+
+.bns-founder-closing li:last-child {
+    border-bottom: none;
+    color: var(--eduvers-base, #ff5544);
+}
+
+.bns-founder-signature {
+    margin-top: 36px;
+    padding-top: 28px;
+    border-top: 2px solid rgba(15, 23, 42, 0.08);
+}
+
+.bns-founder-signature__closing {
+    margin: 0 0 16px;
+    font-size: 15px;
+    color: #64748b;
+}
+
+.bns-founder-signature__name {
+    margin: 0 0 4px;
+    font-size: 1.25rem;
+    font-weight: 800;
+    color: #0a1d37;
+}
+
+.bns-founder-signature__title {
+    margin: 0 0 4px;
+    font-size: 15px;
+    font-weight: 600;
+    color: var(--eduvers-base, #ff5544);
+}
+
+.bns-founder-signature__org {
+    margin: 0;
+    font-size: 14px;
+    color: #64748b;
+}
+
+@media (max-width: 767px) {
+    .bns-founder-letter {
+        padding-left: 20px;
+    }
+}
+
+/* Why BNS page */
+.bns-why-card {
+    max-width: 960px;
+}
+
+.bns-why-section-heading {
+    font-size: 1.35rem;
+    font-weight: 700;
+    color: #0a1d37;
+    margin: 36px 0 24px;
+    padding-bottom: 12px;
+    border-bottom: 3px solid var(--eduvers-base, #ff5544);
+}
+
+.bns-why-reasons {
+    display: flex;
+    flex-direction: column;
+    gap: 16px;
+}
+
+.bns-why-reason {
+    display: flex;
+    gap: 18px;
+    padding: 22px 24px;
+    background: #f8fafc;
+    border: 1px solid rgba(15, 23, 42, 0.08);
+    border-radius: 14px;
+}
+
+.bns-why-reason__number {
+    flex-shrink: 0;
+    width: 44px;
+    height: 44px;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    border-radius: 50%;
+    background: var(--eduvers-base, #ff5544);
+    color: #fff;
+    font-weight: 800;
+    font-size: 16px;
+}
+
+.bns-why-reason__body h4 {
+    margin: 0 0 10px;
+    font-size: 1.05rem;
+    font-weight: 700;
+    color: #0a1d37;
+}
+
+.bns-why-reason__body p {
+    margin: 0 0 10px;
+    font-size: 15px;
+    line-height: 1.7;
+    color: #475569;
+}
+
+.bns-why-reason__intro {
+    font-weight: 600;
+    color: #0a1d37 !important;
+}
+
+.bns-why-list {
+    margin: 8px 0 0;
+    display: grid;
+    grid-template-columns: repeat(auto-fill, minmax(200px, 1fr));
+    gap: 8px;
+}
+
+.bns-why-list li {
+    font-size: 14px;
+    color: #363a40;
+}
+
+.bns-why-list li i {
+    color: var(--eduvers-base, #ff5544);
+    margin-right: 8px;
+}
+
+.bns-why-thousands {
+    margin: 48px 0 32px;
+    padding: 32px 28px;
+    background: linear-gradient(180deg, #fff8f5 0%, #fff 100%);
+    border: 1px solid rgba(255, 85, 68, 0.25);
+    border-radius: 16px;
+}
+
+.bns-why-thousands h3 {
+    margin: 0 0 20px;
+    font-size: 1.2rem;
+    font-weight: 700;
+    color: #0a1d37;
+    text-align: center;
+}
+
+.bns-why-checklist {
+    display: grid;
+    grid-template-columns: repeat(auto-fill, minmax(260px, 1fr));
+    gap: 10px 20px;
+    margin: 0;
+}
+
+.bns-why-checklist li {
+    display: flex;
+    align-items: flex-start;
+    gap: 10px;
+    font-size: 14px;
+    font-weight: 600;
+    color: #363a40;
+}
+
+.bns-why-checklist li i {
+    color: #22c55e;
+    margin-top: 3px;
+}
+
+.bns-why-closing {
+    text-align: center;
+    padding: 40px 32px;
+    background: linear-gradient(135deg, #0a2240 0%, #123a5e 100%);
+    border-radius: 16px;
+    color: #fff;
+    margin-bottom: 32px;
+}
+
+.bns-why-closing__brand {
+    font-size: 13px;
+    font-weight: 700;
+    letter-spacing: 0.12em;
+    margin: 0 0 12px;
+}
+
+.bns-why-closing__tagline {
+    margin: 0 0 10px;
+    font-weight: 700;
+    color: var(--eduvers-base, #ff5544);
+    font-size: 1.05rem;
+}
+
+.bns-why-closing__subtitle {
+    margin: 0 0 10px;
+    font-size: 1rem;
+    opacity: 0.95;
+}
+
+.bns-why-closing__hindi {
+    margin: 0;
+    font-size: 17px;
+    font-weight: 600;
+}
+
+.bns-why-extra {
+    margin: 48px 0 32px;
+    padding: 32px 28px;
+    background: #f8fafc;
+    border: 1px solid rgba(15, 23, 42, 0.08);
+    border-radius: 16px;
+    border-left: 4px solid var(--eduvers-base, #ff5544);
+}
+
+.bns-why-extra h3 {
+    margin: 0 0 16px;
+    font-size: 1.2rem;
+    font-weight: 700;
+    color: #0a1d37;
+}
+
+.bns-why-extra p {
+    margin: 0 0 14px;
+    font-size: 15px;
+    line-height: 1.7;
+    color: #475569;
+}
+
+.bns-why-extra__intro,
+.bns-why-extra__outro {
+    font-weight: 600;
+    color: #0a1d37 !important;
+}
+
+.bns-why-chain {
+    margin: 0 0 14px;
+    padding-left: 0;
+}
+
+.bns-why-chain li {
+    position: relative;
+    padding: 8px 0 8px 20px;
+    font-size: 15px;
+    font-weight: 600;
+    color: #363a40;
+    border-left: 2px solid rgba(255, 85, 68, 0.3);
+    margin-left: 8px;
+}
+
+.bns-why-chain li::before {
+    content: '→';
+    position: absolute;
+    left: -2px;
+    color: var(--eduvers-base, #ff5544);
+    font-weight: 700;
+}
+
+.bns-why-belief {
+    margin: 32px 0;
+    padding: 32px 28px;
+    background: linear-gradient(135deg, #0a2240 0%, #123a5e 100%);
+    border-radius: 16px;
+    color: #fff;
+    text-align: center;
+}
+
+.bns-why-belief h3 {
+    margin: 0 0 16px;
+    font-size: 1.2rem;
+    font-weight: 700;
+    color: var(--eduvers-base, #ff5544);
+}
+
+.bns-why-belief p {
+    margin: 0;
+    font-size: 1.05rem;
+    line-height: 1.75;
+    max-width: 720px;
+    margin-left: auto;
+    margin-right: auto;
+}
+
+@media (max-width: 767px) {
+    .bns-why-reason {
+        flex-direction: column;
+        gap: 12px;
+    }
+}
+
+/* Prosperity Mission page */
+.bns-prosperity-card {
+    max-width: 960px;
+}
+
+.bns-prosperity-section {
+    margin: 40px 0 0;
+    padding-top: 32px;
+    border-top: 1px solid rgba(15, 23, 42, 0.08);
+}
+
+.bns-prosperity-section h3 {
+    margin: 0 0 16px;
+    font-size: 1.25rem;
+    font-weight: 700;
+    color: #0a1d37;
+}
+
+.bns-prosperity-section__intro,
+.bns-prosperity-section__outro {
+    font-size: 15px;
+    line-height: 1.75;
+    color: #475569;
+    margin: 0 0 16px;
+}
+
+.bns-prosperity-section__outro {
+    font-weight: 600;
+    color: #0a1d37;
+    font-style: italic;
+}
+
+.bns-prosperity-section--highlight {
+    padding: 28px 24px;
+    background: linear-gradient(180deg, #fff8f5 0%, #fff 100%);
+    border: 1px solid rgba(255, 85, 68, 0.2);
+    border-radius: 16px;
+    border-top: none;
+    margin-top: 40px;
+}
+
+.bns-prosperity-list {
+    display: flex;
+    flex-direction: column;
+    gap: 10px;
+    margin: 0;
+}
+
+.bns-prosperity-list li {
+    display: flex;
+    align-items: flex-start;
+    gap: 12px;
+    padding: 12px 16px;
+    background: #f8fafc;
+    border-radius: 10px;
+    font-size: 15px;
+    color: #363a40;
+    font-weight: 500;
+}
+
+.bns-prosperity-list li i {
+    color: var(--eduvers-base, #ff5544);
+    margin-top: 4px;
+}
+
+.bns-prosperity-viksit {
+    margin: 40px 0;
+    padding: 32px 28px;
+    background: linear-gradient(135deg, #0a2240 0%, #123a5e 100%);
+    border-radius: 16px;
+    color: #fff;
+    text-align: center;
+}
+
+.bns-prosperity-viksit h3 {
+    margin: 0 0 12px;
+    font-size: 1.2rem;
+    font-weight: 700;
+    color: var(--eduvers-base, #ff5544);
+}
+
+.bns-prosperity-viksit .bns-prosperity-section__intro {
+    color: rgba(255, 255, 255, 0.95);
+    margin-bottom: 24px;
+}
+
+.bns-prosperity-tags {
+    display: flex;
+    flex-wrap: wrap;
+    justify-content: center;
+    gap: 10px;
+}
+
+.bns-prosperity-tag {
+    padding: 10px 16px;
+    background: rgba(255, 255, 255, 0.1);
+    border: 1px solid rgba(255, 255, 255, 0.2);
+    border-radius: 999px;
+    font-size: 13px;
+    font-weight: 600;
+    color: #fff;
+}
+
+.bns-prosperity-belief {
+    margin: 40px 0;
+    padding: 32px 28px;
+    background: #f8fafc;
+    border-radius: 16px;
+    border-left: 4px solid var(--eduvers-base, #ff5544);
+}
+
+.bns-prosperity-belief h3 {
+    margin: 0 0 20px;
+    font-size: 1.2rem;
+    font-weight: 700;
+    color: #0a1d37;
+}
+
+.bns-prosperity-closing {
+    margin-top: 40px;
+}
+
+/* Vision 2047 page */
+.bns-vision2047-card {
+    max-width: 960px;
+}
+
+.bns-vision2047-highlight {
+    margin: 36px 0;
+    padding: 28px 24px;
+    background: linear-gradient(135deg, #0a2240 0%, #123a5e 100%);
+    border-radius: 16px;
+    color: #fff;
+    text-align: center;
+}
+
+.bns-vision2047-highlight h3 {
+    margin: 0 0 12px;
+    font-size: 1.2rem;
+    font-weight: 700;
+    color: var(--eduvers-base, #ff5544);
+}
+
+.bns-vision2047-highlight p {
+    margin: 0;
+    font-size: 15px;
+    line-height: 1.75;
+    color: rgba(255, 255, 255, 0.95);
+}
+
+.bns-vision2047-goals {
+    margin-top: 40px;
+}
+
+.bns-vision2047-dream {
+    padding: 28px 24px;
+    background: linear-gradient(180deg, #fff8f5 0%, #fff 100%);
+    border: 1px solid rgba(255, 85, 68, 0.2);
+    border-radius: 16px;
+    border-top: 1px solid rgba(255, 85, 68, 0.2);
+}
+
+.bns-vision2047-statement {
+    margin: 40px 0;
+    padding: 32px 28px;
+    background: #f8fafc;
+    border-radius: 16px;
+    border-left: 4px solid var(--eduvers-base, #ff5544);
+    text-align: center;
+}
+
+.bns-vision2047-statement h3 {
+    margin: 0 0 20px;
+    font-size: 1.2rem;
+    font-weight: 700;
+    color: #0a1d37;
+}
+
+.bns-vision2047-statement blockquote {
+    margin: 0;
+    padding: 0;
+    border: none;
+    font-size: 16px;
+    line-height: 1.8;
+    font-style: italic;
+    color: #363a40;
+    font-weight: 500;
+}
+
+.bns-vision2047-statement blockquote i {
+    display: block;
+    margin-bottom: 12px;
+    font-size: 24px;
+    color: var(--eduvers-base, #ff5544);
+    opacity: 0.7;
+}
+
+.bns-vision2047-closing__motto {
+    margin: 8px 0 0;
+    font-size: 14px;
+    font-weight: 600;
+    letter-spacing: 0.04em;
+    color: #64748b;
+    text-transform: uppercase;
+}
+
+.bns-vision2047-closing {
+    margin-top: 40px;
+}

@@ -1,0 +1,1037 @@
+/* BNS � BNS Member Pitch (attractive coach-style UI) */
+
+.bns-pitch-detail {
+    padding: 28px 0 88px;
+    font-family: var(--eduvers-font);
+}
+
+.bns-pitch-detail__hero-card,
+.bns-pitch-detail__section,
+.bns-pitch-detail__coming-card,
+.bns-pitch-detail__website {
+    margin-bottom: 28px;
+    padding: 28px 26px;
+    border-radius: 18px;
+    background: #fff;
+    border: 1px solid rgba(15, 23, 42, 0.08);
+    box-shadow: 0 12px 36px rgba(15, 23, 42, 0.07);
+}
+
+.bns-pitch-detail__hero-card {
+    text-align: center;
+}
+
+.bns-pitch-detail__eyebrow {
+    display: inline-block;
+    margin-bottom: 12px;
+    padding: 6px 14px;
+    border-radius: 999px;
+    background: rgba(255, 85, 68, 0.1);
+    color: var(--eduvers-base, #ff5544);
+    font-size: 12px;
+    font-weight: 700;
+    letter-spacing: 0.08em;
+    text-transform: uppercase;
+}
+
+.bns-pitch-detail__brand {
+    margin: 0 0 10px;
+    font-size: clamp(1.5rem, 3vw, 2.1rem);
+    font-weight: 800;
+    line-height: 1.25;
+    color: #0a1d37;
+    text-align: center;
+}
+
+.bns-pitch-detail__subtitle,
+.bns-pitch-detail__welcome {
+    margin: 0 0 10px;
+    font-size: 1.05rem;
+    font-weight: 600;
+    line-height: 1.6;
+    color: #334155;
+    text-align: center;
+}
+
+.bns-pitch-detail__taglines {
+    text-align: center;
+    margin-bottom: 8px;
+}
+
+.bns-pitch-detail__tagline {
+    margin: 0 0 8px;
+    font-size: 1rem;
+    font-weight: 700;
+    letter-spacing: 0.04em;
+    color: #475569;
+}
+
+.bns-pitch-detail__tagline--hindi {
+    margin-top: 12px;
+    font-size: 1.1rem;
+    color: #0a1d37;
+}
+
+.bns-pitch-detail__welcome i,
+.bns-pitch-detail__section-intro i,
+.bns-pitch-detail__note i,
+.bns-pitch-detail__duration i,
+.bns-pitch-detail__note--boxed i {
+    margin-right: 8px;
+    color: #fbbf24;
+    font-size: 0.85em;
+}
+
+.bns-pitch-detail__highlights {
+    display: grid;
+    grid-template-columns: repeat(4, minmax(0, 1fr));
+    gap: 14px;
+    margin-top: 24px;
+}
+
+.bns-pitch-detail__highlight-card {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    text-align: center;
+    padding: 18px 12px;
+    border-radius: 14px;
+    background: linear-gradient(135deg, rgb(51, 61, 97) 0%, #1a2f4d 100%);
+    color: #fff;
+    box-shadow: 0 10px 28px rgba(15, 23, 42, 0.12);
+}
+
+.bns-pitch-detail__highlight-icon {
+    display: inline-flex;
+    align-items: center;
+    justify-content: center;
+    width: 38px;
+    height: 38px;
+    margin-bottom: 10px;
+    border-radius: 10px;
+    background: rgba(255, 255, 255, 0.12);
+    color: #fbbf24;
+    font-size: 15px;
+}
+
+.bns-pitch-detail__highlight-card strong {
+    font-size: clamp(1.1rem, 2vw, 1.35rem);
+    font-weight: 800;
+    line-height: 1.15;
+    color: #fff !important;
+}
+
+.bns-pitch-detail__highlight-card span {
+    margin-top: 6px;
+    font-size: 0.78rem;
+    line-height: 1.45;
+    color: rgba(255, 255, 255, 0.88);
+}
+
+.bns-pitch-detail__section-head {
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    flex-wrap: wrap;
+    gap: 10px 12px;
+    margin-bottom: 22px;
+}
+
+.bns-pitch-detail__section-num {
+    flex-shrink: 0;
+    width: 34px;
+    height: 34px;
+    display: inline-flex;
+    align-items: center;
+    justify-content: center;
+    border-radius: 8px;
+    background: var(--eduvers-base, #ff5544);
+    color: #fff;
+    font-size: 0.85rem;
+    font-weight: 800;
+}
+
+.bns-pitch-detail__section-icon {
+    flex-shrink: 0;
+    display: inline-flex;
+    align-items: center;
+    justify-content: center;
+    width: 34px;
+    height: 34px;
+    border-radius: 8px;
+    background: rgba(255, 85, 68, 0.1);
+    color: var(--eduvers-base, #ff5544);
+    font-size: 14px;
+}
+
+.bns-pitch-detail__section-title {
+    margin: 0;
+    font-size: clamp(1.2rem, 2.5vw, 1.55rem);
+    font-weight: 800;
+    color: #0a1d37;
+    text-align: center;
+}
+
+.bns-pitch-detail__section-intro {
+    margin: -8px auto 18px;
+    max-width: 760px;
+    text-align: center;
+    font-size: 1rem;
+    line-height: 1.65;
+    color: #475569;
+}
+
+.bns-pitch-detail__journey-banner,
+.bns-pitch-detail__methodology-banner {
+    margin: 0 auto 18px;
+    max-width: 760px;
+    padding: 16px 20px;
+    border-radius: 12px;
+    text-align: center;
+    font-size: clamp(1.1rem, 2.2vw, 1.35rem);
+    font-weight: 800;
+    line-height: 1.4;
+    color: #0a1d37;
+}
+
+.bns-pitch-detail__journey-banner {
+    background: linear-gradient(135deg, rgba(255, 85, 68, 0.1) 0%, rgba(51, 61, 97, 0.08) 100%);
+    border: 1px solid rgba(255, 85, 68, 0.15);
+}
+
+.bns-pitch-detail__methodology-banner {
+    background: linear-gradient(135deg, rgb(51, 61, 97) 0%, #1a2f4d 100%);
+    color: #fff;
+    box-shadow: 0 10px 28px rgba(15, 23, 42, 0.12);
+}
+
+.bns-pitch-detail__methodology-banner :is(strong, b) {
+    color: #fff !important;
+}
+
+.bns-pitch-detail__including-label {
+    margin: 0 auto 14px;
+    max-width: 760px;
+    text-align: center;
+    font-size: 1rem;
+    font-weight: 700;
+    color: #0a1d37;
+}
+
+.bns-pitch-detail__block-label {
+    margin: 18px auto 12px;
+    max-width: 760px;
+    text-align: center;
+    font-size: 1rem;
+    font-weight: 700;
+    color: #0a1d37;
+}
+
+.bns-pitch-detail__block-label:first-of-type {
+    margin-top: 0;
+}
+
+.bns-pitch-detail__info-banner {
+    margin: 0 auto;
+    max-width: 640px;
+    padding: 18px 22px;
+    border-radius: 12px;
+    text-align: center;
+    font-size: clamp(1.05rem, 2vw, 1.2rem);
+    font-weight: 800;
+    line-height: 1.45;
+    color: #0a1d37;
+    background: linear-gradient(135deg, rgba(255, 85, 68, 0.1) 0%, rgba(51, 61, 97, 0.08) 100%);
+    border: 1px solid rgba(255, 85, 68, 0.15);
+}
+
+.bns-pitch-detail__points--compact .bns-pitch-detail__point {
+    padding: 10px 12px;
+}
+
+.bns-pitch-detail__section--closing {
+    background: linear-gradient(135deg, #0a1d37 0%, #1a2f4d 100%);
+    color: #fff;
+    border-color: transparent;
+}
+
+.bns-pitch-detail__section--closing .bns-pitch-detail__section-title,
+.bns-pitch-detail__section--closing .bns-pitch-detail__section-num {
+    color: #fff;
+}
+
+.bns-pitch-detail__section--closing .bns-pitch-detail__section-icon {
+    background: rgba(255, 255, 255, 0.12);
+    color: #fbbf24;
+}
+
+.bns-pitch-detail__section--closing .bns-pitch-detail__section-num {
+    background: var(--eduvers-base, #ff5544);
+}
+
+.bns-pitch-detail__closing-text {
+    margin: 0 auto;
+    max-width: 820px;
+    text-align: center;
+    font-size: 1.05rem;
+    line-height: 1.75;
+    color: rgba(255, 255, 255, 0.92);
+}
+
+.bns-pitch-detail__check-points {
+    margin: 0;
+    padding: 0;
+    list-style: none;
+    display: grid;
+    grid-template-columns: repeat(2, minmax(0, 1fr));
+    gap: 10px 14px;
+}
+
+.bns-pitch-detail__check-point {
+    display: flex;
+    align-items: flex-start;
+    gap: 12px;
+    margin-bottom: 0;
+    padding: 12px 14px;
+    border-radius: 12px;
+    background: rgba(51, 61, 97, 0.04);
+    border: 1px solid rgba(15, 23, 42, 0.05);
+}
+
+.bns-pitch-detail__check-icon {
+    flex-shrink: 0;
+    display: inline-flex;
+    align-items: center;
+    justify-content: center;
+    width: 24px;
+    height: 24px;
+    margin-top: 1px;
+    border-radius: 50%;
+    background: rgba(34, 197, 94, 0.15);
+    color: #16a34a;
+    font-size: 11px;
+}
+
+.bns-pitch-detail__check-text {
+    font-size: 0.95rem;
+    line-height: 1.6;
+    font-weight: 600;
+    color: #334155;
+}
+
+.bns-pitch-detail__check-points--session {
+    max-width: 560px;
+    margin: 0 auto;
+    grid-template-columns: 1fr;
+    gap: 12px;
+}
+
+.bns-pitch-detail__check-points--session .bns-pitch-detail__check-point {
+    padding: 14px 16px;
+}
+
+.bns-pitch-detail__points {
+    margin: 0;
+    padding: 0;
+    list-style: none;
+}
+
+.bns-pitch-detail__point {
+    display: flex;
+    align-items: flex-start;
+    gap: 12px;
+    margin-bottom: 10px;
+    padding: 12px 14px;
+    border-radius: 12px;
+    background: rgba(51, 61, 97, 0.04);
+    border: 1px solid rgba(15, 23, 42, 0.05);
+}
+
+.bns-pitch-detail__point:last-child {
+    margin-bottom: 0;
+}
+
+.bns-pitch-detail__point-icon {
+    flex-shrink: 0;
+    display: inline-flex;
+    align-items: center;
+    justify-content: center;
+    width: 24px;
+    height: 24px;
+    margin-top: 1px;
+    border-radius: 50%;
+    background: rgba(251, 191, 36, 0.18);
+    color: #f59e0b;
+    font-size: 10px;
+}
+
+.bns-pitch-detail__point-text {
+    font-size: 0.95rem;
+    line-height: 1.6;
+    color: #334155;
+}
+
+.bns-pitch-detail__point-text strong {
+    font-weight: 800;
+    color: #0a1d37;
+}
+
+.bns-pitch-detail__point-text span {
+    font-weight: 500;
+    color: #475569;
+}
+
+.bns-pitch-detail__points--grid {
+    display: grid;
+    grid-template-columns: repeat(2, minmax(0, 1fr));
+    gap: 10px 14px;
+}
+
+.bns-pitch-detail__points--grid .bns-pitch-detail__point {
+    margin-bottom: 0;
+    height: 100%;
+}
+
+.bns-pitch-detail__pillars {
+    display: grid;
+    grid-template-columns: repeat(3, minmax(0, 1fr));
+    gap: 16px;
+}
+
+.bns-pitch-detail__pillar-card {
+    padding: 22px 16px;
+    border-radius: 14px;
+    background: linear-gradient(135deg, #0a1d37 0%, #1a2f4d 100%);
+    color: #fff;
+    text-align: center;
+    box-shadow: 0 10px 28px rgba(15, 23, 42, 0.12);
+}
+
+.bns-pitch-detail__pillar-icon {
+    display: block;
+    margin-bottom: 10px;
+    font-size: 1.8rem;
+}
+
+.bns-pitch-detail__pillar-card h4 {
+    margin: 0 0 6px;
+    font-size: 1.1rem;
+    font-weight: 800;
+    color: #fff;
+}
+
+.bns-pitch-detail__pillar-card p {
+    margin: 0;
+    font-size: 0.95rem;
+    color: rgba(255, 255, 255, 0.88);
+}
+
+.bns-pitch-detail__sentence-grid,
+.bns-pitch-detail__journey-grid {
+    display: grid;
+    grid-template-columns: repeat(2, minmax(0, 1fr));
+    gap: 18px;
+}
+
+.bns-pitch-detail__sentence-card,
+.bns-pitch-detail__journey-card {
+    display: flex;
+    flex-direction: column;
+    height: 100%;
+    border-radius: 16px;
+    background: #f8fafc;
+    border: 1px solid rgba(15, 23, 42, 0.06);
+    overflow: hidden;
+}
+
+.bns-pitch-detail__card-head {
+    display: flex;
+    align-items: center;
+    gap: 12px;
+    padding: 16px 18px;
+    background: rgba(51, 61, 97, 0.05);
+    border-bottom: 1px solid rgba(15, 23, 42, 0.06);
+}
+
+.bns-pitch-detail__card-num {
+    flex-shrink: 0;
+    width: 34px;
+    height: 34px;
+    display: inline-flex;
+    align-items: center;
+    justify-content: center;
+    border-radius: 8px;
+    background: var(--eduvers-base, #ff5544);
+    color: #fff;
+    font-size: 0.85rem;
+    font-weight: 800;
+}
+
+.bns-pitch-detail__card-head h4 {
+    margin: 0;
+    font-size: 1.02rem;
+    font-weight: 700;
+    line-height: 1.35;
+    color: #0a1d37;
+}
+
+.bns-pitch-detail__card-body {
+    padding: 18px 18px 20px;
+    flex: 1;
+}
+
+.bns-pitch-detail__card-text,
+.bns-pitch-detail__duration,
+.bns-pitch-detail__focus-title,
+.bns-pitch-detail__note,
+.bns-pitch-detail__intro {
+    margin: 0 0 12px;
+    font-size: 0.96rem;
+    line-height: 1.65;
+    color: #475569;
+}
+
+.bns-pitch-detail__focus-title {
+    font-weight: 700;
+    color: #0a1d37;
+}
+
+.bns-pitch-detail__note {
+    margin-top: 12px;
+    padding: 12px 14px;
+    border-radius: 10px;
+    background: rgba(255, 85, 68, 0.08);
+    font-size: 0.9rem;
+    font-style: normal;
+    color: #7c2d12;
+}
+
+.bns-pitch-detail__note--boxed {
+    margin-top: 18px;
+    padding: 14px 16px;
+    border-radius: 12px;
+    background: #fff8f6;
+    border: 1px solid rgba(255, 85, 68, 0.15);
+    font-weight: 600;
+    color: #7c2d12;
+}
+
+.bns-pitch-detail__website {
+    text-align: center;
+    background: linear-gradient(135deg, rgba(255, 85, 68, 0.08) 0%, rgba(51, 61, 97, 0.06) 100%);
+}
+
+.bns-pitch-detail__website-icon {
+    display: inline-flex;
+    align-items: center;
+    justify-content: center;
+    width: 42px;
+    height: 42px;
+    margin-bottom: 10px;
+    border-radius: 50%;
+    background: rgba(251, 191, 36, 0.2);
+    color: #f59e0b;
+    font-size: 16px;
+}
+
+.bns-pitch-detail__website-label {
+    display: block;
+    margin-bottom: 8px;
+    font-size: 0.95rem;
+    font-weight: 700;
+    color: #64748b;
+}
+
+.bns-pitch-detail__website a {
+    font-size: 1.15rem;
+    font-weight: 700;
+    color: var(--eduvers-base, #ff5544);
+    text-decoration: none;
+}
+
+.bns-pitch-detail__website a:hover {
+    text-decoration: underline;
+}
+
+.bns-pitch-detail__program-grid,
+.bns-pitch-detail__eligibility-grid {
+    display: grid;
+    grid-template-columns: repeat(3, minmax(0, 1fr));
+    gap: 16px;
+}
+
+.bns-pitch-detail__eligibility-grid--five {
+    grid-template-columns: repeat(6, minmax(0, 1fr));
+}
+
+.bns-pitch-detail__eligibility-grid--five .bns-pitch-detail__eligibility-card:nth-child(1),
+.bns-pitch-detail__eligibility-grid--five .bns-pitch-detail__eligibility-card:nth-child(2),
+.bns-pitch-detail__eligibility-grid--five .bns-pitch-detail__eligibility-card:nth-child(3) {
+    grid-column: span 2;
+}
+
+.bns-pitch-detail__eligibility-grid--five .bns-pitch-detail__eligibility-card:nth-child(4),
+.bns-pitch-detail__eligibility-grid--five .bns-pitch-detail__eligibility-card:nth-child(5) {
+    grid-column: span 3;
+}
+
+.bns-pitch-detail__program-card,
+.bns-pitch-detail__eligibility-card {
+    padding: 20px 18px;
+    border-radius: 14px;
+    background: #f8fafc;
+    border: 1px solid rgba(15, 23, 42, 0.06);
+    text-align: center;
+    transition: transform 0.2s ease, box-shadow 0.2s ease;
+}
+
+.bns-pitch-detail__program-card:hover,
+.bns-pitch-detail__eligibility-card:hover {
+    transform: translateY(-3px);
+    box-shadow: 0 10px 24px rgba(15, 23, 42, 0.08);
+}
+
+.bns-pitch-detail__program-icon,
+.bns-pitch-detail__eligibility-icon {
+    display: inline-flex;
+    align-items: center;
+    justify-content: center;
+    width: 36px;
+    height: 36px;
+    margin-bottom: 10px;
+    border-radius: 10px;
+    background: rgba(251, 191, 36, 0.18);
+    color: #f59e0b;
+    font-size: 14px;
+}
+
+.bns-pitch-detail__program-card h4,
+.bns-pitch-detail__eligibility-card h4 {
+    margin: 0 0 8px;
+    font-size: 1rem;
+    font-weight: 800;
+    line-height: 1.4;
+    color: #0a1d37;
+}
+
+.bns-pitch-detail__program-card p,
+.bns-pitch-detail__eligibility-card p {
+    margin: 0;
+    font-size: 0.92rem;
+    line-height: 1.55;
+    color: #475569;
+}
+
+.bns-pitch-detail__table-wrap {
+    overflow-x: auto;
+    border-radius: 14px;
+    border: 1px solid rgba(15, 23, 42, 0.08);
+}
+
+.bns-pitch-detail__school-types__intro {
+    margin: -8px auto 18px;
+    max-width: 760px;
+    text-align: center;
+    font-size: 1rem;
+    line-height: 1.65;
+    color: #475569;
+}
+
+.bns-pitch-detail__school-types__intro i {
+    margin-right: 8px;
+    color: #f59e0b;
+}
+
+.bns-pitch-detail__school-types__table-wrap {
+    overflow-x: auto;
+    border-radius: 14px;
+    border: 1px solid rgba(15, 23, 42, 0.08);
+}
+
+.bns-pitch-detail__school-types__table {
+    width: 100%;
+    border-collapse: collapse;
+    min-width: 980px;
+}
+
+.bns-pitch-detail__school-types__table th,
+.bns-pitch-detail__school-types__table td {
+    padding: 12px 14px;
+    border: 1px solid rgba(15, 23, 42, 0.08);
+    text-align: left;
+    font-size: 0.9rem;
+    line-height: 1.5;
+    vertical-align: top;
+}
+
+.bns-pitch-detail__school-types__table th {
+    background: #f8fafc;
+    font-weight: 700;
+    color: #0a1d37;
+}
+
+.bns-pitch-detail__school-types__table td {
+    color: #334155;
+}
+
+.bns-pitch-detail__school-types__tier-head--1 {
+    background: rgba(34, 197, 94, 0.12) !important;
+    color: #166534 !important;
+}
+
+.bns-pitch-detail__school-types__tier-head--2 {
+    background: rgba(251, 191, 36, 0.18) !important;
+    color: #92400e !important;
+}
+
+.bns-pitch-detail__school-types__tier-head--3 {
+    background: rgba(59, 130, 246, 0.12) !important;
+    color: #1e40af !important;
+}
+
+.bns-pitch-detail__school-types__tier-head--4 {
+    background: rgba(139, 92, 246, 0.12) !important;
+    color: #5b21b6 !important;
+}
+
+.bns-pitch-detail__school-types__table th:first-child,
+.bns-pitch-detail__school-types__table td.bns-pitch-detail__school-types__feature-cell {
+    min-width: 190px;
+    background: #fff;
+    font-weight: 700;
+    color: #0a1d37;
+}
+
+.bns-pitch-detail__school-types__table thead th:first-child {
+    background: #f8fafc;
+}
+
+.bns-pitch-detail__school-types__cell-star {
+    margin-right: 8px;
+    color: #f59e0b;
+    font-size: 0.8rem;
+}
+
+.bns-pitch-detail__table {
+    width: 100%;
+    border-collapse: collapse;
+    min-width: 280px;
+}
+
+.bns-pitch-detail__table th,
+.bns-pitch-detail__table td {
+    padding: 12px 14px;
+    border: 1px solid rgba(15, 23, 42, 0.08);
+    text-align: left;
+    font-size: 0.95rem;
+    line-height: 1.5;
+    vertical-align: top;
+}
+
+.bns-pitch-detail__table th {
+    background: #f8fafc;
+    font-weight: 700;
+    color: #0a1d37;
+}
+
+.bns-pitch-detail__table td {
+    color: #334155;
+}
+
+.bns-pitch-detail__cell-star {
+    margin-right: 8px;
+    color: #f59e0b;
+    font-size: 0.8rem;
+}
+
+.bns-pitch-detail__table-wrap--compare {
+    margin-top: 4px;
+}
+
+.bns-pitch-detail__table--compare {
+    min-width: 980px;
+}
+
+.bns-pitch-detail__table--compare th,
+.bns-pitch-detail__table--compare td {
+    min-width: 150px;
+    font-size: 0.9rem;
+}
+
+.bns-pitch-detail__tier-head--1 {
+    background: rgba(34, 197, 94, 0.12) !important;
+    color: #166534 !important;
+}
+
+.bns-pitch-detail__tier-head--2 {
+    background: rgba(251, 191, 36, 0.18) !important;
+    color: #92400e !important;
+}
+
+.bns-pitch-detail__tier-head--3 {
+    background: rgba(59, 130, 246, 0.12) !important;
+    color: #1e40af !important;
+}
+
+.bns-pitch-detail__tier-head--4 {
+    background: rgba(139, 92, 246, 0.12) !important;
+    color: #5b21b6 !important;
+}
+
+.bns-pitch-detail__table--compare th:first-child,
+.bns-pitch-detail__table--compare td.bns-pitch-detail__feature-cell {
+    position: sticky;
+    left: 0;
+    z-index: 1;
+    min-width: 190px;
+    background: #fff;
+    font-weight: 700;
+    color: #0a1d37;
+    box-shadow: 4px 0 8px rgba(15, 23, 42, 0.04);
+}
+
+.bns-pitch-detail__table--compare thead th:first-child {
+    background: #f8fafc;
+    z-index: 2;
+}
+
+.bns-pitch-detail__table--compare thead th {
+    vertical-align: bottom;
+    font-size: 0.82rem;
+    line-height: 1.35;
+}
+
+.bns-pitch-detail__coming-card {
+    text-align: center;
+}
+
+.bns-pitch-detail__coming-card h3 {
+    margin: 0 0 12px;
+    font-size: 1.4rem;
+    color: #0a1d37;
+}
+
+.bns-pitch-detail__coming-card p {
+    margin: 0 0 20px;
+    color: #475569;
+    line-height: 1.7;
+}
+
+@media (max-width: 1199px) {
+    .bns-pitch-detail__highlights {
+        grid-template-columns: repeat(2, minmax(0, 1fr));
+    }
+
+    .bns-pitch-detail__program-grid,
+    .bns-pitch-detail__eligibility-grid {
+        grid-template-columns: repeat(2, minmax(0, 1fr));
+    }
+}
+
+@media (max-width: 991px) {
+    .bns-pitch-detail__pillars,
+    .bns-pitch-detail__sentence-grid,
+    .bns-pitch-detail__journey-grid,
+    .bns-pitch-detail__points--grid,
+    .bns-pitch-detail__check-points {
+        grid-template-columns: 1fr;
+    }
+}
+
+@media (max-width: 991px) {
+    .bns-pitch-detail__eligibility-grid--five {
+        grid-template-columns: repeat(2, minmax(0, 1fr));
+    }
+
+    .bns-pitch-detail__eligibility-grid--five .bns-pitch-detail__eligibility-card {
+        grid-column: span 1 !important;
+    }
+}
+
+@media (max-width: 767px) {
+    .bns-pitch-detail {
+        padding: 24px 0 72px;
+    }
+
+    .bns-pitch-detail__hero-card,
+    .bns-pitch-detail__section,
+    .bns-pitch-detail__coming-card,
+    .bns-pitch-detail__website {
+        padding: 22px 18px;
+    }
+
+    .bns-pitch-detail__eligibility-grid,
+    .bns-pitch-detail__eligibility-grid--five {
+        grid-template-columns: 1fr;
+    }
+
+    .bns-pitch-detail__eligibility-grid--five .bns-pitch-detail__eligibility-card {
+        grid-column: span 1 !important;
+    }
+
+    .bns-pitch-detail__highlights,
+    .bns-pitch-detail__program-grid,
+    .bns-pitch-detail__eligibility-grid {
+        grid-template-columns: 1fr;
+    }
+
+    .bns-pitch-detail__section-head {
+        flex-direction: column;
+    }
+}
+
+/* Member / Coach Pitch sticky summary */
+.bns-pitch-detail__section[id],
+.bns-orientation-pitch [id],
+.bns-coach-presentation[id],
+.bns-orientation-pitch--school-types-only[id] {
+    scroll-margin-top: 96px;
+}
+
+.bns-pitch-summary {
+    position: fixed;
+    right: 18px;
+    /* Sit clearly above the rotated "Go Back Top" control */
+    bottom: 175px;
+    z-index: 1050;
+    display: flex;
+    flex-direction: column;
+    align-items: flex-end;
+    gap: 10px;
+}
+
+.bns-pitch-summary__toggle {
+    display: inline-flex;
+    align-items: center;
+    gap: 8px;
+    padding: 12px 18px;
+    border: 0;
+    border-radius: 999px;
+    background: linear-gradient(135deg, #0a1d37 0%, #14304f 100%);
+    color: #fff;
+    font-size: 0.92rem;
+    font-weight: 700;
+    letter-spacing: 0.02em;
+    box-shadow: 0 12px 28px rgba(10, 29, 55, 0.35);
+    cursor: pointer;
+}
+
+.bns-pitch-summary__toggle:hover,
+.bns-pitch-summary__toggle:focus {
+    background: linear-gradient(135deg, #14304f 0%, #1e4a73 100%);
+    color: #fff;
+}
+
+.bns-pitch-summary__toggle i {
+    color: var(--eduvers-base, #ff5544);
+}
+
+.bns-pitch-summary__panel {
+    width: min(360px, calc(100vw - 28px));
+    max-height: min(68vh, 560px);
+    overflow: hidden;
+    display: flex;
+    flex-direction: column;
+    border-radius: 16px;
+    background: #fff;
+    border: 1px solid rgba(15, 23, 42, 0.1);
+    box-shadow: 0 18px 48px rgba(15, 23, 42, 0.22);
+}
+
+.bns-pitch-summary__panel-head {
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    gap: 10px;
+    padding: 14px 16px;
+    background: #0a1d37;
+    color: #fff;
+}
+
+.bns-pitch-summary__panel-head strong {
+    font-size: 0.95rem;
+}
+
+.bns-pitch-summary__close {
+    width: 32px;
+    height: 32px;
+    border: 0;
+    border-radius: 50%;
+    background: rgba(255, 255, 255, 0.12);
+    color: #fff;
+    display: inline-flex;
+    align-items: center;
+    justify-content: center;
+}
+
+.bns-pitch-summary__nav {
+    overflow-y: auto;
+    padding: 8px;
+}
+
+.bns-pitch-summary__list {
+    list-style: none;
+    margin: 0;
+    padding: 0;
+}
+
+.bns-pitch-summary__link {
+    display: flex;
+    align-items: flex-start;
+    gap: 10px;
+    padding: 10px 10px;
+    border-radius: 10px;
+    color: #0a1d37;
+    text-decoration: none;
+    font-size: 0.88rem;
+    font-weight: 600;
+    line-height: 1.35;
+}
+
+.bns-pitch-summary__link:hover,
+.bns-pitch-summary__link:focus {
+    background: rgba(255, 85, 68, 0.08);
+    color: #0a1d37;
+}
+
+.bns-pitch-summary__num {
+    flex: 0 0 auto;
+    width: 24px;
+    height: 24px;
+    border-radius: 50%;
+    background: rgba(255, 85, 68, 0.12);
+    color: var(--eduvers-base, #ff5544);
+    display: inline-flex;
+    align-items: center;
+    justify-content: center;
+    font-size: 0.72rem;
+    font-weight: 800;
+}
+
+/* Keep Summary above Go Back Top when sticky CTA bar is present */
+body.has-bns-sticky-cta .bns-pitch-summary {
+    bottom: 185px;
+}
+
+@media (min-width: 768px) {
+    body.has-bns-sticky-cta .bns-pitch-summary {
+        bottom: 190px;
+    }
+}
+
+@media (max-width: 767px) {
+    .bns-pitch-summary {
+        right: 12px;
+        bottom: 165px;
+    }
+
+    body.has-bns-sticky-cta .bns-pitch-summary {
+        /* Compact 2-col sticky CTA bar on mobile */
+        bottom: 250px;
+    }
+
+    .bns-pitch-summary__toggle {
+        padding: 10px 14px;
+        font-size: 0.84rem;
+    }
+}

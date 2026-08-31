@@ -1,0 +1,11 @@
+<IfModule mod_rewrite.c>
+    RewriteEngine On
+
+    # Redirect any external request that still contains /public/ to the clean URL
+    RewriteCond %{THE_REQUEST} \s/+public/(\S*) [NC]
+    RewriteRule ^ /%1 [R=301,L]
+
+    # Internally serve everything from the public folder (keeps "public" out of the URL)
+    RewriteCond %{REQUEST_URI} !^/public/
+    RewriteRule ^(.*)$ public/$1 [L]
+</IfModule>

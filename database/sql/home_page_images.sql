@@ -1,0 +1,1 @@
+-- See install_bns_database.sql (home_page_images table included there)

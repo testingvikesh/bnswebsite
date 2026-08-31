@@ -1,0 +1,63 @@
+<?php
+
+return [
+    'eyebrow' => 'Business Navachar School (BNS)',
+    'title' => 'Vision 2047',
+    'subtitle' => 'For Job Excellence School & Business Empire School — Empowering Professionals. Scaling Businesses. Building Global Leaders. Transforming India.',
+    'intro' => [
+        'At Business Navachar School (BNS), we envision an India where every professional becomes a visionary leader and every business evolves into a strong, scalable, innovative, and globally competitive enterprise.',
+        'Our Vision 2047 is to create a nationwide ecosystem of professionals, entrepreneurs, business owners, and industry leaders who continuously learn, embrace Artificial Intelligence (AI), adopt innovation, strengthen business excellence, create employment, and contribute towards Viksit Bharat 2047.',
+        'We aspire to build organizations that are not only profitable but also ethical, sustainable, technology-driven, and globally respected.',
+    ],
+    'points_heading' => 'Our Vision 2047',
+    'points' => [
+        ['icon' => 'fas fa-flag', 'text' => '🇮🇳 To develop world-class professionals with leadership excellence and entrepreneurial thinking.'],
+        ['icon' => 'fas fa-flag', 'text' => '🇮🇳 To empower business owners to build scalable, profitable, and globally competitive enterprises.'],
+        ['icon' => 'fas fa-flag', 'text' => '🇮🇳 To transform MSMEs, startups, family businesses, and growing organizations into high-performance businesses.'],
+        ['icon' => 'fas fa-flag', 'text' => '🇮🇳 To promote Artificial Intelligence (AI), Digital Transformation, Automation, and Innovation across every business.'],
+        ['icon' => 'fas fa-flag', 'text' => '🇮🇳 To build expertise in Marketing, Sales, Branding, Finance, Accounting, HR, Operations, Leadership, Corporate Governance, Business Strategy, and Digital Business.'],
+        ['icon' => 'fas fa-flag', 'text' => '🇮🇳 To encourage continuous learning, innovation, and business excellence among professionals and entrepreneurs.'],
+        ['icon' => 'fas fa-flag', 'text' => '🇮🇳 To strengthen business systems, SOPs, productivity, quality, and operational excellence.'],
+        ['icon' => 'fas fa-flag', 'text' => '🇮🇳 To develop businesses capable of national expansion, global expansion, strategic partnerships, and long-term sustainability.'],
+        ['icon' => 'fas fa-flag', 'text' => '🇮🇳 To create visionary CEOs, Managing Directors, CXOs, entrepreneurs, consultants, investors, and industry leaders.'],
+        ['icon' => 'fas fa-flag', 'text' => '🇮🇳 To generate millions of employment opportunities through stronger businesses and professional excellence.'],
+        ['icon' => 'fas fa-flag', 'text' => '🇮🇳 To deliver a structured syllabus and learning methodology developed with the guidance of Faculties of IIM, as per the applicable collaboration framework.'],
+        ['icon' => 'fas fa-flag', 'text' => '🇮🇳 To provide learning through BNS-trained faculties, business coaches, industry experts, with selected sessions by Faculties of IIM, where applicable.'],
+        ['icon' => 'fas fa-flag', 'text' => '🇮🇳 To recognize learning through Program Completion Certificates, Skill Certificates, Project Certificates, and Participation/Appreciation Certificates by Faculties of IIM for eligible workshops, seminars, masterclasses, training programs, and events conducted under the applicable collaboration framework.'],
+        ['icon' => 'fas fa-flag', 'text' => '🇮🇳 To build a nationwide network of professionals, business owners, mentors, investors, corporate leaders, and business coaches for collaborative growth.'],
+        ['icon' => 'fas fa-flag', 'text' => '🇮🇳 To contribute towards Viksit Bharat 2047 by creating stronger industries, globally respected Indian companies, and a knowledge-driven economy.'],
+    ],
+    'dream_heading' => 'Our Dream by 2047',
+    'dream_lines' => [
+        'Millions of Highly Skilled Professionals.',
+        'Thousands of Scalable Indian Businesses.',
+        'Thousands of High-Growth MSMEs.',
+        'Globally Competitive Indian Enterprises.',
+        'Strong AI-Driven Organizations.',
+        'Ethical and Visionary Business Leaders.',
+        'Millions of New Employment Opportunities.',
+        'Innovation-Driven Industries.',
+        'Sustainable Wealth Creation.',
+        'A Prosperous, Self-Reliant, and Developed India.',
+    ],
+    'statement_heading' => 'Vision Statement',
+    'statement' => [
+        '"By 2047, Business Navachar School aspires to become India\'s leading Executive Business Education Ecosystem, empowering professionals and business owners to achieve business excellence, build globally competitive enterprises, create employment, strengthen industries, and contribute to a prosperous and developed India."',
+    ],
+    'commitment_block' => [
+        'heading' => 'Our Commitment',
+        'items' => [
+            'Professionals → Leaders',
+            'Businesses → Enterprises',
+            'Enterprises → Global Brands',
+            'Growth → Excellence',
+            'Excellence → National Prosperity',
+        ],
+    ],
+    'taglines' => [
+        'Learn More. Lead More.',
+        'Grow Stronger. Scale Smarter.',
+        'Business Excellence Creates National Prosperity.',
+        'Together Towards Viksit Bharat 2047.',
+    ],
+];

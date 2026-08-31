@@ -1,0 +1,29 @@
+<?php
+
+use Illuminate\Database\Migrations\Migration;
+use Illuminate\Database\Schema\Blueprint;
+use Illuminate\Support\Facades\Schema;
+
+return new class extends Migration
+{
+    public function up(): void
+    {
+        Schema::create('working_women_admissions', function (Blueprint $table) {
+            $table->id();
+            $table->string('registration_number')->unique();
+            $table->string('category')->default('working_women_leadership');
+            $table->string('full_name');
+            $table->string('email');
+            $table->string('mobile');
+            $table->string('photo_path')->nullable();
+            $table->json('form_data');
+            $table->string('status')->default('pending');
+            $table->timestamps();
+        });
+    }
+
+    public function down(): void
+    {
+        Schema::dropIfExists('working_women_admissions');
+    }
+};

@@ -1,0 +1,168 @@
+/* BNS modals — header + visible close button (loaded on every front page) */
+
+/* Above preloader (20000), chat popup, sidebars — so X is always clickable */
+.bns-intro-session-modal,
+.bns-quick-register-modal,
+.bns-vision-modal,
+.bns-founder-modal {
+    z-index: 100050 !important;
+}
+
+.modal-backdrop,
+.modal-backdrop.show,
+[data-bns-intro-session-backdrop],
+[data-bns-quick-register-backdrop] {
+    z-index: 100040 !important;
+}
+
+.bns-logout-modal,
+.bns-reporting-logout-modal {
+    z-index: 100055 !important;
+}
+
+.bns-vision-modal .modal-content,
+.bns-founder-modal .modal-content,
+.bns-intro-session-modal .modal-content {
+    border: none;
+    border-radius: 18px;
+    overflow: hidden;
+    box-shadow: 0 24px 64px rgba(15, 23, 42, 0.25);
+}
+
+.bns-vision-modal__header,
+.bns-founder-modal__header {
+    display: flex;
+    align-items: flex-start;
+    justify-content: space-between;
+    gap: 16px;
+    position: relative;
+    padding: 22px 24px;
+    background: linear-gradient(135deg, rgb(51, 61, 97) 0%, #1e293b 100%);
+    border-bottom: none;
+}
+
+.bns-vision-modal__header > div:first-child,
+.bns-founder-modal__header > div:first-child {
+    flex: 1;
+    min-width: 0;
+    padding-right: 12px;
+}
+
+.bns-vision-modal__eyebrow,
+.bns-founder-modal__eyebrow {
+    display: block;
+    margin-bottom: 6px;
+    font-size: 11px;
+    font-weight: 700;
+    letter-spacing: 0.1em;
+    text-transform: uppercase;
+    color: rgba(255, 255, 255, 0.65);
+}
+
+.bns-vision-modal .modal-title,
+.bns-founder-modal .modal-title,
+.bns-intro-session-modal .modal-title {
+    font-size: 1.1rem;
+    font-weight: 700;
+    color: #fff;
+    line-height: 1.45;
+    padding-right: 0;
+    margin: 0;
+}
+
+.bns-modal-close {
+    display: inline-flex;
+    align-items: center;
+    justify-content: center;
+    flex-shrink: 0;
+    width: 40px;
+    height: 40px;
+    padding: 0;
+    margin: 0;
+    border: 1px solid rgba(255, 255, 255, 0.45);
+    border-radius: 50%;
+    background: rgba(255, 255, 255, 0.18);
+    color: #fff;
+    font-size: 1.05rem;
+    line-height: 1;
+    cursor: pointer;
+    opacity: 1;
+    pointer-events: auto !important;
+    position: relative;
+    z-index: 30;
+    transition: background-color 0.2s ease, border-color 0.2s ease, transform 0.2s ease;
+}
+
+.bns-modal-is-closed,
+.modal.bns-modal-is-closed,
+.modal.bns-modal-is-closed.show {
+    display: none !important;
+    visibility: hidden !important;
+    pointer-events: none !important;
+    opacity: 0 !important;
+}
+
+.bns-modal-close__icon {
+    display: block;
+    width: 18px;
+    height: 18px;
+    flex-shrink: 0;
+    pointer-events: none;
+}
+
+.bns-modal-close:hover,
+.bns-modal-close:focus {
+    background: var(--eduvers-base, #ff5544);
+    border-color: var(--eduvers-base, #ff5544);
+    color: #fff;
+    transform: scale(1.04);
+}
+
+.bns-modal-close:focus-visible {
+    outline: 2px solid #fff;
+    outline-offset: 2px;
+}
+
+/* Close button on light / white modal headers */
+.bns-modal-close--on-light {
+    border-color: rgba(15, 23, 42, 0.18);
+    background: rgba(15, 23, 42, 0.05);
+    color: #0a1d37;
+}
+
+.bns-modal-close--on-light:hover,
+.bns-modal-close--on-light:focus {
+    background: var(--eduvers-base, #ff5544);
+    border-color: var(--eduvers-base, #ff5544);
+    color: #fff;
+}
+
+.bns-modal-close--on-light:focus-visible {
+    outline-color: var(--eduvers-base, #ff5544);
+}
+
+/* Fallback for Bootstrap close buttons on dark BNS headers only */
+.bns-vision-modal__header .btn-close,
+.bns-founder-modal__header .btn-close {
+    flex-shrink: 0;
+    width: 40px;
+    height: 40px;
+    padding: 0;
+    margin: 0;
+    opacity: 1;
+    cursor: pointer;
+    pointer-events: auto;
+    z-index: 3;
+    border: 1px solid rgba(255, 255, 255, 0.35);
+    border-radius: 50%;
+    background-color: rgba(255, 255, 255, 0.12);
+    background-size: 14px;
+    filter: brightness(0) invert(1);
+}
+
+.bns-vision-modal__header .btn-close:hover,
+.bns-founder-modal__header .btn-close:hover {
+    background-color: var(--eduvers-base, #ff5544);
+    border-color: var(--eduvers-base, #ff5544);
+    opacity: 1;
+}

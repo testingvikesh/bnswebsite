@@ -1,0 +1,70 @@
+<?php
+
+return [
+    'eyebrow' => 'Business Navachar School (BNS) – Women Business School',
+    'title' => 'Mission',
+    'subtitle' => 'Empowering Women to Build Businesses, Create Wealth & Transform Society',
+    'intro' => [
+        'At Business Navachar School (BNS), our mission is to empower women with <strong>practical business education, entrepreneurial mindset, leadership, financial intelligence, digital skills, and innovation</strong> so they can confidently transform their ideas into successful businesses and become financially independent leaders.',
+        'Through our structured <strong>2-Year Women Business School</strong>, we aim to help women progress from <strong>Idea to Startup</strong> and <strong>Startup to Business Growth</strong>, enabling them to build sustainable enterprises that create value, generate employment, and contribute to India\'s economic development.',
+    ],
+    'points_heading' => 'Our Mission',
+    'points' => [
+        ['icon' => 'fas fa-female', 'text' => 'To inspire women to become <strong>confident entrepreneurs and business leaders</strong>.'],
+        ['icon' => 'fas fa-lightbulb', 'text' => 'To transform <strong>Ideas into Startups</strong>.'],
+        ['icon' => 'fas fa-store', 'text' => 'To transform <strong>Startups into Successful Businesses</strong>.'],
+        ['icon' => 'fas fa-coins', 'text' => 'To empower women to achieve <strong>financial independence through entrepreneurship</strong>.'],
+        ['icon' => 'fas fa-bridge', 'text' => 'To bridge the gap between <strong>passion and profitable business</strong>.'],
+        ['icon' => 'fas fa-puzzle-piece', 'text' => 'To develop <strong>entrepreneurial thinking, creativity, innovation, and leadership</strong>.'],
+        ['icon' => 'fas fa-laptop-code', 'text' => 'To provide practical business education through <strong>live projects, case studies, workshops, mentoring, networking, and business visits</strong>.'],
+        ['icon' => 'fas fa-briefcase', 'text' => 'To build expertise in <strong>Marketing, Sales, Branding, Digital Marketing, Artificial Intelligence (AI), Finance, Accounting, Human Resources, Operations, Business Strategy, Leadership, and Customer Excellence</strong>.'],
+        ['icon' => 'fas fa-robot', 'text' => 'To prepare women for the <strong>AI-driven and digital business economy</strong>.'],
+        ['icon' => 'fas fa-home', 'text' => 'To encourage <strong>women-led startups, MSMEs, family businesses, and home-based enterprises</strong>.'],
+        ['icon' => 'fas fa-chart-line', 'text' => 'To help women build <strong>sustainable, scalable, and value-driven businesses</strong>.'],
+        ['icon' => 'fas fa-university', 'text' => 'To deliver a structured syllabus and learning methodology developed with the guidance of <strong>Faculties of IIM</strong>, as per the applicable collaboration framework.'],
+        ['icon' => 'fas fa-chalkboard-teacher', 'text' => 'To provide learning through <strong>BNS-trained faculties, business coaches, industry experts</strong>, with selected sessions by <strong>Faculties of IIM</strong>, where applicable.'],
+        ['icon' => 'fas fa-certificate', 'text' => 'To recognize learning through <strong>Program Completion Certificates, Skill Certificates, Project Certificates</strong>, and <strong>Participation/Appreciation Certificates by Faculties of IIM</strong> for eligible workshops, seminars, masterclasses, training programs, or events conducted under the applicable collaboration framework.'],
+        ['icon' => 'fas fa-hands-helping', 'text' => 'To create <strong>employment opportunities through women-led enterprises</strong>.'],
+        ['icon' => 'fas fa-network-wired', 'text' => 'To build a nationwide network of <strong>women entrepreneurs, mentors, investors, business coaches, and industry experts</strong>.'],
+        ['icon' => 'fas fa-flag', 'text' => 'To contribute towards <strong>Viksit Bharat 2047</strong> by strengthening women entrepreneurship and India\'s economy.'],
+    ],
+    'dream_heading' => 'Our 2-Year Mission Journey',
+    'journey_years' => [
+        [
+            'title' => 'Year 1 – Women Startup School',
+            'subtitle' => 'From Dream to Startup',
+            'intro' => 'Build entrepreneurial confidence and learn how to identify opportunities, validate ideas, develop products and services, create brands, attract customers, and launch successful startups.',
+        ],
+        [
+            'title' => 'Year 2 – Women Business Growth School',
+            'subtitle' => 'From Startup to Business Growth',
+            'intro' => 'Learn how to grow, manage, systemize, market, finance, lead, and expand businesses using modern business practices, AI, digital tools, and strategic leadership.',
+        ],
+    ],
+    'promise_block' => [
+        'heading' => 'Our Promise',
+        'intro' => 'Every participant will receive opportunities to:',
+        'items' => [
+            'Learn Practical Business Skills.',
+            'Build Entrepreneurial Confidence.',
+            'Develop Leadership Qualities.',
+            'Master Digital & AI Tools.',
+            'Grow a Sustainable Business.',
+            'Build Professional Networks.',
+            'Create Employment Opportunities.',
+            'Achieve Financial Independence.',
+            'Become a Responsible Business Leader.',
+            'Continue Lifelong Learning.',
+        ],
+    ],
+    'statement_heading' => 'Mission Statement',
+    'statement' => [
+        '"To empower every woman with practical business education, entrepreneurial confidence, and future-ready skills to transform ideas into startups, startups into successful businesses, and businesses into engines of prosperity for families, communities, and the nation."',
+    ],
+    'taglines' => [
+        'Empowered Women. Prosperous Families.',
+        'Women Entrepreneurs. Strong India.',
+        'Learn. Launch. Grow. Lead.',
+        'Together Towards Viksit Bharat 2047.',
+    ],
+];
