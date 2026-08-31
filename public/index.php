@@ -48,6 +48,16 @@ $app = require_once __DIR__.'/../bootstrap/app.php';
 
 $kernel = $app->make(Kernel::class);
 
+// When Apache rewrites project-root URLs into /public/index.php, SCRIPT_NAME
+// still contains "/public" while REQUEST_URI does not. Strip it so Laravel
+// matches "/" instead of the subdirectory path. No-op when public/ is docroot.
+if (! empty($_SERVER['SCRIPT_NAME']) && str_contains($_SERVER['SCRIPT_NAME'], '/public/index.php')) {
+    $_SERVER['SCRIPT_NAME'] = str_replace('/public/index.php', '/index.php', $_SERVER['SCRIPT_NAME']);
+    if (! empty($_SERVER['PHP_SELF'])) {
+        $_SERVER['PHP_SELF'] = str_replace('/public/index.php', '/index.php', $_SERVER['PHP_SELF']);
+    }
+}
+
 $response = $kernel->handle(
     $request = Request::capture()
 )->send();
