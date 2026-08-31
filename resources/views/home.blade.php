@@ -1,7 +1,5 @@
 @extends('layouts.front')
 
-@section('title', 'Home')
-
 @push('head')
 @php($heroSlides = $heroSlides ?? config('home.hero_slides', []))
 @php($firstSlide = $heroSlides[0] ?? config('home.hero_banner', []))
