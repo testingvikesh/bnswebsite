@@ -11,46 +11,48 @@ jobs:
     runs-on: ubuntu-latest
 
     steps:
-      - name: Deploy to cPanel Server
+      - name: Checkout repository
+        uses: actions/checkout@v4
+
+      - name: Copy project files to live server
+        uses: appleboy/scp-action@v0.1.7
+        with:
+          host: ${{ secrets.SERVER_HOST }}
+          username: ${{ secrets.SERVER_USER }}
+          key: ${{ secrets.SERVER_SSH_KEY }}
+          source: "app,bootstrap,config,database,public,resources,routes,scripts,artisan,composer.json,composer.lock"
+          target: "/home/businessnavachar/bnswebsite"
+          overwrite: true
+
+      - name: Clear Laravel cache on live server
         uses: appleboy/ssh-action@v1.2.2
         with:
           host: ${{ secrets.SERVER_HOST }}
           username: ${{ secrets.SERVER_USER }}
           key: ${{ secrets.SERVER_SSH_KEY }}
           command_timeout: 10m
-          script_stop: true
           script: |
             set -e
             APP_USER="businessnavachar"
-            LIVE_HOME="/home/${APP_USER}"
-            APP_DIR="${LIVE_HOME}/bnswebsite"
+            APP_DIR="/home/${APP_USER}/bnswebsite"
 
-            echo "Connected as $(whoami)@$(hostname) HOME=$HOME"
+            echo "Connected as $(whoami)@$(hostname)"
+            echo "Title file:"
+            grep "<title>" "${APP_DIR}/resources/views/layouts/front.blade.php" || true
 
-            if [ ! -d "$APP_DIR/.git" ]; then
-              echo "ERROR: $APP_DIR is not a git repo"
-              exit 1
-            fi
+            cd "$APP_DIR"
+            php artisan optimize:clear
 
-            as_app() {
-              if [ "$(id -un)" = "$APP_USER" ]; then
-                bash -lc "$*"
-              else
-                sudo -u "$APP_USER" -H bash -lc "$*"
-              fi
-            }
-
-            echo "=== git before ==="
-            as_app "cd '$APP_DIR' && git remote -v && git log -1 --oneline"
-
-            as_app "cd '$APP_DIR' && git fetch origin main && git reset --hard origin/main"
-
-            echo "=== git after ==="
-            as_app "cd '$APP_DIR' && git log -1 --oneline"
-
-            as_app "cd '$APP_DIR' && bash scripts/server-deploy.sh"
-
-            # In case a previous root artisan run left root-owned cache files
             chown -R "${APP_USER}:${APP_USER}" \
+              "${APP_DIR}/app" \
+              "${APP_DIR}/bootstrap" \
+              "${APP_DIR}/config" \
+              "${APP_DIR}/database" \
+              "${APP_DIR}/public" \
+              "${APP_DIR}/resources" \
+              "${APP_DIR}/routes" \
+              "${APP_DIR}/scripts" \
               "${APP_DIR}/bootstrap/cache" \
               "${APP_DIR}/storage" || true
+
+            echo "Deploy finished"

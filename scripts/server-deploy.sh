@@ -11,20 +11,13 @@ echo "whoami=$(whoami) HOME=$HOME"
 echo "APP_DIR=$APP_DIR"
 echo "WEB_DIR=$WEB_DIR"
 
-if [ "$(id -un)" = "root" ]; then
-  echo "ERROR: do not deploy as root (git ownership / file permissions)."
-  echo "Re-run as businessnavachar."
-  exit 1
-fi
-
-if [ ! -d "$APP_DIR/.git" ]; then
-  echo "ERROR: $APP_DIR is not a git checkout"
+if [ ! -d "$APP_DIR" ]; then
+  echo "ERROR: $APP_DIR does not exist"
   exit 1
 fi
 
 cd "$APP_DIR"
-echo "HEAD: $(git log -1 --oneline)"
-echo "Title in git checkout:"
+echo "Title in checkout:"
 grep "<title>" resources/views/layouts/front.blade.php || true
 
 clear_artisan() {
