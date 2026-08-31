@@ -1,5 +1,26 @@
 <?php
 
+if (! function_exists('bns_document_title')) {
+    /**
+     * Public browser tab title. Home is "BNS School"; other pages append the brand.
+     */
+    function bns_document_title(?string $pageTitle = null): string
+    {
+        $siteTitle = 'BNS School';
+        $pageTitle = trim((string) $pageTitle);
+
+        if ($pageTitle === '' || strcasecmp($pageTitle, 'Home') === 0 || strcasecmp($pageTitle, $siteTitle) === 0) {
+            return $siteTitle;
+        }
+
+        if (str_contains($pageTitle, $siteTitle) || str_contains($pageTitle, 'Business Navachar School')) {
+            return $pageTitle;
+        }
+
+        return $pageTitle.' — '.$siteTitle;
+    }
+}
+
 if (! function_exists('bns_web_base_url')) {
     /**
      * Web-accessible base URL (works for subdirectory installs and live docroot).

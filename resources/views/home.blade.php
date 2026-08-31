@@ -1,6 +1,6 @@
 @extends('layouts.front')
 
-@section('title', 'Home')
+@section('title', 'BNS School')
 
 @push('head')
 @php($heroSlides = $heroSlides ?? config('home.hero_slides', []))
