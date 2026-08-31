@@ -14,40 +14,18 @@ jobs:
       - name: Checkout repository
         uses: actions/checkout@v5
 
-      - name: Make live files writable
-        uses: appleboy/ssh-action@v1.2.2
-        with:
-          host: ${{ secrets.SERVER_HOST }}
-          username: ${{ secrets.SERVER_USER }}
-          key: ${{ secrets.SERVER_SSH_KEY }}
-          script: |
-            set -e
-            APP_USER="businessnavachar"
-            APP_DIR="/home/${APP_USER}/bnswebsite"
-
-            echo "Connected as $(whoami)@$(hostname)"
-            ls -la "${APP_DIR}/app/Providers" || true
-
-            if [ "$(id -u)" = "0" ]; then
-              chown -R "${APP_USER}:${APP_USER}" "$APP_DIR"
-            elif command -v sudo >/dev/null 2>&1; then
-              sudo chown -R "${APP_USER}:${APP_USER}" "$APP_DIR" || true
-            fi
-
-            chmod -R u+rwX "$APP_DIR" || true
-            echo "Live tree is writable"
-
-      - name: Copy project files to live server
+      - name: Upload files to staging
         uses: appleboy/scp-action@v0.1.7
         with:
           host: ${{ secrets.SERVER_HOST }}
           username: ${{ secrets.SERVER_USER }}
           key: ${{ secrets.SERVER_SSH_KEY }}
           source: "app,bootstrap,config,database,public,resources,routes,scripts,artisan,composer.json,composer.lock"
-          target: "/home/businessnavachar/bnswebsite"
+          target: "/tmp/bnswebsite-release"
           overwrite: true
+          rm: true
 
-      - name: Fix owner and clear Laravel cache
+      - name: Publish staging to live and clear cache
         uses: appleboy/ssh-action@v1.2.2
         with:
           host: ${{ secrets.SERVER_HOST }}
@@ -58,15 +36,35 @@ jobs:
             set -e
             APP_USER="businessnavachar"
             APP_DIR="/home/${APP_USER}/bnswebsite"
+            STAGE="/tmp/bnswebsite-release"
+
+            echo "Connected as $(whoami)@$(hostname)"
+            echo "Staging:"
+            ls -la "$STAGE"
+
+            copy_live() {
+              if command -v rsync >/dev/null 2>&1; then
+                rsync -a "$STAGE/" "$APP_DIR/"
+              else
+                cp -a "$STAGE"/. "$APP_DIR"/
+              fi
+            }
 
             if [ "$(id -u)" = "0" ]; then
+              copy_live
               chown -R "${APP_USER}:${APP_USER}" "$APP_DIR"
               sudo -u "$APP_USER" -H bash -lc "cd '$APP_DIR' && php artisan optimize:clear"
             else
+              if ! copy_live; then
+                echo "Direct copy failed; trying sudo"
+                sudo rsync -a "$STAGE/" "$APP_DIR/"
+                sudo chown -R "${APP_USER}:${APP_USER}" "$APP_DIR"
+              fi
               cd "$APP_DIR"
               php artisan optimize:clear
             fi
 
+            rm -rf "$STAGE"
             echo "Title file:"
             grep "<title>" "${APP_DIR}/resources/views/layouts/front.blade.php" || true
             echo "Deploy finished"
