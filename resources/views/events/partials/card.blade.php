@@ -17,7 +17,7 @@
 <article class="bns-event-card bns-event-card--{{ $type }} {{ !empty($event['featured']) ? 'bns-event-card--featured' : '' }}">
     <div class="bns-event-card__header">
         <span class="bns-event-card__type">{{ $typeLabel }}</span>
-        <h3>{{ $event['title'] ?? '' }}</h3>
+        <h3>{{ bns_introduction_session_public_title($event) }}</h3>
     </div>
 
     <ul class="bns-event-card__meta list-unstyled">

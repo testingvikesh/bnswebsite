@@ -346,6 +346,24 @@ if (! function_exists('bns_introduction_session')) {
     }
 }
 
+if (! function_exists('bns_introduction_session_public_title')) {
+    /**
+     * Public-facing title for introduction sessions (no session number).
+     *
+     * @param  array<string, mixed>|null  $event
+     */
+    function bns_introduction_session_public_title(?array $event = null): string
+    {
+        if (is_array($event) && ($event['type'] ?? '') !== 'introduction' && ! empty($event['title'])) {
+            return (string) $event['title'];
+        }
+
+        $category = is_array($event) ? trim((string) ($event['category'] ?? '')) : '';
+
+        return $category !== '' ? $category : 'Introduction Session';
+    }
+}
+
 if (! function_exists('bns_intro_session_venue_card')) {
     /**
      * Front-style venue / date / time card data for admin preview and emails.
