@@ -244,11 +244,7 @@ if (! function_exists('bns_intro_session_selectable_numbers')) {
             ->values()
             ->all();
 
-        if ($numbers !== []) {
-            return $numbers;
-        }
-
-        return bns_intro_session_allowed_numbers();
+        return $numbers;
     }
 }
 

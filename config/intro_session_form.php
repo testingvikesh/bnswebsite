@@ -67,16 +67,16 @@ return [
 
     /*
     | Unique mobiles ordered by id ASC (when no stored intro_session_number).
-    | New registrations → Session 4 (22 Aug · 7:00–8:30 PM).
-    | Sessions 1–3 are historical (past dates) — hidden on the admission form;
+    | New registrations → Session 5 (06 Sep · 7:00–8:30 PM).
+    | Past sessions are hidden on the admission form and events page;
     | assign only via stored intro_session_number / reporting.
     |
     | Set forced_session_number to override capacity for NEW form emails (null = auto).
     */
     'unique_mobile_capacity' => 166,
-    'default_session_number' => 4,
-    'overflow_session_number' => 4,
-    'allowed_session_numbers' => [1, 2, 3, 4],
-    'forced_session_number' => 4,
+    'default_session_number' => 5,
+    'overflow_session_number' => 6,
+    'allowed_session_numbers' => [1, 2, 3, 4, 5, 6],
+    'forced_session_number' => 5,
 
 ];
