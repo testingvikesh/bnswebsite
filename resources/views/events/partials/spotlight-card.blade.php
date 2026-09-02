@@ -7,9 +7,6 @@
 <article class="bns-event-spotlight">
     <div class="bns-event-spotlight__top">
         <div class="bns-event-spotlight__top-left">
-            @if(!empty($event['session_number']))
-                <span class="bns-event-spotlight__session-no" aria-label="Session {{ $event['session_number'] }}">{{ $event['session_number'] }}</span>
-            @endif
             <span class="bns-event-spotlight__badge">
                 <i class="fas fa-star" aria-hidden="true"></i> {{ $event['category'] ?? 'Induction Seminar' }}
             </span>
@@ -23,7 +20,7 @@
     </div>
 
     <div class="bns-event-spotlight__body">
-        <h3 class="bns-event-spotlight__title">{{ $event['title'] ?? '' }}</h3>
+        <h3 class="bns-event-spotlight__title">{{ bns_introduction_session_public_title($event) }}</h3>
         @if(!empty($event['tagline']))
             <p class="bns-event-spotlight__tagline">{!! bns_rich_text($event['tagline']) !!}</p>
         @endif

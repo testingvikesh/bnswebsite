@@ -51,7 +51,6 @@
                             data-session-date-dmy="{{ $sessionDmy }}"
                             @checked($isChecked)
                         >
-                        <span class="bns-intro-session-modal__option-badge">Session {{ $sessionNo }}</span>
                         @if(!empty($sessionOption['date']))
                             <p class="bns-intro-session-modal__option-date">
                                 <i class="fas fa-calendar-alt" aria-hidden="true"></i>
@@ -74,7 +73,6 @@
             <div class="bns-intro-session-modal__options">
                 @foreach($sessions as $sessionOption)
                     <div class="bns-intro-session-modal__option">
-                        <span class="bns-intro-session-modal__option-badge">Session {{ $sessionOption['session_number'] ?? '' }}</span>
                         @if(!empty($sessionOption['date']))
                             <p class="bns-intro-session-modal__option-date">
                                 <i class="fas fa-calendar-alt" aria-hidden="true"></i>
@@ -127,7 +125,7 @@
     @endif
     <div class="bns-intro-session-modal__event">
         <p class="bns-intro-session-modal__event-label">Upcoming Session</p>
-        <h6 class="bns-intro-session-modal__event-title">{{ $event['title'] ?? 'Introduction Session 1' }}</h6>
+        <h6 class="bns-intro-session-modal__event-title">{{ bns_introduction_session_public_title($event) }}</h6>
 
         <ul class="bns-intro-session-modal__event-meta list-unstyled">
             @if(!empty($event['date']))
