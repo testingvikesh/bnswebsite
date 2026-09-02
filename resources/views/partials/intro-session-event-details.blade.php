@@ -1,9 +1,6 @@
 @php
     $selectable = $selectable ?? false;
     $sessions = bns_introduction_sessions($selectable);
-    if ($sessions === []) {
-        $sessions = bns_introduction_sessions();
-    }
     $event = $event ?? bns_first_introduction_session();
     $showBothOptions = $showBothOptions ?? true;
     $formId = $formId ?? 'bnsIntroSessionForm';

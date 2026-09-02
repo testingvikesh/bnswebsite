@@ -18,14 +18,7 @@ class EventsController extends Controller
         $about = $this->aboutPage->get();
         $page = config('events.page', []);
         $allEvents = collect(config('events.events', []))
-            ->filter(function (array $event): bool {
-                // Hide introduction sessions once their date/time has passed.
-                if (($event['type'] ?? '') === 'introduction' && bns_event_has_passed($event)) {
-                    return false;
-                }
-
-                return true;
-            })
+            ->filter(fn (array $event): bool => ! bns_event_has_passed($event))
             ->values();
         $spotlightEvents = $allEvents->filter(fn (array $event) => ! empty($event['spotlight']))->values();
         $otherEvents = $allEvents->reject(fn (array $event) => ! empty($event['spotlight']))->values();
