@@ -67,7 +67,7 @@ return [
 
     /*
     | Unique mobiles ordered by id ASC (when no stored intro_session_number).
-    | New registrations → Session 5 (06 Sep · 7:00–8:30 PM).
+    | New registrations → Session 5 (06 Sep · 2:30–4:30 PM).
     | Past sessions are hidden on the admission form and events page;
     | assign only via stored intro_session_number / reporting.
     |
