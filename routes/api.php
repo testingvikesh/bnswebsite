@@ -19,5 +19,6 @@ Route::middleware('auth:sanctum')->get('/user', function (Request $request) {
 });
 
 Route::middleware(['institute.api', 'throttle:30,1'])->prefix('institute')->group(function () {
+    Route::get('sessions', [\App\Http\Controllers\Api\InstituteAttendanceController::class, 'sessions']);
     Route::post('attendance', [\App\Http\Controllers\Api\InstituteAttendanceController::class, 'mark']);
 });
