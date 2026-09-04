@@ -66,5 +66,6 @@ class Kernel extends HttpKernel
         'verified' => \Illuminate\Auth\Middleware\EnsureEmailIsVerified::class,
         'sop.admin' => \App\Http\Middleware\EnsureSopAdmin::class,
         'mail.auth' => \App\Http\Middleware\EnsureMailPortalAuth::class,
+        'institute.api' => \App\Http\Middleware\EnsureInstituteApiKey::class,
     ];
 }

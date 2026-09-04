@@ -17,6 +17,8 @@ class SessionAttendance extends Model
 
     public const VIA_ADMIN = 'admin';
 
+    public const VIA_INSTITUTE = 'institute';
+
     protected $fillable = [
         'contact_inquiry_id',
         'registration_number',

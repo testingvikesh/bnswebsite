@@ -17,3 +17,7 @@ use Illuminate\Support\Facades\Route;
 Route::middleware('auth:sanctum')->get('/user', function (Request $request) {
     return $request->user();
 });
+
+Route::middleware(['institute.api', 'throttle:30,1'])->prefix('institute')->group(function () {
+    Route::post('attendance', [\App\Http\Controllers\Api\InstituteAttendanceController::class, 'mark']);
+});
