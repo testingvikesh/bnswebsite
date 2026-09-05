@@ -121,14 +121,20 @@ class AppServiceProvider extends ServiceProvider
             $sendmailPath = '/usr/sbin/sendmail -t -i -f '.$sendmailFrom;
         }
 
+        $password = preg_replace('/\s+/', '', trim((string) env('MAIL_PASSWORD', ''), " \t\n\r\0\x0B\"'"));
+
         config([
-            'mail.default' => 'php',
+            'mail.default' => 'smtp_ssl',
             'mail.mailers.sendmail.path' => $sendmailPath,
             'mail.from.address' => $sendmailFrom,
             'mail.from.name' => $fromName,
             'mail.reply_to.address' => $sendmailFrom,
             'mail.reply_to.name' => $fromName,
             'mail.mailers.smtp.verify_peer' => false,
+            'mail.mailers.smtp.timeout' => 12,
+            'mail.mailers.smtp_ssl.username' => $username ?: $sendmailFrom,
+            'mail.mailers.smtp_ssl.password' => $password,
+            'mail.mailers.smtp.password' => $password,
         ]);
         Mail::alwaysFrom($sendmailFrom, $fromName);
         Mail::alwaysReplyTo($sendmailFrom, $fromName);
