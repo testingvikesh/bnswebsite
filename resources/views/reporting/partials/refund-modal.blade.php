@@ -30,7 +30,9 @@
                         <div class="fw-semibold mb-2">Transaction Details</div>
                         <div class="row g-2">
                             <div class="col-6"><span class="text-muted">Member</span><div class="fw-semibold">{{ $upload->membership_name }}</div></div>
+                            <div class="col-6"><span class="text-muted">Membership No</span><div class="fw-semibold">{{ $upload->membership_no ?: '—' }}</div></div>
                             <div class="col-6"><span class="text-muted">Reg. No.</span><div class="fw-semibold">{{ $upload->registration_number ?: '—' }}</div></div>
+                            <div class="col-6"><span class="text-muted">Mobile</span><div class="fw-semibold">{{ $upload->mobile ?: '—' }}</div></div>
                             <div class="col-6"><span class="text-muted">Merchant Txn</span><div class="fw-semibold text-break">{{ $payment->merchant_txn_no }}</div></div>
                             <div class="col-6"><span class="text-muted">Gateway Txn</span><div class="fw-semibold text-break">{{ $payment->txn_id ?: '—' }}</div></div>
                             <div class="col-6"><span class="text-muted">Payment ID</span><div class="fw-semibold text-break">{{ $payment->payment_id ?: '—' }}</div></div>

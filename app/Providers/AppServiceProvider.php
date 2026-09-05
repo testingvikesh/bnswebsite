@@ -93,16 +93,13 @@ class AppServiceProvider extends ServiceProvider
     }
 
     /**
-     * Live Hostinger cannot use smtp.gmail.com (TLS is intercepted).
-     * A cPanel mailbox such as info@businessnavacharschool.com must go
-     * through smtp.hostinger.com with the same username/password.
+     * info@ is Google Workspace (G Suite), so keep smtp.gmail.com.
+     * Do not send that password to smtp.hostinger.com (that caused 535).
+     * On Hostinger, TLS to Gmail can be intercepted — disable peer verify
+     * and fall back to local sendmail if Gmail SMTP still fails.
      */
     private function configureHostingerMailer(): void
     {
-        if (filter_var(env('MAIL_FORCE_GMAIL', false), FILTER_VALIDATE_BOOLEAN)) {
-            return;
-        }
-
         $hostname = strtolower((string) gethostname());
         $onHostinger = str_contains($hostname, 'hstgr.cloud')
             || str_contains($hostname, 'srv1864255')
@@ -115,62 +112,47 @@ class AppServiceProvider extends ServiceProvider
         $fromHost = parse_url((string) config('app.url'), PHP_URL_HOST) ?: 'businessnavacharschool.com';
         $fromHost = preg_replace('/^www\./i', '', (string) $fromHost) ?: 'businessnavacharschool.com';
 
-        $username = strtolower(trim((string) config('mail.mailers.smtp.username')));
-        $fromAddress = strtolower(trim((string) config('mail.from.address')));
-        $domainMailbox = $this->isDomainMailbox($username, $fromHost)
-            ? $username
-            : ($this->isDomainMailbox($fromAddress, $fromHost) ? $fromAddress : '');
-
+        $username = strtolower(trim((string) config('mail.mailers.smtp.username'), " \t\n\r\0\x0B\"'"));
+        $fromAddress = strtolower(trim((string) config('mail.from.address'), " \t\n\r\0\x0B\"'"));
         $fromName = (string) env('MAIL_FROM_NAME', 'Business Navachar School');
         $smtpHost = strtolower((string) config('mail.mailers.smtp.host'));
-        $usingGmailSmtp = str_contains($smtpHost, 'gmail.com');
-        $usingHostingerSmtp = str_contains($smtpHost, 'hostinger')
-            || str_contains($smtpHost, 'titan.email')
-            || $smtpHost === 'localhost'
-            || $smtpHost === '127.0.0.1';
-
-        if ($domainMailbox !== '') {
-            if (! $usingHostingerSmtp) {
-                config([
-                    'mail.default' => 'smtp',
-                    'mail.mailers.smtp.host' => env('MAIL_HOSTINGER_HOST', 'smtp.hostinger.com'),
-                    'mail.mailers.smtp.port' => (int) env('MAIL_HOSTINGER_PORT', 465),
-                    'mail.mailers.smtp.encryption' => env('MAIL_HOSTINGER_ENCRYPTION', 'ssl'),
-                    'mail.mailers.smtp.username' => $domainMailbox,
-                ]);
-            }
-
-            config([
-                'mail.from.address' => $domainMailbox,
-                'mail.from.name' => $fromName,
-                'mail.reply_to.address' => $domainMailbox,
-                'mail.reply_to.name' => $fromName,
-            ]);
-
-            Mail::alwaysFrom($domainMailbox, $fromName);
-            Mail::alwaysReplyTo($domainMailbox, $fromName);
-
-            return;
-        }
-
-        if (! $usingGmailSmtp) {
-            return;
-        }
-
-        $domainFrom = 'info@'.$fromHost;
+        $usingGmailSmtp = str_contains($smtpHost, 'gmail.com') || str_contains($smtpHost, 'google.com');
+        $mailbox = $this->isDomainMailbox($username, $fromHost)
+            ? $username
+            : ($this->isDomainMailbox($fromAddress, $fromHost) ? $fromAddress : ($username ?: $fromAddress));
+        $sendmailFrom = $this->isDomainMailbox($mailbox, $fromHost) ? $mailbox : 'info@'.$fromHost;
         $sendmailPath = trim((string) env('MAIL_SENDMAIL_PATH', ''));
         if ($sendmailPath === '') {
-            $sendmailPath = '/usr/sbin/sendmail -t -i -f '.$domainFrom;
+            $sendmailPath = '/usr/sbin/sendmail -t -i -f '.$sendmailFrom;
         }
 
         config([
-            'mail.default' => 'sendmail',
             'mail.mailers.sendmail.path' => $sendmailPath,
-            'mail.from.address' => $domainFrom,
+            'mail.from.address' => $sendmailFrom,
             'mail.from.name' => $fromName,
+            'mail.reply_to.address' => $sendmailFrom,
+            'mail.reply_to.name' => $fromName,
         ]);
-        Mail::alwaysFrom($domainFrom, $fromName);
-        Mail::alwaysReplyTo($domainFrom, $fromName);
+        Mail::alwaysFrom($sendmailFrom, $fromName);
+        Mail::alwaysReplyTo($sendmailFrom, $fromName);
+
+        if ($usingGmailSmtp) {
+            config([
+                'mail.default' => 'failover',
+                'mail.mailers.failover.mailers' => ['smtp', 'sendmail'],
+                'mail.mailers.smtp.host' => 'smtp.gmail.com',
+                'mail.mailers.smtp.port' => (int) env('MAIL_PORT', 587),
+                'mail.mailers.smtp.encryption' => env('MAIL_ENCRYPTION', 'tls'),
+                'mail.mailers.smtp.verify_peer' => false,
+            ]);
+
+            return;
+        }
+
+        config([
+            'mail.default' => 'failover',
+            'mail.mailers.failover.mailers' => ['smtp', 'sendmail'],
+        ]);
     }
 
     private function isDomainMailbox(string $email, string $fromHost): bool

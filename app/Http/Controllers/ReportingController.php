@@ -16,6 +16,7 @@ use Illuminate\Support\Collection;
 use Illuminate\Support\Facades\Auth;
 use Illuminate\Support\Facades\Cache;
 use Illuminate\Support\Facades\Hash;
+use Illuminate\Support\Facades\Log;
 use Illuminate\Support\Facades\Mail;
 use Illuminate\View\View;
 use RuntimeException;
@@ -398,9 +399,29 @@ class ReportingController extends Controller
         } catch (Throwable $exception) {
             Cache::forget($this->refundOtpCacheKey($membershipUpload));
             report($exception);
+            Log::error('Refund OTP email failed', [
+                'email' => $otpEmail,
+                'membership_id' => $membershipUpload->id,
+                'mailer' => config('mail.default'),
+                'host' => config('mail.mailers.smtp.host'),
+                'from' => config('mail.from.address'),
+                'message' => $exception->getMessage(),
+            ]);
 
-            return $this->refundOtpResponse($request, false, 'Unable to send OTP email right now. Please try again.', 500);
+            return $this->refundOtpResponse(
+                $request,
+                false,
+                'Unable to send OTP email. '.$exception->getMessage(),
+                500
+            );
         }
+
+        Log::info('Refund OTP email accepted by mailer', [
+            'email' => $otpEmail,
+            'membership_id' => $membershipUpload->id,
+            'mailer' => config('mail.default'),
+            'from' => config('mail.from.address'),
+        ]);
 
         return $this->refundOtpResponse(
             $request,

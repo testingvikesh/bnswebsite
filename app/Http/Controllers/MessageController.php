@@ -93,16 +93,28 @@ class MessageController extends Controller
         } catch (\Throwable $e) {
             report($e);
 
+            $detail = trim((string) $e->getMessage());
+            $friendly = 'Unable to send mail right now. Please try again.';
+            if (str_contains(strtolower($detail), '535') || str_contains(strtolower($detail), 'authentication failed')) {
+                $friendly = 'G Suite login failed. Use the Google App Password for info@businessnavacharschool.com in MAIL_PASSWORD (not the normal G Suite login password). Create it at https://myaccount.google.com/apppasswords';
+            }
+
             return response()->json([
                 'ok' => false,
-                'message' => 'Unable to send mail right now. Please try again.',
+                'message' => $friendly,
             ], 500);
         }
 
         if (! $result['ok']) {
+            $error = strtolower((string) ($result['error'] ?? ''));
+            $message = $result['error'] ?: 'Unable to send mail. Please try again.';
+            if (str_contains($error, '535') || str_contains($error, 'authentication failed')) {
+                $message = 'G Suite login failed. Use the Google App Password for info@businessnavacharschool.com in MAIL_PASSWORD (not the normal Gmail/G Suite login password). Create it at https://myaccount.google.com/apppasswords';
+            }
+
             return response()->json([
                 'ok' => false,
-                'message' => $result['error'] ?: 'Unable to send mail. Please try again.',
+                'message' => $message,
             ], 422);
         }
 
