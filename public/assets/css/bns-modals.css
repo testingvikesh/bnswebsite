@@ -8,13 +8,6 @@
     z-index: 100050 !important;
 }
 
-.modal-backdrop,
-.modal-backdrop.show,
-[data-bns-intro-session-backdrop],
-[data-bns-quick-register-backdrop] {
-    z-index: 100040 !important;
-}
-
 .bns-logout-modal,
 .bns-reporting-logout-modal {
     z-index: 100055 !important;
