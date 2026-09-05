@@ -1222,16 +1222,6 @@ class ReportingController extends Controller
         $paidDate = trim((string) $request->query('paid_date', ''));
         $dateFrom = trim((string) $request->query('date_from', ''));
         $dateTo = trim((string) $request->query('date_to', ''));
-        $session = trim((string) $request->query('session', ''));
-
-        if ($paidDate !== '') {
-            $dateFrom = $paidDate;
-            $dateTo = $paidDate;
-        }
-
-        if ($session !== '' && ! in_array((int) $session, [1, 2, 3, 4], true)) {
-            $session = '';
-        }
 
         return [
             'search' => trim((string) $request->query('q', '')),
@@ -1240,7 +1230,7 @@ class ReportingController extends Controller
             'date_from' => $dateFrom,
             'date_to' => $dateTo,
             'paid_date' => $paidDate,
-            'session' => $session,
+            'session' => '',
         ];
     }
 
@@ -1323,11 +1313,11 @@ class ReportingController extends Controller
             $query->where('payment_mode', $filters['payment_mode']);
         }
 
-        if ($filters['date_from'] !== '') {
+        if ($filters['date_from'] !== '' && ($filters['paid_date'] ?? '') === '') {
             $query->whereDate('paid_at', '>=', $filters['date_from']);
         }
 
-        if ($filters['date_to'] !== '') {
+        if ($filters['date_to'] !== '' && ($filters['paid_date'] ?? '') === '') {
             $query->whereDate('paid_at', '<=', $filters['date_to']);
         }
 
@@ -1340,10 +1330,10 @@ class ReportingController extends Controller
                 ->values();
         }
 
-        if (($filters['session'] ?? '') !== '') {
-            $session = (int) $filters['session'];
+        if (($filters['paid_date'] ?? '') !== '') {
+            $paidDate = $filters['paid_date'];
             $payments = $payments
-                ->filter(fn (AdmissionPayment $payment) => $this->paymentSessionNumber($payment) === $session)
+                ->filter(fn (AdmissionPayment $payment) => $payment->paid_at?->timezone('Asia/Kolkata')->toDateString() === $paidDate)
                 ->values();
         }
 
@@ -1351,45 +1341,32 @@ class ReportingController extends Controller
     }
 
     /**
-     * Only the first 4 intro sessions appear as date chips.
+     * Four intro session dates. Counts and clicks are by paid date (IST), not session membership.
      *
      * @param  Collection<int, AdmissionPayment>  $payments
      * @return Collection<int, array{session: int, date: string, label: string, count: int}>
      */
     private function introSessionPaymentChips(Collection $payments): Collection
     {
-        $counts = $payments->countBy(fn (AdmissionPayment $payment) => $this->paymentSessionNumber($payment));
+        $chipDates = [
+            ['session' => 4, 'date' => '2026-08-22'],
+            ['session' => 3, 'date' => '2026-08-09'],
+            ['session' => 2, 'date' => '2026-08-08'],
+            ['session' => 1, 'date' => '2026-07-19'],
+        ];
 
-        return collect(bns_introduction_sessions())
-            ->filter(fn (array $event) => in_array((int) ($event['session_number'] ?? 0), [1, 2, 3, 4], true))
-            ->map(function (array $event) use ($counts) {
-                $session = (int) ($event['session_number'] ?? 0);
-                $starts = \Illuminate\Support\Carbon::parse((string) ($event['starts_at'] ?? now()), 'Asia/Kolkata');
+        return collect($chipDates)->map(function (array $chip) use ($payments) {
+            $ymd = $chip['date'];
 
-                return [
-                    'session' => $session,
-                    'date' => $starts->toDateString(),
-                    'label' => $starts->format('d M Y'),
-                    'count' => (int) ($counts[$session] ?? 0),
-                ];
-            })
-            ->sortByDesc('date')
-            ->values();
-    }
-
-    private function paymentSessionNumber(AdmissionPayment $payment): int
-    {
-        $payable = $payment->payable;
-        if ($payable instanceof ContactInquiry) {
-            $stored = (int) ($payable->intro_session_number ?? 0);
-            if ($stored > 0) {
-                return $stored;
-            }
-        }
-
-        $paidDate = $payment->paid_at?->timezone('Asia/Kolkata')->toDateString();
-
-        return (int) (bns_intro_session_number_for_date($paidDate) ?: 0);
+            return [
+                'session' => $chip['session'],
+                'date' => $ymd,
+                'label' => \Illuminate\Support\Carbon::parse($ymd, 'Asia/Kolkata')->format('d M Y'),
+                'count' => $payments
+                    ->filter(fn (AdmissionPayment $payment) => $payment->paid_at?->timezone('Asia/Kolkata')->toDateString() === $ymd)
+                    ->count(),
+            ];
+        })->values();
     }
 
     private function decoratePayment(AdmissionPayment $payment): AdmissionPayment

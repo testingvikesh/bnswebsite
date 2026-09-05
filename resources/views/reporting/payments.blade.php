@@ -4,7 +4,7 @@
 
 @php
     $activeFilters = collect([
-        $search, $programFilter, $paymentModeFilter, $dateFrom, $dateTo, $sessionFilter ?? '',
+        $search, $programFilter, $paymentModeFilter, $dateFrom, $dateTo, $paidDate ?? '',
     ])->filter(fn ($value) => filled($value))->count();
 @endphp
 
@@ -67,7 +67,6 @@
 @php
     $dateChips = $dateChips ?? collect();
     $paidDate = $paidDate ?? '';
-    $sessionFilter = (string) ($sessionFilter ?? '');
     $chipQuery = array_filter([
         'q' => $search !== '' ? $search : null,
         'program' => $programFilter !== '' ? $programFilter : null,
@@ -80,14 +79,14 @@
     <div class="bns-reporting-date-chips__row">
         @foreach($dateChips as $chip)
             <a
-                href="{{ route('reporting.payments', array_merge($chipQuery, ['session' => $chip['session']])) }}#payment-members"
-                class="bns-reporting-date-chip{{ $sessionFilter === (string) $chip['session'] ? ' is-active' : '' }}"
+                href="{{ route('reporting.payments', array_merge($chipQuery, ['paid_date' => $chip['date']])) }}#payment-members"
+                class="bns-reporting-date-chip{{ $paidDate === $chip['date'] ? ' is-active' : '' }}"
             >
                 <span>{{ $chip['label'] }}</span>
                 <strong>{{ number_format($chip['count']) }}</strong>
             </a>
         @endforeach
-        @if($sessionFilter !== '')
+        @if($paidDate !== '')
             <a href="{{ route('reporting.payments', $chipQuery) }}" class="bns-reporting-date-chip bns-reporting-date-chip--all">All dates</a>
         @endif
     </div>
