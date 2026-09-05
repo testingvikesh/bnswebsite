@@ -128,28 +128,25 @@
                                         </div>
                                     @endif
 
-                                    @if($upload->canRefund() && $payment)
-                                        <button
-                                            type="button"
-                                            class="btn btn-sm btn-warning mt-2"
-                                            data-bs-toggle="modal"
-                                            data-bs-target="#{{ $modalId }}"
-                                        >
-                                            <i class="bi bi-cash-coin"></i> Refund
-                                        </button>
-                                    @elseif($upload->canRefund() && ! $payment)
-                                        <div class="text-danger small mt-2">No successful payment found for refund.</div>
-                                    @elseif($payment && $payment->refund_merchant_txn_no)
+                                    @if($payment && ($upload->status === 'refunded' || $payment->isRefunded()))
                                         <div class="mt-2">
-                                            @if($upload->status === 'refunded' || $payment->isRefunded())
-                                                <div class="text-success small">
-                                                    Refunded ₹{{ number_format((float) ($payment->refund_amount ?? 0), 2) }}
-                                                    · {{ $payment->refund_merchant_txn_no }}
-                                                </div>
-                                            @elseif($payment->refund_status === 'failed')
-                                                <div class="text-danger small mb-1">
-                                                    Refund failed: {{ $payment->refund_response_description ?: 'Unknown error' }}
-                                                </div>
+                                            <div class="text-success small">
+                                                Refunded ₹{{ number_format((float) ($payment->refund_amount ?? 0), 2) }}
+                                                · {{ $payment->refund_merchant_txn_no }}
+                                            </div>
+                                            <form method="POST" action="{{ route('reporting.membership.refund-status', $upload) }}" class="mt-2">
+                                                @csrf
+                                                <button type="submit" class="btn btn-sm btn-outline-primary">
+                                                    <i class="bi bi-arrow-repeat"></i> Check Refund Status
+                                                </button>
+                                            </form>
+                                        </div>
+                                    @elseif($payment && $payment->refund_status === 'failed')
+                                        <div class="mt-2">
+                                            <div class="text-danger small mb-1">
+                                                Refund failed: {{ $payment->refund_response_description ?: 'Unknown error' }}
+                                            </div>
+                                            @if($upload->canOfferRefund($payment))
                                                 <button
                                                     type="button"
                                                     class="btn btn-sm btn-warning mb-2"
@@ -166,6 +163,17 @@
                                                 </button>
                                             </form>
                                         </div>
+                                    @elseif($upload->canOfferRefund($payment))
+                                        <button
+                                            type="button"
+                                            class="btn btn-sm btn-warning mt-2"
+                                            data-bs-toggle="modal"
+                                            data-bs-target="#{{ $modalId }}"
+                                        >
+                                            <i class="bi bi-cash-coin"></i> Refund
+                                        </button>
+                                    @elseif($upload->canRefund() && ! $payment)
+                                        <div class="text-danger small mt-2">No successful payment found for refund.</div>
                                     @endif
                                 </div>
                             @endif
@@ -173,7 +181,7 @@
                     @endif
                 </tr>
 
-                @if($canManageBnsVerify && $payment && ($upload->canRefund() || $payment->refund_status === 'failed'))
+                @if($canManageBnsVerify && $payment && $upload->canOfferRefund($payment))
                     @include('reporting.partials.refund-modal', [
                         'upload' => $upload,
                         'payment' => $payment,
@@ -271,7 +279,7 @@
                                 <div class="text-muted mt-1">{{ $upload->bns_remarks }}</div>
                             @endif
 
-                            @if($upload->canRefund() && $payment)
+                            @if($upload->canOfferRefund($payment))
                                 <button
                                     type="button"
                                     class="btn btn-sm btn-warning mt-2"
@@ -280,7 +288,7 @@
                                 >
                                     <i class="bi bi-cash-coin"></i> Refund
                                 </button>
-                            @elseif($upload->status === 'refunded' && $payment)
+                            @elseif($payment && ($upload->status === 'refunded' || $payment->isRefunded()))
                                 <form method="POST" action="{{ route('reporting.membership.refund-status', $upload) }}" class="mt-2">
                                     @csrf
                                     <button type="submit" class="btn btn-sm btn-outline-primary">
@@ -292,7 +300,7 @@
                     @endif
                 </div>
 
-                @if($upload->canRefund() && $payment)
+                @if($upload->canOfferRefund($payment))
                     @include('reporting.partials.refund-modal', [
                         'upload' => $upload,
                         'payment' => $payment,

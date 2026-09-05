@@ -26,6 +26,7 @@
                                     <div><strong>Member:</strong> {{ $upload->membership_name }}</div>
                                     <div><strong>Membership No:</strong> {{ $upload->membership_no ?: '—' }}</div>
                                     <div><strong>Reg. No.:</strong> {{ $upload->registration_number ?: '—' }}</div>
+                                    <div><strong>Mobile:</strong> {{ $upload->mobile ?: '—' }}</div>
                                     <div><strong>Refund Amount:</strong> ₹{{ number_format((float) $refundAmount, 2) }}</div>
                                 </td>
                             </tr>

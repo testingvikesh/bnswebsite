@@ -190,6 +190,17 @@ class MembershipUpload extends Model
             && $this->bns_status === self::STEP_APPROVED;
     }
 
+    public function canOfferRefund(?AdmissionPayment $payment = null): bool
+    {
+        if (! $this->canRefund()) {
+            return false;
+        }
+
+        $payment ??= $this->successfulPayment();
+
+        return $payment !== null && ! $payment->isRefunded();
+    }
+
     public function successfulPayment(): ?AdmissionPayment
     {
         $registrationNumber = trim((string) $this->registration_number);

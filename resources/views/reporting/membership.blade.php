@@ -205,6 +205,9 @@
                 });
 
                 const data = await response.json().catch(function () {
+                    if (response.status === 419) {
+                        return { success: false, message: 'Session expired. Refresh the page and try Send OTP again.' };
+                    }
                     return { success: false, message: 'Unable to send OTP. Please try again.' };
                 });
 

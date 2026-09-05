@@ -9,6 +9,7 @@ use App\Models\MembershipUpload;
 use App\Models\SessionAttendance;
 use App\Models\User;
 use App\Services\IciciPaymentGatewayService;
+use App\Services\OutboundMailer;
 use Illuminate\Http\JsonResponse;
 use Illuminate\Http\RedirectResponse;
 use Illuminate\Http\Request;
@@ -17,7 +18,6 @@ use Illuminate\Support\Facades\Auth;
 use Illuminate\Support\Facades\Cache;
 use Illuminate\Support\Facades\Hash;
 use Illuminate\Support\Facades\Log;
-use Illuminate\Support\Facades\Mail;
 use Illuminate\View\View;
 use RuntimeException;
 use Symfony\Component\HttpFoundation\StreamedResponse;
@@ -369,7 +369,7 @@ class ReportingController extends Controller
         }
 
         if ($payment->isRefunded()) {
-            return $this->refundOtpResponse($request, false, 'This payment has already been refunded.', 422);
+            return $this->refundOtpResponse($request, false, 'This payment has already been refunded. Use Check Refund Status.', 422);
         }
 
         $maxAmount = (float) $payment->amount;
@@ -390,7 +390,7 @@ class ReportingController extends Controller
         ], now()->addMinutes($ttlMinutes));
 
         try {
-            Mail::to($otpEmail)->send(new RefundOtpMail(
+            app(OutboundMailer::class)->send($otpEmail, new RefundOtpMail(
                 $otp,
                 $membershipUpload,
                 $refundAmount,
@@ -411,7 +411,7 @@ class ReportingController extends Controller
             return $this->refundOtpResponse(
                 $request,
                 false,
-                'Unable to send OTP email. '.$exception->getMessage(),
+                'Unable to send OTP to '.$otpEmail.'. '.$exception->getMessage(),
                 500
             );
         }

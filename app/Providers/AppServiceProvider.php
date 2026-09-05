@@ -2,6 +2,7 @@
 
 namespace App\Providers;
 
+use App\Services\OutboundMailer;
 use App\Services\SiteSettingsService;
 use App\Services\TestRegistrationPurgeService;
 use Illuminate\Auth\Notifications\ResetPassword;
@@ -93,19 +94,12 @@ class AppServiceProvider extends ServiceProvider
     }
 
     /**
-     * info@ is Google Workspace (G Suite), so keep smtp.gmail.com.
-     * Do not send that password to smtp.hostinger.com (that caused 535).
-     * On Hostinger, TLS to Gmail can be intercepted — disable peer verify
-     * and fall back to local sendmail if Gmail SMTP still fails.
+     * info@ is Google Workspace, but Hostinger intercepts smtp.gmail.com
+     * (535 against a fake SMTP). Send through local sendmail as the school domain.
      */
     private function configureHostingerMailer(): void
     {
-        $hostname = strtolower((string) gethostname());
-        $onHostinger = str_contains($hostname, 'hstgr.cloud')
-            || str_contains($hostname, 'srv1864255')
-            || str_contains($hostname, 'hostinger');
-
-        if (! $onHostinger) {
+        if (! OutboundMailer::isHostingerServer()) {
             return;
         }
 
@@ -115,8 +109,6 @@ class AppServiceProvider extends ServiceProvider
         $username = strtolower(trim((string) config('mail.mailers.smtp.username'), " \t\n\r\0\x0B\"'"));
         $fromAddress = strtolower(trim((string) config('mail.from.address'), " \t\n\r\0\x0B\"'"));
         $fromName = (string) env('MAIL_FROM_NAME', 'Business Navachar School');
-        $smtpHost = strtolower((string) config('mail.mailers.smtp.host'));
-        $usingGmailSmtp = str_contains($smtpHost, 'gmail.com') || str_contains($smtpHost, 'google.com');
         $mailbox = $this->isDomainMailbox($username, $fromHost)
             ? $username
             : ($this->isDomainMailbox($fromAddress, $fromHost) ? $fromAddress : ($username ?: $fromAddress));
@@ -127,6 +119,7 @@ class AppServiceProvider extends ServiceProvider
         }
 
         config([
+            'mail.default' => 'sendmail',
             'mail.mailers.sendmail.path' => $sendmailPath,
             'mail.from.address' => $sendmailFrom,
             'mail.from.name' => $fromName,
@@ -135,24 +128,6 @@ class AppServiceProvider extends ServiceProvider
         ]);
         Mail::alwaysFrom($sendmailFrom, $fromName);
         Mail::alwaysReplyTo($sendmailFrom, $fromName);
-
-        if ($usingGmailSmtp) {
-            config([
-                'mail.default' => 'failover',
-                'mail.mailers.failover.mailers' => ['smtp', 'sendmail'],
-                'mail.mailers.smtp.host' => 'smtp.gmail.com',
-                'mail.mailers.smtp.port' => (int) env('MAIL_PORT', 587),
-                'mail.mailers.smtp.encryption' => env('MAIL_ENCRYPTION', 'tls'),
-                'mail.mailers.smtp.verify_peer' => false,
-            ]);
-
-            return;
-        }
-
-        config([
-            'mail.default' => 'failover',
-            'mail.mailers.failover.mailers' => ['smtp', 'sendmail'],
-        ]);
     }
 
     private function isDomainMailbox(string $email, string $fromHost): bool

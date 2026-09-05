@@ -4,15 +4,18 @@ namespace App\Services;
 
 use App\Mail\IntroSessionConfirmationMail;
 use App\Mail\IntroSessionSequenceMail;
+use App\Services\OutboundMailer;
 use App\Support\IcsCalendarBuilder;
 use Illuminate\Support\Facades\Log;
-use Illuminate\Support\Facades\Mail;
 
 class IntroSessionConfirmationMailer
 {
     public const TEMPLATE_WELCOME = 'welcome-confirmation';
 
-    public function __construct(private IcsCalendarBuilder $ics) {}
+    public function __construct(
+        private IcsCalendarBuilder $ics,
+        private OutboundMailer $outbound,
+    ) {}
 
     /**
      * @param  array<string, mixed>  $inquiry
@@ -94,7 +97,7 @@ class IntroSessionConfirmationMailer
                     ];
                 }
 
-                Mail::to($email)->send(new IntroSessionSequenceMail(
+                $this->outbound->send($email, new IntroSessionSequenceMail(
                     inquiry: $inquiry,
                     event: is_array($event) ? $event : ['title' => 'Introduction Session'],
                     template: $template,
@@ -159,7 +162,7 @@ class IntroSessionConfirmationMailer
 
         $googleCalendarUrl = $this->ics->googleCalendarUrl($event);
 
-        Mail::to($email)->send(new IntroSessionConfirmationMail(
+        $this->outbound->send($email, new IntroSessionConfirmationMail(
             inquiry: $inquiry,
             event: $event,
             googleCalendarUrl: $googleCalendarUrl,
