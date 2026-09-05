@@ -39,9 +39,15 @@ class IntroSessionSequenceMail extends Mailable
 
         return new Envelope(
             from: new Address(
-                (string) config('mail.from.address', 'businessnavacharschool1@gmail.com'),
-                'Business Navachar School',
+                (string) config('mail.from.address', 'info@businessnavacharschool.com'),
+                (string) config('mail.from.name', 'Business Navachar School'),
             ),
+            replyTo: [
+                new Address(
+                    (string) config('mail.reply_to.address', config('mail.from.address')),
+                    (string) config('mail.reply_to.name', config('mail.from.name', 'Business Navachar School')),
+                ),
+            ],
             subject: $subject,
         );
     }

@@ -88,7 +88,8 @@ return [
         ['label' => 'WhatsApp Channel', 'icon' => 'fab fa-whatsapp', 'url' => 'https://whatsapp.com/channel/0029VbD3LPjA2pLF2rqtq20X'],
     ],
 
-    'maps_embed_url' => 'https://www.google.com/maps/embed?pb=!1m18!1m12!1m3!1d3691.0!2d70.8022!3d22.3039!2m3!1f0!2f0!3f0!3m2!1i1024!2i768!4f13.1!3m3!1m2!1s0x0%3A0x0!2zMjLCsDE4JzE0LjAiTiA3MMKwNDgnMDguMCJF!5e0!3m2!1sen!2sin!4v1',
+    'maps_url' => 'https://maps.app.goo.gl/Ve33LZjacUg2eB9H7',
+    'maps_embed_url' => 'https://www.google.com/maps?q=19.084415435791016,72.8405532836914&z=17&hl=en&output=embed',
 
     'form_categories' => [
         'Student',

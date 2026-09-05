@@ -144,14 +144,67 @@
     letter-spacing: 0.04em;
 }
 
-.bns-contact-lines a {
+.bns-contact-address-link {
+    display: block;
     color: #fff;
     text-decoration: none;
+}
+
+.bns-contact-address-link p,
+.bns-contact-address-link li {
+    color: inherit;
+}
+
+.bns-contact-address-link:hover,
+.bns-contact-address-link:focus {
+    color: #ffd9c2;
+}
+
+.bns-contact-map-open {
+    display: inline-flex;
+    align-items: center;
+    gap: 8px;
+    margin-top: 10px;
+    padding: 8px 14px;
+    border-radius: 999px;
+    background: #fe5500;
+    color: #fff;
+    font-size: 13px;
+    font-weight: 700;
+}
+
+.bns-contact-address-link:hover .bns-contact-map-open {
+    background: #fff;
+    color: #fe5500;
+}
+
+.bns-contact-lines a {
+    color: #fff;
+    text-decoration: underline;
+    text-underline-offset: 3px;
     font-weight: 600;
     word-break: break-word;
 }
 
 .bns-contact-lines a:hover { color: #fe5500; }
+
+.bns-contact-map-btn {
+    display: inline-flex;
+    align-items: center;
+    gap: 8px;
+    margin-top: 16px;
+    padding: 12px 18px;
+    border-radius: 999px;
+    background: #fe5500;
+    color: #fff;
+    font-weight: 700;
+    text-decoration: none;
+}
+
+.bns-contact-map-btn:hover {
+    color: #fff;
+    background: #0a1d37;
+}
 
 .bns-contact-form__title {
     font-size: 1.35rem;

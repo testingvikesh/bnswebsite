@@ -19,7 +19,7 @@
                         </div>
                         <div class="sidebar-contact-info"><h4>Contact Info</h4><ul class="list-unstyled">
                             @if(!empty($siteHeader['address']))
-                            <li><span class="far fa-map-marker-alt"></span> {{ $siteHeader['address'] }}</li>
+                            <li><span class="far fa-map-marker-alt"></span> <a href="{{ $siteHeader['maps_url'] ?? '#' }}" target="_blank" rel="noopener noreferrer">{{ $siteHeader['address'] }}</a></li>
                             @endif
                             @foreach($siteHeader['phones'] ?? [] as $phoneItem)
                             <li><span class="far fa-phone"></span> <a href="{{ $phoneItem['href'] }}">{{ $phoneItem['label'] }}</a></li>

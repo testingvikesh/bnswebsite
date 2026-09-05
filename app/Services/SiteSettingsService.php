@@ -126,6 +126,7 @@ class SiteSettingsService
                 ? 'mailto:'.trim((string) $this->get(self::KEY_HEADER_EMAIL, $defaults['email'] ?? ''))
                 : '#',
             'address' => trim((string) $this->get(self::KEY_HEADER_ADDRESS, $defaults['address'] ?? '')),
+            'maps_url' => $this->mapsUrl($defaults),
             'welcome_text' => trim((string) $this->get(self::KEY_HEADER_WELCOME, $defaults['welcome_text'] ?? '')),
             'social_title' => trim((string) $this->get(self::KEY_HEADER_SOCIAL_TITLE, $defaults['social_title'] ?? 'Follow Us On:')),
             'social_links' => $socialLinks,
@@ -168,6 +169,20 @@ class SiteSettingsService
             'digits' => $digits,
             'href' => 'tel:'.$digits,
         ]];
+    }
+
+    /** @param array<string, mixed> $defaults */
+    private function mapsUrl(array $defaults): string
+    {
+        $configured = trim((string) ($defaults['maps_url'] ?? config('contact.maps_url', '')));
+        if ($configured !== '') {
+            return $configured;
+        }
+
+        $address = trim((string) $this->get(self::KEY_HEADER_ADDRESS, $defaults['address'] ?? ''));
+        $query = trim($address.' Business Navachar School');
+
+        return 'https://www.google.com/maps/search/?api=1&query='.rawurlencode($query !== '' ? $query : 'Business Navachar School');
     }
 
     /** @return array<string, string> */

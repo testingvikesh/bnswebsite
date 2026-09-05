@@ -35,7 +35,7 @@
                             <div class="footer-widget__contact-info-box">
                                 <ul class="footer-widget__contact-info-list list-unstyled">
                                     @if(!empty($siteHeader['address']))
-                                    <li><div class="footer-widget__contact-info-list-shape-1"></div><div class="icon"><span class="fas fa-map-marker-alt"></span></div><p>{{ $siteHeader['address'] }}</p></li>
+                                    <li><div class="footer-widget__contact-info-list-shape-1"></div><div class="icon"><span class="fas fa-map-marker-alt"></span></div><p><a href="{{ $siteHeader['maps_url'] ?? '#' }}" target="_blank" rel="noopener noreferrer">{{ $siteHeader['address'] }}</a></p></li>
                                     @endif
                                     @if(!empty($siteHeader['email']))
                                     <li><div class="footer-widget__contact-info-list-shape-1"></div><div class="icon"><span class="fas fa-envelope"></span></div><p><a href="{{ $siteHeader['email_href'] }}">{{ $siteHeader['email'] }}</a></p></li>

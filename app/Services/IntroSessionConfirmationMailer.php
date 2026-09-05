@@ -101,6 +101,13 @@ class IntroSessionConfirmationMailer
                 ));
             }
 
+            Log::info('Intro session email accepted by mailer', [
+                'email' => $email,
+                'template' => $templateId,
+                'mailer' => config('mail.default'),
+                'from' => config('mail.from.address'),
+            ]);
+
             return [
                 'ok' => true,
                 'error' => null,

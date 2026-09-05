@@ -108,8 +108,13 @@ return [
     */
 
     'from' => [
-        'address' => env('MAIL_FROM_ADDRESS', 'businessnavacharschool1@gmail.com'),
-        'name' => 'Business Navachar School',
+        'address' => env('MAIL_FROM_ADDRESS', 'info@businessnavacharschool.com'),
+        'name' => env('MAIL_FROM_NAME', 'Business Navachar School'),
+    ],
+
+    'reply_to' => [
+        'address' => env('MAIL_REPLY_TO_ADDRESS', env('MAIL_FROM_ADDRESS', 'info@businessnavacharschool.com')),
+        'name' => env('MAIL_FROM_NAME', 'Business Navachar School'),
     ],
 
     /*

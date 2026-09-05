@@ -1,3 +1,8 @@
+@php
+    $mapsUrl = $page->mapsUrl();
+    $tel = fn (?string $phone) => 'tel:+'.ltrim((string) preg_replace('/\D+/', '', (string) $phone), '0');
+    $wa = fn (?string $phone) => 'https://wa.me/'.preg_replace('/\D+/', '', (string) $phone);
+@endphp
 <div class="bns-contact-card bns-contact-card--office">
     <span class="bns-contact-card__label">{{ $page->office_title }}</span>
     <h3 class="bns-contact-card__title">{{ $page->office_brand }}</h3>
@@ -7,25 +12,28 @@
 
     <div class="bns-contact-info-block">
         <h4><i class="fas fa-map-marker-alt"></i> {{ $page->office_head_label }}</h4>
-        @if($page->address_line)<p>{{ $page->address_line }}</p>@endif
-        <ul class="list-unstyled bns-contact-address">
-            @if($page->city)<li><strong>City:</strong> {{ $page->city }}</li>@endif
-            @if($page->state)<li><strong>State:</strong> {{ $page->state }}</li>@endif
-            @if($page->pin_code)<li><strong>PIN Code:</strong> {{ $page->pin_code }}</li>@endif
-        </ul>
+        <a class="bns-contact-address-link" href="{{ $mapsUrl }}" target="_blank" rel="noopener noreferrer">
+            @if($page->address_line)<p>{{ $page->address_line }}</p>@endif
+            <ul class="list-unstyled bns-contact-address">
+                @if($page->city)<li><strong>City:</strong> {{ $page->city }}</li>@endif
+                @if($page->state)<li><strong>State:</strong> {{ $page->state }}</li>@endif
+                @if($page->pin_code)<li><strong>PIN Code:</strong> {{ $page->pin_code }}</li>@endif
+            </ul>
+            <span class="bns-contact-map-open"><i class="fas fa-map-marked-alt"></i> Open in Google Maps</span>
+        </a>
     </div>
 
     <div class="bns-contact-info-block">
         <h4><i class="fas fa-phone-alt"></i> Contact Information</h4>
         <ul class="list-unstyled bns-contact-lines">
             @if($page->phone_helpline)
-                <li><span>Admission Helpline</span><a href="tel:{{ preg_replace('/\D+/', '', $page->phone_helpline) }}">{{ $page->phone_helpline }}</a></li>
+                <li><span>Admission Helpline</span><a href="{{ $tel($page->phone_helpline) }}">{{ $page->phone_helpline }}</a></li>
             @endif
             @if($page->phone_whatsapp)
-                <li><span>WhatsApp</span><a href="https://wa.me/{{ preg_replace('/\D+/', '', $page->phone_whatsapp) }}" target="_blank" rel="noopener">{{ $page->phone_whatsapp }}</a></li>
+                <li><span>WhatsApp</span><a href="{{ $wa($page->phone_whatsapp) }}" target="_blank" rel="noopener">{{ $page->phone_whatsapp }}</a></li>
             @endif
             @if($page->phone_office)
-                <li><span>Office Number</span><a href="tel:{{ preg_replace('/\D+/', '', $page->phone_office) }}">{{ $page->phone_office }}</a></li>
+                <li><span>Office Number</span><a href="{{ $tel($page->phone_office) }}">{{ $page->phone_office }}</a></li>
             @endif
             @if($page->email_admissions)
                 <li><span>Email</span><a href="mailto:{{ $page->email_admissions }}">{{ $page->email_admissions }}</a></li>

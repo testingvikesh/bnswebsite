@@ -117,12 +117,15 @@
             </div>
             @endif
 
-            @if($page->maps_embed_url)
+            @if($page->mapsEmbedSrc())
             <div class="bns-contact-card bns-contact-card--map">
-                <h3><i class="fas fa-map-marked-alt"></i> Find Us</h3>
+                <h3><i class="fas fa-map-marked-alt"></i> Find Us on Google Maps</h3>
                 <div class="bns-contact-map">
-                    <iframe src="{{ $page->maps_embed_url }}" allowfullscreen loading="lazy" referrerpolicy="no-referrer-when-downgrade" title="BNS location on Google Maps"></iframe>
+                    <iframe src="{{ $page->mapsEmbedSrc() }}" allowfullscreen loading="lazy" referrerpolicy="no-referrer-when-downgrade" title="BNS location on Google Maps"></iframe>
                 </div>
+                <a href="{{ $page->mapsUrl() }}" class="bns-contact-map-btn" target="_blank" rel="noopener noreferrer">
+                    <i class="fas fa-directions"></i> Open in Google Maps
+                </a>
             </div>
             @endif
 

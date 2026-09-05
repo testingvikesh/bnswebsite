@@ -61,4 +61,41 @@ class ContactPage extends Model
 
         return str_starts_with($url, 'http') ? $url : 'https://'.$url;
     }
+
+    public function mapsUrl(): string
+    {
+        $configured = trim((string) config('contact.maps_url', ''));
+        if ($configured !== '') {
+            return $configured;
+        }
+
+        $embed = trim((string) $this->maps_embed_url);
+        if ($embed !== '' && str_contains($embed, 'google.com/maps') && ! str_contains($embed, '0x0%3A0x0')) {
+            $clickable = preg_replace('/([?&])output=embed(&|$)/', '$1', $embed) ?: $embed;
+
+            return rtrim($clickable, '?&');
+        }
+
+        $query = trim(implode(', ', array_filter([
+            $this->address_line,
+            $this->city,
+            $this->state,
+            $this->pin_code,
+            'Business Navachar School',
+        ], fn ($value) => filled($value))));
+
+        return 'https://www.google.com/maps/search/?api=1&query='.rawurlencode($query);
+    }
+
+    public function mapsEmbedSrc(): ?string
+    {
+        $embed = trim((string) $this->maps_embed_url);
+        $fallback = trim((string) config('contact.maps_embed_url', ''));
+
+        if ($embed === '' || str_contains($embed, '0x0%3A0x0') || ! str_contains($embed, 'google.com/maps')) {
+            $embed = $fallback;
+        }
+
+        return $embed !== '' ? $embed : null;
+    }
 }
