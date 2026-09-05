@@ -10,8 +10,8 @@ use Throwable;
 class OutboundMailer
 {
     /**
-     * Send mail using the working path on this server.
-     * Hostinger intercepts smtp.gmail.com, so local sendmail is tried first.
+     * Hostinger blocks/intercepts smtp.gmail.com (535).
+     * Send with PHP mail() first, then sendmail. Gmail SMTP is last and optional.
      */
     public function send(string|array $to, Mailable $mailable): void
     {
@@ -19,7 +19,7 @@ class OutboundMailer
 
         foreach ($this->mailersToTry() as $mailer) {
             try {
-                Mail::mailer($mailer)->to($to)->send($mailable);
+                Mail::mailer($mailer)->to($to)->send(clone $mailable);
 
                 Log::info('Outbound mail sent', [
                     'mailer' => $mailer,
@@ -46,18 +46,32 @@ class OutboundMailer
      */
     public function mailersToTry(): array
     {
-        if (self::isHostingerServer()) {
-            return ['sendmail', 'smtp'];
+        $mailers = ['php', 'sendmail'];
+        $smtpHost = strtolower((string) config('mail.mailers.smtp.host'));
+        $gmailSmtp = str_contains($smtpHost, 'gmail') || str_contains($smtpHost, 'google');
+        $tryGmail = filter_var(env('MAIL_TRY_GMAIL_SMTP', false), FILTER_VALIDATE_BOOLEAN);
+
+        if (! $gmailSmtp || $tryGmail) {
+            $mailers[] = 'smtp';
         }
 
-        $default = (string) config('mail.default', 'smtp');
+        if (! self::isHostingerServer()) {
+            $default = (string) config('mail.default', 'smtp');
 
-        return array_values(array_unique(array_filter([$default, 'smtp'])));
+            return array_values(array_unique(array_filter([$default, ...$mailers])));
+        }
+
+        return array_values(array_unique($mailers));
     }
 
     public static function isHostingerServer(): bool
     {
         if (filter_var(env('MAIL_USE_SENDMAIL', false), FILTER_VALIDATE_BOOLEAN)) {
+            return true;
+        }
+
+        $appUrl = strtolower((string) config('app.url', env('APP_URL', '')));
+        if (str_contains($appUrl, 'businessnavacharschool.com')) {
             return true;
         }
 
@@ -92,7 +106,7 @@ class OutboundMailer
         $first = (string) reset($errors);
         $lower = strtolower($first);
         if (str_contains($lower, '535') || str_contains($lower, 'authentication failed')) {
-            return 'Email server rejected G Suite SMTP. The site will send through the school server after this update is deployed. Try Send OTP again.';
+            return 'G Suite SMTP is blocked on this server. Mail is now sent from info@businessnavacharschool.com through the school server. Try Send OTP again.';
         }
 
         return $first;

@@ -2,6 +2,7 @@
 
 namespace App\Providers;
 
+use App\Mail\Transport\PhpMailTransport;
 use App\Services\OutboundMailer;
 use App\Services\SiteSettingsService;
 use App\Services\TestRegistrationPurgeService;
@@ -29,6 +30,8 @@ class AppServiceProvider extends ServiceProvider
     {
         Paginator::defaultView('vendor.pagination.bns');
         Paginator::defaultSimpleView('vendor.pagination.bns-simple');
+
+        Mail::extend('php', fn () => new PhpMailTransport());
 
         $this->configureHostingerMailer();
 
@@ -119,12 +122,13 @@ class AppServiceProvider extends ServiceProvider
         }
 
         config([
-            'mail.default' => 'sendmail',
+            'mail.default' => 'php',
             'mail.mailers.sendmail.path' => $sendmailPath,
             'mail.from.address' => $sendmailFrom,
             'mail.from.name' => $fromName,
             'mail.reply_to.address' => $sendmailFrom,
             'mail.reply_to.name' => $fromName,
+            'mail.mailers.smtp.verify_peer' => false,
         ]);
         Mail::alwaysFrom($sendmailFrom, $fromName);
         Mail::alwaysReplyTo($sendmailFrom, $fromName);
