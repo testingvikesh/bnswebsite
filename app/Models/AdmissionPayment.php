@@ -91,6 +91,11 @@ class AdmissionPayment extends Model
         return $this->refund_status === self::REFUND_STATUS_SUCCESS;
     }
 
+    public function canOfferRefund(): bool
+    {
+        return $this->isPaid() && ! $this->isRefunded();
+    }
+
     public function formattedAmount(): string
     {
         return number_format((float) $this->amount, 2, '.', '');

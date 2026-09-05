@@ -4,16 +4,22 @@
     $modalId = $modalId ?? 'bnsRefundModal';
     $defaultRefundAmount = number_format((float) ($defaultRefundAmount ?? 3160), 2, '.', '');
     $otpEmail = (string) config('reporting.refund_otp.email', 'mrupani2005@gmail.com');
+    $otpUrl = $otpUrl ?? ($upload ? route('reporting.membership.refund-otp', $upload) : ($payment ? route('reporting.payments.refund-otp', $payment) : ''));
+    $formAction = $formAction ?? ($upload ? route('reporting.membership.refund', $upload) : ($payment ? route('reporting.payments.refund', $payment) : ''));
+    $memberName = $upload->membership_name ?? $payment->customer_name ?? '—';
+    $membershipNo = $upload->membership_no ?? '—';
+    $registrationNumber = $upload->registration_number ?? $payment->registration_number ?? '—';
+    $mobile = $upload->mobile ?? $payment->customer_mobile ?? '—';
 @endphp
 
-@if($upload && $payment)
+@if($payment && $otpUrl !== '' && $formAction !== '')
 <div
     class="modal fade"
     id="{{ $modalId }}"
     tabindex="-1"
     aria-labelledby="{{ $modalId }}Label"
     aria-hidden="true"
-    data-refund-otp-url="{{ route('reporting.membership.refund-otp', $upload) }}"
+    data-refund-otp-url="{{ $otpUrl }}"
 >
     <div class="modal-dialog modal-dialog-centered">
         <div class="modal-content">
@@ -23,16 +29,16 @@
                 </h5>
                 <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
             </div>
-            <form method="POST" action="{{ route('reporting.membership.refund', $upload) }}" class="bns-refund-form">
+            <form method="POST" action="{{ $formAction }}" class="bns-refund-form">
                 @csrf
                 <div class="modal-body">
                     <div class="mb-3 small">
                         <div class="fw-semibold mb-2">Transaction Details</div>
                         <div class="row g-2">
-                            <div class="col-6"><span class="text-muted">Member</span><div class="fw-semibold">{{ $upload->membership_name }}</div></div>
-                            <div class="col-6"><span class="text-muted">Membership No</span><div class="fw-semibold">{{ $upload->membership_no ?: '—' }}</div></div>
-                            <div class="col-6"><span class="text-muted">Reg. No.</span><div class="fw-semibold">{{ $upload->registration_number ?: '—' }}</div></div>
-                            <div class="col-6"><span class="text-muted">Mobile</span><div class="fw-semibold">{{ $upload->mobile ?: '—' }}</div></div>
+                            <div class="col-6"><span class="text-muted">Member</span><div class="fw-semibold">{{ $memberName }}</div></div>
+                            <div class="col-6"><span class="text-muted">Membership No</span><div class="fw-semibold">{{ $membershipNo ?: '—' }}</div></div>
+                            <div class="col-6"><span class="text-muted">Reg. No.</span><div class="fw-semibold">{{ $registrationNumber ?: '—' }}</div></div>
+                            <div class="col-6"><span class="text-muted">Mobile</span><div class="fw-semibold">{{ $mobile ?: '—' }}</div></div>
                             <div class="col-6"><span class="text-muted">Merchant Txn</span><div class="fw-semibold text-break">{{ $payment->merchant_txn_no }}</div></div>
                             <div class="col-6"><span class="text-muted">Gateway Txn</span><div class="fw-semibold text-break">{{ $payment->txn_id ?: '—' }}</div></div>
                             <div class="col-6"><span class="text-muted">Payment ID</span><div class="fw-semibold text-break">{{ $payment->payment_id ?: '—' }}</div></div>

@@ -4,7 +4,7 @@
 
 @php
     $activeFilters = collect([
-        $search, $programFilter, $paymentModeFilter, $dateFrom, $dateTo,
+        $search, $programFilter, $paymentModeFilter, $dateFrom, $dateTo, $paidDate ?? '',
     ])->filter(fn ($value) => filled($value))->count();
 @endphp
 
@@ -25,6 +25,13 @@
 </section>
 
 @include('reporting.partials.page-tabs', ['activeTab' => 'payments'])
+
+@if ($errors->any())
+    <div class="alert alert-danger alert-dismissible fade show border-0 shadow-sm mb-4" role="alert">
+        <i class="bi bi-exclamation-triangle me-2"></i>{{ $errors->first() }}
+        <button type="button" class="btn-close" data-bs-dismiss="alert"></button>
+    </div>
+@endif
 
 <div class="row g-3 mb-4">
     <div class="col-6 col-lg-3">
@@ -56,6 +63,35 @@
         </div>
     </div>
 </div>
+
+@php
+    $dateChips = $dateChips ?? collect();
+    $paidDate = $paidDate ?? '';
+    $chipQuery = array_filter([
+        'q' => $search !== '' ? $search : null,
+        'program' => $programFilter !== '' ? $programFilter : null,
+        'payment_mode' => $paymentModeFilter !== '' ? $paymentModeFilter : null,
+    ], fn ($value) => $value !== null && $value !== '');
+@endphp
+@if($dateChips->isNotEmpty())
+<section class="bns-reporting-date-chips mb-4">
+    <div class="bns-reporting-date-chips__label">Click an intro session date</div>
+    <div class="bns-reporting-date-chips__row">
+        @foreach($dateChips as $chip)
+            <a
+                href="{{ route('reporting.payments', array_merge($chipQuery, ['paid_date' => $chip['date']])) }}#payment-members"
+                class="bns-reporting-date-chip{{ ($paidDate === $chip['date'] || ($dateFrom === $chip['date'] && $dateTo === $chip['date'])) ? ' is-active' : '' }}"
+            >
+                <span>{{ $chip['label'] }}</span>
+                <strong>{{ number_format($chip['count']) }}</strong>
+            </a>
+        @endforeach
+        @if($paidDate !== '')
+            <a href="{{ route('reporting.payments', $chipQuery) }}" class="bns-reporting-date-chip bns-reporting-date-chip--all">All dates</a>
+        @endif
+    </div>
+</section>
+@endif
 
 @if($programSummary->isNotEmpty())
 <section class="bns-reporting-program-summary mb-4">
@@ -137,7 +173,7 @@
     </form>
 </div>
 
-<section class="bns-reporting-table-card">
+<section class="bns-reporting-table-card" id="payment-members">
     <div class="bns-reporting-table-card__head">
         <div>
             <h3><i class="bi bi-table me-1"></i> Successful Payment Details</h3>
@@ -147,6 +183,15 @@
             </span>
         </div>
     </div>
-    @include('reporting.partials.payments-table', ['rows' => $payments])
+    @include('reporting.partials.payments-table', [
+        'rows' => $payments,
+        'canManageRefunds' => $canManageRefunds ?? false,
+        'membershipsByReg' => $membershipsByReg ?? [],
+        'defaultRefundAmount' => $defaultRefundAmount ?? 3160,
+    ])
 </section>
 @endsection
+
+@push('scripts')
+@include('reporting.partials.refund-otp-script')
+@endpush

@@ -23,10 +23,10 @@
                         <table role="presentation" width="100%" cellspacing="0" cellpadding="0" style="background:#f8fafc;border-radius:12px;border:1px solid #e2e8f0;">
                             <tr>
                                 <td style="padding:16px 18px;font-size:14px;line-height:1.7;">
-                                    <div><strong>Member:</strong> {{ $upload->membership_name }}</div>
-                                    <div><strong>Membership No:</strong> {{ $upload->membership_no ?: '—' }}</div>
-                                    <div><strong>Reg. No.:</strong> {{ $upload->registration_number ?: '—' }}</div>
-                                    <div><strong>Mobile:</strong> {{ $upload->mobile ?: '—' }}</div>
+                                    <div><strong>Member:</strong> {{ $memberName }}</div>
+                                    <div><strong>Membership No:</strong> {{ $membershipNo !== '' ? $membershipNo : '—' }}</div>
+                                    <div><strong>Reg. No.:</strong> {{ $registrationNumber !== '' ? $registrationNumber : '—' }}</div>
+                                    <div><strong>Mobile:</strong> {{ $mobile !== '' ? $mobile : '—' }}</div>
                                     <div><strong>Refund Amount:</strong> ₹{{ number_format((float) $refundAmount, 2) }}</div>
                                 </td>
                             </tr>

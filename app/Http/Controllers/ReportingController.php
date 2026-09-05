@@ -147,9 +147,29 @@ class ReportingController extends Controller
             ->sortByDesc('amount')
             ->values();
 
+        $dateChips = $allSuccessful
+            ->filter(fn (AdmissionPayment $payment) => $payment->paid_at !== null)
+            ->groupBy(fn (AdmissionPayment $payment) => $payment->paid_at->timezone('Asia/Kolkata')->toDateString())
+            ->map(fn (Collection $rows, string $ymd) => [
+                'date' => $ymd,
+                'label' => $rows->first()->paid_at->timezone('Asia/Kolkata')->format('d M Y'),
+                'count' => $rows->count(),
+            ])
+            ->sortByDesc('date')
+            ->values();
+
+        $membershipsByReg = $this->membershipsByRegistration(
+            $payments->pluck('registration_number')->filter()->unique()->values()->all()
+        );
+
         return view('reporting.payments', [
             'payments' => $payments,
             'programSummary' => $programSummary,
+            'dateChips' => $dateChips,
+            'paidDate' => $filters['paid_date'],
+            'membershipsByReg' => $membershipsByReg,
+            'canManageRefunds' => (bool) Auth::user()?->isBnsVerifier(),
+            'defaultRefundAmount' => (float) config('pay_now.scholarship_amount', 3160),
             'programOptions' => $allSuccessful->pluck('display_program')->filter()->unique()->sort()->values(),
             'search' => $filters['search'],
             'programFilter' => $filters['program'],
@@ -383,7 +403,7 @@ class ReportingController extends Controller
         $otpEmail = (string) config('reporting.refund_otp.email', 'mrupani2005@gmail.com');
         $otp = str_pad((string) random_int(0, (10 ** $otpLength) - 1), $otpLength, '0', STR_PAD_LEFT);
 
-        Cache::put($this->refundOtpCacheKey($membershipUpload), [
+        Cache::put($this->refundOtpCacheKey($payment), [
             'hash' => Hash::make($otp),
             'amount' => $refundAmount,
             'attempts' => 0,
@@ -392,12 +412,15 @@ class ReportingController extends Controller
         try {
             app(OutboundMailer::class)->send($otpEmail, new RefundOtpMail(
                 $otp,
-                $membershipUpload,
+                (string) $membershipUpload->membership_name,
+                (string) ($membershipUpload->membership_no ?: ''),
+                (string) ($membershipUpload->registration_number ?: ''),
+                (string) ($membershipUpload->mobile ?: ''),
                 $refundAmount,
                 $ttlMinutes,
             ));
         } catch (Throwable $exception) {
-            Cache::forget($this->refundOtpCacheKey($membershipUpload));
+            Cache::forget($this->refundOtpCacheKey($payment));
             report($exception);
             Log::error('Refund OTP email failed', [
                 'email' => $otpEmail,
@@ -459,7 +482,7 @@ class ReportingController extends Controller
         ]);
 
         $refundAmount = number_format((float) $validated['refund_amount'], 2, '.', '');
-        $otpPayload = Cache::get($this->refundOtpCacheKey($membershipUpload));
+        $otpPayload = Cache::get($this->refundOtpCacheKey($payment));
 
         if (! is_array($otpPayload) || empty($otpPayload['hash'])) {
             return back()->withErrors(['refund' => 'OTP expired or not sent. Please click Send OTP again.']);
@@ -467,7 +490,7 @@ class ReportingController extends Controller
 
         $attempts = (int) ($otpPayload['attempts'] ?? 0);
         if ($attempts >= 5) {
-            Cache::forget($this->refundOtpCacheKey($membershipUpload));
+            Cache::forget($this->refundOtpCacheKey($payment));
 
             return back()->withErrors(['refund' => 'Too many invalid OTP attempts. Please request a new OTP.']);
         }
@@ -475,7 +498,7 @@ class ReportingController extends Controller
         if (! Hash::check((string) $validated['otp'], (string) $otpPayload['hash'])) {
             $otpPayload['attempts'] = $attempts + 1;
             Cache::put(
-                $this->refundOtpCacheKey($membershipUpload),
+            $this->refundOtpCacheKey($payment),
                 $otpPayload,
                 now()->addMinutes(max(1, (int) config('reporting.refund_otp.ttl_minutes', 10)))
             );
@@ -487,7 +510,7 @@ class ReportingController extends Controller
             return back()->withErrors(['refund' => 'Refund amount changed after OTP was sent. Please send a new OTP.']);
         }
 
-        Cache::forget($this->refundOtpCacheKey($membershipUpload));
+        Cache::forget($this->refundOtpCacheKey($payment));
 
         $refundTxnNo = AdmissionPayment::generateRefundMerchantTxnNo();
 
@@ -568,6 +591,223 @@ class ReportingController extends Controller
                 'status' => MembershipUpload::STATUS_REFUNDED,
                 'bns_status' => MembershipUpload::STEP_REFUNDED,
             ]);
+        }
+
+        $description = (string) ($response['responseDescription'] ?? ($response['respdescription'] ?? ($response['error'] ?? 'Status checked.')));
+
+        return back()->with(
+            'status',
+            'Refund status: '.($response['responseCode'] ?? '—').' — '.$description
+        );
+    }
+
+    public function sendPaymentRefundOtp(Request $request, AdmissionPayment $payment): JsonResponse|RedirectResponse
+    {
+        $this->ensureReportingAccess();
+
+        if (! Auth::user()?->isBnsVerifier()) {
+            abort(403, 'Only the BNS login can process refunds.');
+        }
+
+        if (! $payment->isPaid()) {
+            return $this->refundOtpResponse($request, false, 'Refund is available only for a successful payment.', 422);
+        }
+
+        if ($payment->isRefunded()) {
+            return $this->refundOtpResponse($request, false, 'This payment has already been refunded. Use Check Refund Status.', 422);
+        }
+
+        $maxAmount = (float) $payment->amount;
+        $validated = $request->validate([
+            'refund_amount' => ['required', 'numeric', 'min:1', 'max:'.$maxAmount],
+        ]);
+
+        $refundAmount = number_format((float) $validated['refund_amount'], 2, '.', '');
+        $otpLength = max(4, (int) config('reporting.refund_otp.length', 6));
+        $ttlMinutes = max(1, (int) config('reporting.refund_otp.ttl_minutes', 10));
+        $otpEmail = (string) config('reporting.refund_otp.email', 'mrupani2005@gmail.com');
+        $otp = str_pad((string) random_int(0, (10 ** $otpLength) - 1), $otpLength, '0', STR_PAD_LEFT);
+        $membership = $this->membershipForPayment($payment);
+
+        Cache::put($this->refundOtpCacheKey($payment), [
+            'hash' => Hash::make($otp),
+            'amount' => $refundAmount,
+            'attempts' => 0,
+        ], now()->addMinutes($ttlMinutes));
+
+        try {
+            app(OutboundMailer::class)->send($otpEmail, new RefundOtpMail(
+                $otp,
+                (string) ($membership?->membership_name ?: $payment->customer_name ?: 'Participant'),
+                (string) ($membership?->membership_no ?: ''),
+                (string) ($payment->registration_number ?: ''),
+                (string) ($membership?->mobile ?: $payment->customer_mobile ?: ''),
+                $refundAmount,
+                $ttlMinutes,
+            ));
+        } catch (Throwable $exception) {
+            Cache::forget($this->refundOtpCacheKey($payment));
+            report($exception);
+            Log::error('Payment refund OTP email failed', [
+                'email' => $otpEmail,
+                'payment_id' => $payment->id,
+                'mailer' => config('mail.default'),
+                'from' => config('mail.from.address'),
+                'message' => $exception->getMessage(),
+            ]);
+
+            return $this->refundOtpResponse(
+                $request,
+                false,
+                'Unable to send OTP to '.$otpEmail.'. '.$exception->getMessage(),
+                500
+            );
+        }
+
+        return $this->refundOtpResponse(
+            $request,
+            true,
+            'OTP sent to '.$otpEmail.'. Enter the OTP to complete the refund.'
+        );
+    }
+
+    public function refundPayment(Request $request, AdmissionPayment $payment): RedirectResponse
+    {
+        $this->ensureReportingAccess();
+
+        if (! Auth::user()?->isBnsVerifier()) {
+            abort(403, 'Only the BNS login can process refunds.');
+        }
+
+        if (! $payment->isPaid()) {
+            return back()->withErrors(['refund' => 'Refund is available only for a successful payment.']);
+        }
+
+        if ($payment->isRefunded()) {
+            return back()->withErrors(['refund' => 'This payment has already been refunded.']);
+        }
+
+        $maxAmount = (float) $payment->amount;
+        $validated = $request->validate([
+            'refund_amount' => ['required', 'numeric', 'min:1', 'max:'.$maxAmount],
+            'otp' => ['required', 'digits:'.max(4, (int) config('reporting.refund_otp.length', 6))],
+        ]);
+
+        $refundAmount = number_format((float) $validated['refund_amount'], 2, '.', '');
+        $otpPayload = Cache::get($this->refundOtpCacheKey($payment));
+
+        if (! is_array($otpPayload) || empty($otpPayload['hash'])) {
+            return back()->withErrors(['refund' => 'OTP expired or not sent. Please click Send OTP again.']);
+        }
+
+        $attempts = (int) ($otpPayload['attempts'] ?? 0);
+        if ($attempts >= 5) {
+            Cache::forget($this->refundOtpCacheKey($payment));
+
+            return back()->withErrors(['refund' => 'Too many invalid OTP attempts. Please request a new OTP.']);
+        }
+
+        if (! Hash::check((string) $validated['otp'], (string) $otpPayload['hash'])) {
+            $otpPayload['attempts'] = $attempts + 1;
+            Cache::put(
+                $this->refundOtpCacheKey($payment),
+                $otpPayload,
+                now()->addMinutes(max(1, (int) config('reporting.refund_otp.ttl_minutes', 10)))
+            );
+
+            return back()->withErrors(['refund' => 'Invalid OTP. Please check the email and try again.']);
+        }
+
+        if (($otpPayload['amount'] ?? null) !== $refundAmount) {
+            return back()->withErrors(['refund' => 'Refund amount changed after OTP was sent. Please send a new OTP.']);
+        }
+
+        Cache::forget($this->refundOtpCacheKey($payment));
+
+        $refundTxnNo = AdmissionPayment::generateRefundMerchantTxnNo();
+
+        try {
+            $gateway = app(IciciPaymentGatewayService::class);
+            $result = $gateway->refund($payment, $refundAmount, $refundTxnNo);
+        } catch (RuntimeException $exception) {
+            return back()->withErrors(['refund' => $exception->getMessage()]);
+        }
+
+        $response = $result['response'] ?? [];
+        $success = app(IciciPaymentGatewayService::class)->isRefundSuccess($response);
+
+        $payment->update([
+            'refund_merchant_txn_no' => $refundTxnNo,
+            'refund_amount' => $refundAmount,
+            'refund_status' => $success
+                ? AdmissionPayment::REFUND_STATUS_SUCCESS
+                : AdmissionPayment::REFUND_STATUS_FAILED,
+            'refund_response_code' => (string) ($response['responseCode'] ?? ''),
+            'refund_response_description' => (string) ($response['responseDescription'] ?? ($response['respdescription'] ?? ($response['error'] ?? ''))),
+            'refund_request' => $result['request'] ?? null,
+            'refund_response' => $response,
+            'refunded_at' => $success ? now() : null,
+        ]);
+
+        if ($success) {
+            $membership = $this->membershipForPayment($payment);
+            if ($membership && $membership->status !== MembershipUpload::STATUS_REFUNDED) {
+                $membership->update([
+                    'status' => MembershipUpload::STATUS_REFUNDED,
+                    'bns_status' => MembershipUpload::STEP_REFUNDED,
+                    'notes' => trim(($membership->notes ? $membership->notes."\n" : '').'Refund of ₹'.$refundAmount.' processed.'),
+                ]);
+            }
+
+            return back()->with('status', 'Refund of ₹'.$refundAmount.' submitted successfully. Txn: '.$refundTxnNo);
+        }
+
+        $description = (string) ($response['responseDescription'] ?? ($response['respdescription'] ?? ($response['error'] ?? 'Refund request failed.')));
+
+        return back()->withErrors(['refund' => 'Refund failed: '.$description]);
+    }
+
+    public function checkPaymentRefundStatus(Request $request, AdmissionPayment $payment): RedirectResponse
+    {
+        $this->ensureReportingAccess();
+
+        if (! Auth::user()?->isBnsVerifier()) {
+            abort(403, 'Only the BNS login can check refund status.');
+        }
+
+        if (! $payment->refund_merchant_txn_no) {
+            return back()->withErrors(['refund' => 'No refund transaction was found to check status.']);
+        }
+
+        try {
+            $gateway = app(IciciPaymentGatewayService::class);
+            $result = $gateway->checkRefundStatus($payment);
+        } catch (RuntimeException $exception) {
+            return back()->withErrors(['refund' => $exception->getMessage()]);
+        }
+
+        $response = $result['response'] ?? [];
+        $success = app(IciciPaymentGatewayService::class)->isRefundSuccess($response)
+            || app(IciciPaymentGatewayService::class)->isPaymentSuccess($response);
+
+        $payment->update([
+            'refund_status_response' => $response,
+            'refund_response_code' => (string) ($response['responseCode'] ?? $payment->refund_response_code),
+            'refund_response_description' => (string) ($response['responseDescription'] ?? ($response['respdescription'] ?? ($response['error'] ?? $payment->refund_response_description))),
+            'refund_status' => $success
+                ? AdmissionPayment::REFUND_STATUS_SUCCESS
+                : ($payment->refund_status ?: AdmissionPayment::REFUND_STATUS_PENDING),
+            'refunded_at' => $success ? ($payment->refunded_at ?: now()) : $payment->refunded_at,
+        ]);
+
+        if ($success) {
+            $membership = $this->membershipForPayment($payment);
+            if ($membership && $membership->status !== MembershipUpload::STATUS_REFUNDED) {
+                $membership->update([
+                    'status' => MembershipUpload::STATUS_REFUNDED,
+                    'bns_status' => MembershipUpload::STEP_REFUNDED,
+                ]);
+            }
         }
 
         $description = (string) ($response['responseDescription'] ?? ($response['respdescription'] ?? ($response['error'] ?? 'Status checked.')));
@@ -984,16 +1224,50 @@ class ReportingController extends Controller
             ->count();
     }
 
-    /** @return array{search: string, program: string, payment_mode: string, date_from: string, date_to: string} */
+    /** @return array{search: string, program: string, payment_mode: string, date_from: string, date_to: string, paid_date: string} */
     private function paymentFiltersFromRequest(Request $request): array
     {
+        $paidDate = trim((string) $request->query('paid_date', ''));
+        $dateFrom = trim((string) $request->query('date_from', ''));
+        $dateTo = trim((string) $request->query('date_to', ''));
+
+        if ($paidDate !== '') {
+            $dateFrom = $paidDate;
+            $dateTo = $paidDate;
+        }
+
         return [
             'search' => trim((string) $request->query('q', '')),
             'program' => trim((string) $request->query('program', '')),
             'payment_mode' => trim((string) $request->query('payment_mode', '')),
-            'date_from' => trim((string) $request->query('date_from', '')),
-            'date_to' => trim((string) $request->query('date_to', '')),
+            'date_from' => $dateFrom,
+            'date_to' => $dateTo,
+            'paid_date' => $paidDate,
         ];
+    }
+
+    /**
+     * @param  list<string>  $registrationNumbers
+     * @return array<string, MembershipUpload>
+     */
+    private function membershipsByRegistration(array $registrationNumbers): array
+    {
+        $registrationNumbers = array_values(array_filter(array_map(
+            static fn ($value) => trim((string) $value),
+            $registrationNumbers
+        )));
+
+        if ($registrationNumbers === []) {
+            return [];
+        }
+
+        return MembershipUpload::query()
+            ->whereIn('registration_number', $registrationNumbers)
+            ->latest('id')
+            ->get()
+            ->unique(fn (MembershipUpload $upload) => trim((string) $upload->registration_number))
+            ->keyBy(fn (MembershipUpload $upload) => trim((string) $upload->registration_number))
+            ->all();
     }
 
     /**
@@ -1213,9 +1487,22 @@ class ReportingController extends Controller
         return $this->sessionAbsentRegistrations(1);
     }
 
-    private function refundOtpCacheKey(MembershipUpload $membershipUpload): string
+    private function membershipForPayment(AdmissionPayment $payment): ?MembershipUpload
     {
-        return 'reporting.refund_otp.'.$membershipUpload->id.'.'.(Auth::id() ?: 'guest');
+        $registrationNumber = trim((string) $payment->registration_number);
+        if ($registrationNumber === '') {
+            return null;
+        }
+
+        return MembershipUpload::query()
+            ->where('registration_number', $registrationNumber)
+            ->latest('id')
+            ->first();
+    }
+
+    private function refundOtpCacheKey(AdmissionPayment $payment): string
+    {
+        return 'reporting.refund_otp.payment.'.$payment->id.'.'.(Auth::id() ?: 'guest');
     }
 
     private function refundOtpResponse(

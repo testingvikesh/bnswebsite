@@ -11,6 +11,12 @@ Route::prefix('reporting')->name('reporting.')->group(function () {
         Route::get('/export', [ReportingController::class, 'export'])->name('export');
         Route::get('/payments', [ReportingController::class, 'payments'])->name('payments');
         Route::get('/payments/export', [ReportingController::class, 'exportPayments'])->name('payments.export');
+        Route::post('/payments/{payment}/refund-otp', [ReportingController::class, 'sendPaymentRefundOtp'])
+            ->name('payments.refund-otp');
+        Route::post('/payments/{payment}/refund', [ReportingController::class, 'refundPayment'])
+            ->name('payments.refund');
+        Route::post('/payments/{payment}/refund-status', [ReportingController::class, 'checkPaymentRefundStatus'])
+            ->name('payments.refund-status');
         Route::get('/membership', [ReportingController::class, 'membership'])->name('membership');
         Route::get('/membership/export', [ReportingController::class, 'exportMembership'])->name('membership.export');
         Route::post('/membership/{membershipUpload}/trustee-verify', [ReportingController::class, 'trusteeVerifyMembership'])

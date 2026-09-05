@@ -2,7 +2,6 @@
 
 namespace App\Mail;
 
-use App\Models\MembershipUpload;
 use Illuminate\Bus\Queueable;
 use Illuminate\Mail\Mailable;
 use Illuminate\Mail\Mailables\Address;
@@ -16,7 +15,10 @@ class RefundOtpMail extends Mailable
 
     public function __construct(
         public string $otp,
-        public MembershipUpload $upload,
+        public string $memberName,
+        public string $membershipNo,
+        public string $registrationNumber,
+        public string $mobile,
         public string $refundAmount,
         public int $ttlMinutes,
     ) {}
@@ -34,7 +36,7 @@ class RefundOtpMail extends Mailable
                     (string) config('mail.reply_to.name', config('mail.from.name', 'Business Navachar School')),
                 ),
             ],
-            subject: 'Refund OTP '.$this->otp.' | '.$this->upload->membership_name.' | BNS',
+            subject: 'Refund OTP '.$this->otp.' | '.$this->memberName.' | BNS',
         );
     }
 
@@ -44,7 +46,10 @@ class RefundOtpMail extends Mailable
             view: 'emails.refund-otp',
             with: [
                 'otp' => $this->otp,
-                'upload' => $this->upload,
+                'memberName' => $this->memberName,
+                'membershipNo' => $this->membershipNo,
+                'registrationNumber' => $this->registrationNumber,
+                'mobile' => $this->mobile,
                 'refundAmount' => $this->refundAmount,
                 'ttlMinutes' => $this->ttlMinutes,
             ],

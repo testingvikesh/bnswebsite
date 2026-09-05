@@ -1,4 +1,10 @@
-@php($rows = $rows ?? collect())
+@php
+    $rows = $rows ?? collect();
+    $canManageRefunds = (bool) ($canManageRefunds ?? false);
+    $membershipsByReg = $membershipsByReg ?? [];
+    $defaultRefundAmount = (float) ($defaultRefundAmount ?? 3160);
+    $colspan = $canManageRefunds ? 13 : 12;
+@endphp
 
 <div class="bns-reporting-scroll-hint d-none d-lg-block">
     <i class="bi bi-arrows-expand me-1"></i> Scroll horizontally to see all payment details.
@@ -20,6 +26,9 @@
                 <th>Response</th>
                 <th>Related Details</th>
                 <th>Receipt</th>
+                @if($canManageRefunds)
+                    <th>Action</th>
+                @endif
             </tr>
         </thead>
         <tbody>
@@ -70,10 +79,68 @@
                             <i class="bi bi-receipt"></i> Receipt
                         </a>
                     </td>
+                    @if($canManageRefunds)
+                        @php
+                            $modalId = 'bnsPayRefundModal-'.$payment->id;
+                            $membership = $membershipsByReg[trim((string) $payment->registration_number)] ?? null;
+                        @endphp
+                        <td class="text-nowrap">
+                            @if($payment->isRefunded())
+                                <div class="text-success small mb-1">
+                                    Refunded ₹{{ number_format((float) ($payment->refund_amount ?? 0), 2) }}
+                                </div>
+                                <form method="POST" action="{{ route('reporting.payments.refund-status', $payment) }}">
+                                    @csrf
+                                    <button type="submit" class="btn btn-sm btn-outline-primary">
+                                        <i class="bi bi-arrow-repeat"></i> Check Refund Status
+                                    </button>
+                                </form>
+                            @elseif($payment->refund_status === 'failed')
+                                <div class="text-danger small mb-1">
+                                    Refund failed: {{ $payment->refund_response_description ?: 'Unknown error' }}
+                                </div>
+                                <button
+                                    type="button"
+                                    class="btn btn-sm btn-warning mb-1"
+                                    data-bs-toggle="modal"
+                                    data-bs-target="#{{ $modalId }}"
+                                >
+                                    <i class="bi bi-cash-coin"></i> Retry Refund
+                                </button>
+                                @if($payment->refund_merchant_txn_no)
+                                    <form method="POST" action="{{ route('reporting.payments.refund-status', $payment) }}">
+                                        @csrf
+                                        <button type="submit" class="btn btn-sm btn-outline-primary">
+                                            <i class="bi bi-arrow-repeat"></i> Check Refund Status
+                                        </button>
+                                    </form>
+                                @endif
+                            @elseif($payment->canOfferRefund())
+                                <button
+                                    type="button"
+                                    class="btn btn-sm btn-warning"
+                                    data-bs-toggle="modal"
+                                    data-bs-target="#{{ $modalId }}"
+                                >
+                                    <i class="bi bi-cash-coin"></i> Refund
+                                </button>
+                            @endif
+                        </td>
+                    @endif
                 </tr>
+                @if($canManageRefunds && $payment->canOfferRefund())
+                    @include('reporting.partials.refund-modal', [
+                        'upload' => $membership,
+                        'payment' => $payment,
+                        'modalId' => $modalId,
+                        'otpUrl' => route('reporting.payments.refund-otp', $payment),
+                        'formAction' => route('reporting.payments.refund', $payment),
+                        'defaultRefundAmount' => min($defaultRefundAmount, (float) $payment->amount),
+                    ])
+                @endif
             @empty
                 <tr>
-                    <td colspan="12" class="bns-reporting-empty">
+                    <td colspan="{{ $colspan }}" class="bns-reporting-empty">
                         <i class="bi bi-credit-card-2-front"></i>
                         No successful payments found.
                     </td>
@@ -117,6 +184,44 @@
             >
                 <i class="bi bi-receipt"></i> View Receipt
             </a>
+            @if($canManageRefunds)
+                @php
+                    $modalId = 'bnsPayRefundModalMobile-'.$payment->id;
+                    $membership = $membershipsByReg[trim((string) $payment->registration_number)] ?? null;
+                @endphp
+                <div class="mt-2">
+                    @if($payment->isRefunded())
+                        <div class="text-success small mb-1">
+                            Refunded ₹{{ number_format((float) ($payment->refund_amount ?? 0), 2) }}
+                        </div>
+                        <form method="POST" action="{{ route('reporting.payments.refund-status', $payment) }}">
+                            @csrf
+                            <button type="submit" class="btn btn-sm btn-outline-primary">
+                                <i class="bi bi-arrow-repeat"></i> Check Refund Status
+                            </button>
+                        </form>
+                    @elseif($payment->canOfferRefund())
+                        <button
+                            type="button"
+                            class="btn btn-sm btn-warning"
+                            data-bs-toggle="modal"
+                            data-bs-target="#{{ $modalId }}"
+                        >
+                            <i class="bi bi-cash-coin"></i> Refund
+                        </button>
+                    @endif
+                </div>
+                @if($payment->canOfferRefund())
+                    @include('reporting.partials.refund-modal', [
+                        'upload' => $membership,
+                        'payment' => $payment,
+                        'modalId' => $modalId,
+                        'otpUrl' => route('reporting.payments.refund-otp', $payment),
+                        'formAction' => route('reporting.payments.refund', $payment),
+                        'defaultRefundAmount' => min($defaultRefundAmount, (float) $payment->amount),
+                    ])
+                @endif
+            @endif
         </article>
     @empty
         <div class="bns-reporting-empty p-4">
