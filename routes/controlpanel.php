@@ -5,6 +5,7 @@ use App\Http\Controllers\Sop\AdvisoryBoardController;
 use App\Http\Controllers\Sop\ChangePasswordController;
 use App\Http\Controllers\Sop\ContactPageController;
 use App\Http\Controllers\Sop\DashboardController;
+use App\Http\Controllers\Sop\EmailDashboardController;
 use App\Http\Controllers\Sop\FacultyPageController;
 use App\Http\Controllers\Sop\ForgotPasswordController;
 use App\Http\Controllers\Sop\HomeImageController;
@@ -15,6 +16,7 @@ use App\Http\Controllers\Sop\IntroSessionEmailController;
 use App\Http\Controllers\Sop\LoginController;
 use App\Http\Controllers\Sop\LogoutController;
 use App\Http\Controllers\Sop\MembershipUploadController;
+use App\Http\Controllers\Sop\NewsletterSubscriberController;
 use App\Http\Controllers\Sop\PaymentReportController;
 use App\Http\Controllers\Sop\RegisterController;
 use App\Http\Controllers\Sop\ResetPasswordController;
@@ -128,6 +130,12 @@ Route::prefix('controlpanel')->name('controlpanel.')->group(function () {
             Route::get('contact-inquiries', [ContactPageController::class, 'inquiries'])->name('contact-inquiries.index');
             Route::get('contact-inquiries/{inquiry}', [ContactPageController::class, 'showInquiry'])->name('contact-inquiries.show');
             Route::delete('contact-inquiries/{inquiry}', [ContactPageController::class, 'destroyInquiry'])->name('contact-inquiries.destroy');
+
+            Route::get('newsletter-subscribers', [NewsletterSubscriberController::class, 'index'])->name('newsletter-subscribers.index');
+            Route::delete('newsletter-subscribers/{subscriber}', [NewsletterSubscriberController::class, 'destroy'])->name('newsletter-subscribers.destroy');
+
+            Route::get('email-dashboard', [EmailDashboardController::class, 'index'])->name('email-dashboard.index');
+            Route::get('email-dashboard/{log}', [EmailDashboardController::class, 'show'])->name('email-dashboard.show');
 
             Route::get('whatsapp-page', [WhatsappPageController::class, 'edit'])->name('whatsapp-page.edit');
             Route::put('whatsapp-page', [WhatsappPageController::class, 'update'])->name('whatsapp-page.update');

@@ -138,6 +138,18 @@
                     </a>
                 </div>
                 <div class="col-sm-6">
+                    <a href="{{ route('controlpanel.newsletter-subscribers.index') }}" class="bns-action-btn">
+                        <span class="bns-action-btn__icon bg-success bg-opacity-10 text-success"><i class="bi bi-envelope-check"></i></span>
+                        <span><strong>Subscribers</strong><br><small class="text-muted">View footer subscribe emails</small></span>
+                    </a>
+                </div>
+                <div class="col-sm-6">
+                    <a href="{{ route('controlpanel.email-dashboard.index') }}" class="bns-action-btn">
+                        <span class="bns-action-btn__icon bg-primary bg-opacity-10 text-primary"><i class="bi bi-envelope-paper-fill"></i></span>
+                        <span><strong>Email Dashboard</strong><br><small class="text-muted">All emails sent from website</small></span>
+                    </a>
+                </div>
+                <div class="col-sm-6">
                     <a href="{{ route('controlpanel.testimonials.index') }}" class="bns-action-btn">
                         <span class="bns-action-btn__icon bg-warning bg-opacity-10 text-warning"><i class="bi bi-chat-quote"></i></span>
                         <span><strong>Testimonials</strong><br><small class="text-muted">Update success stories</small></span>

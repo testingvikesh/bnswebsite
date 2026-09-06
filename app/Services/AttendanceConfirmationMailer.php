@@ -5,10 +5,11 @@ namespace App\Services;
 use App\Mail\AttendanceConfirmedMail;
 use App\Models\SessionAttendance;
 use Illuminate\Support\Facades\Log;
-use Illuminate\Support\Facades\Mail;
 
 class AttendanceConfirmationMailer
 {
+    public function __construct(private OutboundMailer $outbound) {}
+
     public function send(SessionAttendance $attendance): void
     {
         $email = trim((string) ($attendance->email ?? ''));
@@ -20,7 +21,7 @@ class AttendanceConfirmationMailer
         $event = bns_introduction_session((int) $attendance->session_number) ?? [];
 
         try {
-            Mail::to($email)->send(new AttendanceConfirmedMail(
+            $this->outbound->send($email, new AttendanceConfirmedMail(
                 attendance: $attendance,
                 event: $event,
             ));

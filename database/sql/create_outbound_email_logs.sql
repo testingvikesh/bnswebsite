@@ -1,0 +1,25 @@
+-- Email Dashboard log (run once on live DB if migration is not used)
+CREATE TABLE IF NOT EXISTS `outbound_email_logs` (
+    `id` BIGINT UNSIGNED NOT NULL AUTO_INCREMENT,
+    `process` VARCHAR(50) NOT NULL DEFAULT 'other',
+    `mailable` VARCHAR(191) NULL,
+    `to_email` VARCHAR(500) NOT NULL,
+    `cc_email` VARCHAR(500) NULL,
+    `from_email` VARCHAR(255) NULL,
+    `subject` VARCHAR(500) NULL,
+    `body_html` LONGTEXT NULL,
+    `body_text` LONGTEXT NULL,
+    `status` VARCHAR(20) NOT NULL DEFAULT 'sent',
+    `error_message` TEXT NULL,
+    `mailer` VARCHAR(50) NULL,
+    `sent_by` BIGINT UNSIGNED NULL,
+    `sent_by_name` VARCHAR(255) NULL,
+    `sent_at` TIMESTAMP NULL,
+    `created_at` TIMESTAMP NULL,
+    `updated_at` TIMESTAMP NULL,
+    PRIMARY KEY (`id`),
+    KEY `outbound_email_logs_process_index` (`process`),
+    KEY `outbound_email_logs_status_index` (`status`),
+    KEY `outbound_email_logs_sent_at_index` (`sent_at`),
+    CONSTRAINT `outbound_email_logs_sent_by_foreign` FOREIGN KEY (`sent_by`) REFERENCES `users` (`id`) ON DELETE SET NULL
+) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_unicode_ci;

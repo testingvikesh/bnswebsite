@@ -45,6 +45,12 @@
         <a href="{{ route('controlpanel.contact-inquiries.index') }}" class="{{ request()->routeIs('controlpanel.contact-inquiries.*') ? 'active' : '' }}">
             <i class="bi bi-inbox"></i> Contact Enquiries
         </a>
+        <a href="{{ route('controlpanel.newsletter-subscribers.index') }}" class="{{ request()->routeIs('controlpanel.newsletter-subscribers.*') ? 'active' : '' }}">
+            <i class="bi bi-envelope-check"></i> Subscribers
+        </a>
+        <a href="{{ route('controlpanel.email-dashboard.index') }}" class="{{ request()->routeIs('controlpanel.email-dashboard.*') ? 'active' : '' }}">
+            <i class="bi bi-envelope-paper-fill"></i> Email Dashboard
+        </a>
         <a href="{{ route('controlpanel.whatsapp-page.edit') }}" class="{{ request()->routeIs('controlpanel.whatsapp-page.*') ? 'active' : '' }}">
             <i class="bi bi-whatsapp"></i> WhatsApp Page
         </a>

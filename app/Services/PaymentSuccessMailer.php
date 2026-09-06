@@ -5,10 +5,11 @@ namespace App\Services;
 use App\Mail\PaymentSuccessMail;
 use App\Models\AdmissionPayment;
 use Illuminate\Support\Facades\Log;
-use Illuminate\Support\Facades\Mail;
 
 class PaymentSuccessMailer
 {
+    public function __construct(private OutboundMailer $outbound) {}
+
     public function send(AdmissionPayment $payment): void
     {
         $email = trim((string) ($payment->customer_email ?? ''));
@@ -48,7 +49,7 @@ class PaymentSuccessMailer
         ];
 
         try {
-            Mail::to($email)->send(new PaymentSuccessMail(
+            $this->outbound->send($email, new PaymentSuccessMail(
                 payment: $payment,
                 details: $details,
                 receiptUrl: route('payment.receipt', $payment->merchant_txn_no),

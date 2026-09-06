@@ -1,0 +1,54 @@
+.bns-email-dash__table th {
+    font-size: 0.78rem;
+    letter-spacing: 0.04em;
+    text-transform: uppercase;
+    color: #64748b;
+    white-space: nowrap;
+}
+
+.bns-email-dash__process {
+    display: inline-block;
+    padding: 0.28rem 0.7rem;
+    border-radius: 999px;
+    background: #e8f1ff;
+    color: #1d4ed8;
+    font-size: 0.75rem;
+    font-weight: 700;
+    white-space: nowrap;
+}
+
+.bns-email-dash__status {
+    display: inline-block;
+    padding: 0.28rem 0.7rem;
+    border-radius: 999px;
+    font-size: 0.75rem;
+    font-weight: 700;
+}
+
+.bns-email-dash__status--sent {
+    background: #dcfce7;
+    color: #15803d;
+}
+
+.bns-email-dash__status--failed {
+    background: #fee2e2;
+    color: #b91c1c;
+}
+
+.bns-email-dash__preview {
+    width: 100%;
+    min-height: 640px;
+    border: 1px solid #e2e8f0;
+    border-radius: 12px;
+    background: #fff;
+}
+
+.bns-email-dash__text {
+    white-space: pre-wrap;
+    word-break: break-word;
+    background: #f8fafc;
+    border: 1px solid #e2e8f0;
+    border-radius: 12px;
+    padding: 1rem 1.15rem;
+    font-size: 0.9rem;
+}

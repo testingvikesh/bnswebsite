@@ -9,10 +9,11 @@ use App\Models\SessionAttendance;
 use Illuminate\Support\Facades\Auth;
 use Illuminate\Support\Facades\DB;
 use Illuminate\Support\Facades\Log;
-use Illuminate\Support\Facades\Mail;
 
 class AttendanceModuleService
 {
+    public function __construct(private OutboundMailer $outbound) {}
+
     /**
      * @return array{ok: bool, message: string, invite?: AttendanceQrInvite}
      */
@@ -51,7 +52,7 @@ class AttendanceModuleService
         );
 
         try {
-            Mail::to($email)->send(new AttendanceInviteMail($invite, $event));
+            $this->outbound->send($email, new AttendanceInviteMail($invite, $event));
         } catch (\Throwable $e) {
             Log::error('Attendance invite email failed', [
                 'email' => $email,

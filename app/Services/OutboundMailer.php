@@ -2,6 +2,7 @@
 
 namespace App\Services;
 
+use App\Models\OutboundEmailLog;
 use Illuminate\Mail\Mailable;
 use Illuminate\Support\Facades\Log;
 use Illuminate\Support\Facades\Mail;
@@ -9,6 +10,8 @@ use Throwable;
 
 class OutboundMailer
 {
+    public function __construct(private OutboundEmailLogService $emailLog) {}
+
     /**
      * Hostinger blocks/intercepts smtp.gmail.com (535).
      * Send with PHP mail() first, then sendmail. Gmail SMTP is last and optional.
@@ -29,7 +32,8 @@ class OutboundMailer
 
         foreach ($mailers as $mailer) {
             try {
-                Mail::mailer($mailer)->to($to)->send(clone $mailable);
+                $this->emailLog->rememberMailer($mailer);
+                Mail::mailer($mailer)->to($to)->send($this->prepareMailable($mailable, $mailer));
 
                 Log::info('Outbound mail sent', [
                     'mailer' => $mailer,
@@ -48,7 +52,24 @@ class OutboundMailer
             }
         }
 
+        $this->emailLog->recordFailed($to, $mailable, $this->summarize($errors));
+
         throw new \RuntimeException($this->summarize($errors));
+    }
+
+    private function prepareMailable(Mailable $mailable, string $mailer): Mailable
+    {
+        $prepared = clone $mailable;
+        $process = OutboundEmailLog::processKeyForMailable($mailable);
+
+        $prepared->withSymfonyMessage(function ($message) use ($mailable, $mailer, $process) {
+            $headers = $message->getHeaders();
+            $headers->addTextHeader('X-BNS-Mailable', $mailable::class);
+            $headers->addTextHeader('X-BNS-Process', $process);
+            $headers->addTextHeader('X-BNS-Mailer', $mailer);
+        });
+
+        return $prepared;
     }
 
     /**
