@@ -7910,6 +7910,20 @@ Blog One
   border-radius: var(--eduvers-bdr-radius);
   font-size: 14px;
   line-height: 1.5;
+  transition: opacity 0.4s ease, transform 0.4s ease, margin 0.4s ease, padding 0.4s ease, max-height 0.4s ease;
+  max-height: 120px;
+  overflow: hidden;
+}
+
+.bns-footer-newsletter-alert.is-hiding {
+  opacity: 0;
+  transform: translateY(-6px);
+  margin-top: 0;
+  margin-bottom: 0;
+  padding-top: 0;
+  padding-bottom: 0;
+  max-height: 0;
+  pointer-events: none;
 }
 
 .bns-footer-newsletter-alert i {

@@ -60,7 +60,7 @@
                             <p class="site-footer__text">Subscribe for updates and events!</p>
 
                             @if(session('newsletter_success'))
-                                <div class="bns-footer-newsletter-alert bns-footer-newsletter-alert--success" role="status">
+                                <div class="bns-footer-newsletter-alert bns-footer-newsletter-alert--success" role="status" data-auto-hide="4000">
                                     <i class="fas fa-check-circle" aria-hidden="true"></i>
                                     <span>{{ session('newsletter_success') }}</span>
                                 </div>
@@ -131,3 +131,18 @@
         </div>
     </div>
 </footer>
+<script>
+(function () {
+    document.querySelectorAll('.bns-footer-newsletter-alert[data-auto-hide]').forEach(function (alert) {
+        var delay = parseInt(alert.getAttribute('data-auto-hide'), 10) || 4000;
+        window.setTimeout(function () {
+            alert.classList.add('is-hiding');
+            window.setTimeout(function () {
+                if (alert.parentNode) {
+                    alert.parentNode.removeChild(alert);
+                }
+            }, 400);
+        }, delay);
+    });
+})();
+</script>
