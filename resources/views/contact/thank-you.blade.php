@@ -130,3 +130,36 @@
     </section>
 </div>
 @endsection
+
+@push('scripts')
+{{--
+    Meta Pixel "Lead" event. This page is only rendered after a successful form
+    submission (the controller redirects away when no flashed registration exists),
+    so the event never fires on the registration form itself or on a failed submit.
+    The registration number is also used as a client-side guard and as the Meta
+    eventID so the same registration is never counted twice.
+--}}
+<script>
+(function () {
+    var registrationNumber = @json((string) ($thankYou['registration_number'] ?? ''));
+    var formSource = @json((string) ($thankYou['form_source'] ?? ''));
+    if (!registrationNumber) return;
+
+    var storageKey = 'bns_meta_lead_' + registrationNumber;
+    try {
+        if (window.localStorage && window.localStorage.getItem(storageKey)) return;
+    } catch (e) {}
+
+    if (typeof window.fbq !== 'function') return;
+
+    window.fbq('track', 'Lead', {
+        content_name: formSource || 'contact-thank-you',
+        content_category: 'registration'
+    }, { eventID: 'lead-' + registrationNumber });
+
+    try {
+        if (window.localStorage) window.localStorage.setItem(storageKey, String(Date.now()));
+    } catch (e) {}
+})();
+</script>
+@endpush
