@@ -130,3 +130,29 @@
     </section>
 </div>
 @endsection
+
+@push('scripts')
+{{-- Meta Pixel Lead event: this view is only rendered right after a successful
+     submission (flash session data); a refresh redirects away, so it cannot fire
+     on the form page, on button click, or on validation failure. The
+     sessionStorage guard keyed by registration number is an extra safety net
+     against duplicate Lead events for the same registration. --}}
+<script>
+(function () {
+    var registrationNumber = @json((string) ($thankYou['registration_number'] ?? ''));
+    var formSource = @json((string) ($thankYou['form_source'] ?? ''));
+    if (!registrationNumber || typeof window.fbq !== 'function') return;
+
+    var storageKey = 'bns_meta_lead_' + registrationNumber;
+    try {
+        if (window.sessionStorage && window.sessionStorage.getItem(storageKey)) return;
+    } catch (e) {}
+
+    window.fbq('track', 'Lead', { content_name: formSource }, { eventID: 'lead-' + registrationNumber });
+
+    try {
+        if (window.sessionStorage) window.sessionStorage.setItem(storageKey, '1');
+    } catch (e) {}
+})();
+</script>
+@endpush
