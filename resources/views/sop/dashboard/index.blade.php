@@ -150,6 +150,18 @@
                     </a>
                 </div>
                 <div class="col-sm-6">
+                    <a href="{{ route('controlpanel.intro-session-emails.index') }}" class="bns-action-btn">
+                        <span class="bns-action-btn__icon bg-danger bg-opacity-10 text-danger"><i class="bi bi-envelope-paper"></i></span>
+                        <span><strong>Session Email Sending</strong><br><small class="text-muted">Send intro session emails</small></span>
+                    </a>
+                </div>
+                <div class="col-sm-6">
+                    <a href="{{ route('controlpanel.intro-session-schedules.edit') }}" class="bns-action-btn">
+                        <span class="bns-action-btn__icon bg-warning bg-opacity-10 text-warning"><i class="bi bi-calendar2-week"></i></span>
+                        <span><strong>Intro Session Dates</strong><br><small class="text-muted">Change session date &amp; time</small></span>
+                    </a>
+                </div>
+                <div class="col-sm-6">
                     <a href="{{ route('controlpanel.testimonials.index') }}" class="bns-action-btn">
                         <span class="bns-action-btn__icon bg-warning bg-opacity-10 text-warning"><i class="bi bi-chat-quote"></i></span>
                         <span><strong>Testimonials</strong><br><small class="text-muted">Update success stories</small></span>

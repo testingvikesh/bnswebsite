@@ -13,6 +13,7 @@ use App\Http\Controllers\Sop\HomeReelController;
 use App\Http\Controllers\Sop\EventGalleryController;
 use App\Http\Controllers\Sop\AttendanceModuleController;
 use App\Http\Controllers\Sop\IntroSessionEmailController;
+use App\Http\Controllers\Sop\IntroSessionScheduleController;
 use App\Http\Controllers\Sop\LoginController;
 use App\Http\Controllers\Sop\LogoutController;
 use App\Http\Controllers\Sop\MembershipUploadController;
@@ -112,6 +113,9 @@ Route::prefix('controlpanel')->name('controlpanel.')->group(function () {
             Route::get('intro-session-emails/preview', [IntroSessionEmailController::class, 'preview'])->name('intro-session-emails.preview');
             Route::get('intro-session-emails/export', [IntroSessionEmailController::class, 'export'])->name('intro-session-emails.export');
             Route::post('intro-session-emails/send', [IntroSessionEmailController::class, 'send'])->name('intro-session-emails.send');
+
+            Route::get('intro-session-schedules', [IntroSessionScheduleController::class, 'edit'])->name('intro-session-schedules.edit');
+            Route::put('intro-session-schedules', [IntroSessionScheduleController::class, 'update'])->name('intro-session-schedules.update');
 
             Route::get('attendance', [AttendanceModuleController::class, 'index'])->name('attendance.index');
             Route::post('attendance/mark', [AttendanceModuleController::class, 'mark'])->name('attendance.mark');

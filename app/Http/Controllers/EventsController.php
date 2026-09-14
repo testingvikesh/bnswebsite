@@ -17,8 +17,19 @@ class EventsController extends Controller
     {
         $about = $this->aboutPage->get();
         $page = config('events.page', []);
+        $scheduler = app(\App\Services\IntroSessionScheduleService::class);
         $allEvents = collect(config('events.events', []))
-            ->filter(fn (array $event): bool => ! bns_event_has_passed($event))
+            ->map(function ($event) use ($scheduler) {
+                if (! is_array($event)) {
+                    return $event;
+                }
+                if (($event['type'] ?? '') === 'introduction') {
+                    return $scheduler->applyToEvent($event);
+                }
+
+                return $event;
+            })
+            ->filter(fn ($event): bool => is_array($event) && ! bns_event_has_passed($event))
             ->values();
         $spotlightEvents = $allEvents->filter(fn (array $event) => ! empty($event['spotlight']))->values();
         $otherEvents = $allEvents->reject(fn (array $event) => ! empty($event['spotlight']))->values();

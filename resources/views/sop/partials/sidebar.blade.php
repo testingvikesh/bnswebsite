@@ -75,6 +75,9 @@
         <a href="{{ route('controlpanel.intro-session-emails.index') }}" class="{{ request()->routeIs('controlpanel.intro-session-emails.*') ? 'active' : '' }}">
             <i class="bi bi-envelope-paper"></i> Session Email Sending
         </a>
+        <a href="{{ route('controlpanel.intro-session-schedules.edit') }}" class="{{ request()->routeIs('controlpanel.intro-session-schedules.*') ? 'active' : '' }}">
+            <i class="bi bi-calendar2-week"></i> Intro Session Dates
+        </a>
         <a href="{{ route('controlpanel.attendance.index') }}" class="{{ request()->routeIs('controlpanel.attendance.*') ? 'active' : '' }}">
             <i class="bi bi-qr-code-scan"></i> Attendance Module
         </a>

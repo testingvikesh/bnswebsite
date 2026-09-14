@@ -304,6 +304,13 @@ if (! function_exists('bns_introduction_sessions')) {
     function bns_introduction_sessions(bool $upcomingOnly = false): array
     {
         $sessions = [];
+        $scheduler = null;
+
+        try {
+            $scheduler = app(\App\Services\IntroSessionScheduleService::class);
+        } catch (\Throwable) {
+            $scheduler = null;
+        }
 
         foreach (config('events.events', []) as $event) {
             if (! is_array($event)) {
@@ -312,6 +319,10 @@ if (! function_exists('bns_introduction_sessions')) {
 
             if (($event['type'] ?? '') !== 'introduction') {
                 continue;
+            }
+
+            if ($scheduler) {
+                $event = $scheduler->applyToEvent($event);
             }
 
             if ($upcomingOnly && bns_event_has_passed($event)) {
@@ -485,6 +496,11 @@ if (! function_exists('bns_reporting_session_mobile_map')) {
         $capacity = bns_intro_session_capacity();
         $allowed = bns_intro_session_allowed_numbers();
         $default = (int) config('intro_session_form.default_session_number', 2);
+        try {
+            $default = app(\App\Services\IntroSessionScheduleService::class)->defaultSessionNumber() ?: $default;
+        } catch (\Throwable) {
+            // keep config default
+        }
         $overflow = (int) config('intro_session_form.overflow_session_number', 3);
 
         if (! in_array($default, $allowed, true)) {
@@ -576,13 +592,23 @@ if (! function_exists('bns_intro_session_number_for_count')) {
      */
     function bns_intro_session_number_for_count(?int $registeredCount = null): int
     {
-        $forced = config('intro_session_form.forced_session_number');
+        $forced = null;
+        $defaultFromService = null;
+
+        try {
+            $scheduler = app(\App\Services\IntroSessionScheduleService::class);
+            $forced = $scheduler->forcedSessionNumber();
+            $defaultFromService = $scheduler->defaultSessionNumber();
+        } catch (\Throwable) {
+            $forced = config('intro_session_form.forced_session_number');
+        }
+
         if ($forced !== null && $forced !== '' && (int) $forced > 0) {
             return (int) $forced;
         }
 
         $allowed = bns_intro_session_allowed_numbers();
-        $default = (int) config('intro_session_form.default_session_number', 2);
+        $default = (int) ($defaultFromService ?: config('intro_session_form.default_session_number', 2));
         $overflow = (int) config('intro_session_form.overflow_session_number', 3);
 
         if (! in_array($default, $allowed, true)) {
@@ -679,23 +705,7 @@ if (! function_exists('bns_next_introduction_session')) {
      */
     function bns_next_introduction_session(): ?array
     {
-        $upcoming = [];
-
-        foreach (config('events.events', []) as $event) {
-            if (! is_array($event)) {
-                continue;
-            }
-
-            if (($event['type'] ?? '') !== 'introduction') {
-                continue;
-            }
-
-            if (bns_event_has_passed($event)) {
-                continue;
-            }
-
-            $upcoming[] = $event;
-        }
+        $upcoming = bns_introduction_sessions(true);
 
         usort($upcoming, static function (array $a, array $b): int {
             $aKey = (string) ($a['starts_at'] ?? $a['date'] ?? '');

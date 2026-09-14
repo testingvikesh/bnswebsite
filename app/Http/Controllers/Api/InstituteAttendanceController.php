@@ -196,12 +196,21 @@ class InstituteAttendanceController extends Controller
             return $todaySession;
         }
 
-        $forced = config('intro_session_form.forced_session_number');
+        $forced = null;
+        try {
+            $forced = app(\App\Services\IntroSessionScheduleService::class)->forcedSessionNumber();
+        } catch (\Throwable) {
+            $forced = config('intro_session_form.forced_session_number');
+        }
         if (is_numeric($forced) && (int) $forced > 0) {
             return (int) $forced;
         }
 
-        return (int) config('intro_session_form.default_session_number', 5);
+        try {
+            return app(\App\Services\IntroSessionScheduleService::class)->defaultSessionNumber();
+        } catch (\Throwable) {
+            return (int) config('intro_session_form.default_session_number', 5);
+        }
     }
 
     private function sessionLabel(int $sessionNumber): string
