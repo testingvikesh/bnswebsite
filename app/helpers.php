@@ -1016,6 +1016,336 @@ if (! function_exists('bns_message_email_templates')) {
     }
 }
 
+if (! function_exists('bns_intro_session_display_formats')) {
+    /**
+     * Human-readable date/time variants for one introduction session.
+     *
+     * @param  array<string, mixed>  $session
+     * @return array{
+     *     number:int,
+     *     label:string,
+     *     date:string,
+     *     date_long:string,
+     *     date_medium:string,
+     *     date_ordinal:string,
+     *     date_compact:string,
+     *     time:string,
+     *     time_to:string,
+     *     time_short:string,
+     *     report:string
+     * }
+     */
+    function bns_intro_session_display_formats(array $session): array
+    {
+        $number = (int) ($session['session_number'] ?? 0);
+        $timezone = (string) ($session['timezone'] ?? 'Asia/Kolkata');
+        $startsAt = null;
+        $endsAt = null;
+
+        try {
+            if (! empty($session['starts_at'])) {
+                $startsAt = \Illuminate\Support\Carbon::parse((string) $session['starts_at'], $timezone);
+            }
+        } catch (\Throwable) {
+            $startsAt = null;
+        }
+
+        try {
+            if (! empty($session['ends_at'])) {
+                $endsAt = \Illuminate\Support\Carbon::parse((string) $session['ends_at'], $timezone);
+            }
+        } catch (\Throwable) {
+            $endsAt = null;
+        }
+
+        if (! $startsAt) {
+            try {
+                $datePart = trim(\Illuminate\Support\Str::before((string) ($session['date'] ?? ''), '('));
+                if ($datePart !== '') {
+                    $startsAt = \Illuminate\Support\Carbon::parse($datePart, $timezone)->setTime(14, 30);
+                }
+            } catch (\Throwable) {
+                $startsAt = null;
+            }
+        }
+
+        if ($startsAt && ! $endsAt) {
+            $endsAt = $startsAt->copy()->addHours(2);
+        }
+
+        $ordinal = static function (int $day): string {
+            if ($day % 100 >= 11 && $day % 100 <= 13) {
+                return $day.'th';
+            }
+
+            return $day.match ($day % 10) {
+                1 => 'st',
+                2 => 'nd',
+                3 => 'rd',
+                default => 'th',
+            };
+        };
+
+        $dateLabel = trim((string) ($session['date'] ?? ''));
+        $timeLabel = trim((string) ($session['time'] ?? ''));
+
+        if ($startsAt) {
+            $dateLabel = $dateLabel !== '' ? $dateLabel : $startsAt->format('d F Y').' ('.$startsAt->format('l').')';
+            $dateLong = $startsAt->format('l').', '.$startsAt->format('d F Y');
+            $dateMedium = $startsAt->format('d F Y');
+            $dateOrdinal = $ordinal((int) $startsAt->format('j')).' '.$startsAt->format('F Y');
+            $dateCompact = $startsAt->format('D j M Y');
+            $timeTo = $endsAt
+                ? $startsAt->format('g:i A').' to '.$endsAt->format('g:i A')
+                : $startsAt->format('g:i A');
+            $timeDash = $endsAt
+                ? $startsAt->format('g:i A').' – '.$endsAt->format('g:i A')
+                : $startsAt->format('g:i A');
+            $timeShort = $endsAt
+                ? $startsAt->format('g:i').'–'.$endsAt->format('g:i A')
+                : $startsAt->format('g:i A');
+            $report = $startsAt->copy()->subMinutes(15)->format('g:i A');
+            $timeLabel = $timeLabel !== '' ? $timeLabel : $timeDash;
+        } else {
+            $dateLong = $dateLabel;
+            $dateMedium = trim(\Illuminate\Support\Str::before($dateLabel, '(')) ?: $dateLabel;
+            $dateOrdinal = $dateMedium;
+            $dateCompact = $dateMedium;
+            $timeTo = str_replace([' – ', ' — ', ' - '], ' to ', $timeLabel);
+            $timeDash = $timeLabel !== '' ? $timeLabel : $timeTo;
+            $timeShort = str_replace([' PM', ' AM'], '', str_replace([' to ', ' – '], '–', $timeTo));
+            $report = '';
+        }
+
+        return [
+            'number' => $number,
+            'label' => $number > 0 ? 'Session '.$number : 'Introduction Session',
+            'date' => $dateLabel,
+            'date_long' => $dateLong,
+            'date_medium' => $dateMedium,
+            'date_ordinal' => $dateOrdinal,
+            'date_compact' => $dateCompact,
+            'time' => $timeLabel,
+            'time_to' => $timeTo,
+            'time_short' => $timeShort,
+            'report' => $report,
+        ];
+    }
+}
+
+if (! function_exists('bns_intro_session_replacement_map')) {
+    /**
+     * Map every known intro-session date/time/label to the live active session.
+     *
+     * @return array<string, string>
+     */
+    function bns_intro_session_replacement_map(?array $target = null): array
+    {
+        $target ??= bns_first_introduction_session();
+        if (! is_array($target) || $target === []) {
+            return [];
+        }
+
+        $live = bns_intro_session_display_formats($target);
+        $map = [];
+
+        $add = static function (string $from, string $to) use (&$map): void {
+            $from = trim($from);
+            $to = trim($to);
+            if ($from === '' || $to === '' || strcasecmp($from, $to) === 0) {
+                return;
+            }
+            $map[$from] = $to;
+        };
+
+        $sources = [];
+        foreach (config('events.events', []) as $event) {
+            if (is_array($event) && ($event['type'] ?? '') === 'introduction') {
+                $sources[] = $event;
+            }
+        }
+        foreach (bns_introduction_sessions() as $event) {
+            $sources[] = $event;
+        }
+
+        foreach ($sources as $event) {
+            if (! is_array($event)) {
+                continue;
+            }
+
+            $old = bns_intro_session_display_formats($event);
+            if ($old['number'] <= 0) {
+                continue;
+            }
+
+            $add('Introduction Session '.$old['number'], $live['label']);
+            $add('Session '.$old['number'], $live['label']);
+            $add((string) ($event['title'] ?? ''), $live['label']);
+
+            $add($old['date'], $live['date']);
+            $add($old['date_long'], $live['date_long']);
+            $add($old['date_medium'], $live['date_medium']);
+            $add($old['date_ordinal'], $live['date_ordinal']);
+            $add($old['date_compact'], $live['date_compact']);
+            $add((string) ($event['date'] ?? ''), $live['date']);
+
+            $eventTime = (string) ($event['time'] ?? '');
+            $add($old['time'], $live['time']);
+            $add($old['time_to'], $live['time_to']);
+            $add($old['time_short'], $live['time_short']);
+            $add($eventTime, $live['time']);
+            $add(str_replace([' – ', ' — ', ' - '], ' to ', $eventTime), $live['time_to']);
+            $add(str_replace([' to ', ' — ', ' - '], ' – ', $eventTime), $live['time']);
+
+            if ($old['report'] !== '' && $live['report'] !== '') {
+                $add($old['report'], $live['report']);
+            }
+        }
+
+        $add('{{session_label}}', $live['label']);
+        $add('{{session_number}}', (string) $live['number']);
+        $add('{{session_date}}', $live['date']);
+        $add('{{session_date_long}}', $live['date_long']);
+        $add('{{session_time}}', $live['time_to']);
+        $add('{{session_report}}', $live['report']);
+
+        uksort($map, static fn (string $a, string $b): int => strlen($b) <=> strlen($a));
+
+        return $map;
+    }
+}
+
+if (! function_exists('bns_apply_live_intro_session')) {
+    /**
+     * Recursively rewrite hardcoded intro-session date/time text to the live admin schedule.
+     *
+     * @param  mixed  $value
+     * @return mixed
+     */
+    function bns_apply_live_intro_session(mixed $value, ?array $session = null): mixed
+    {
+        static $mapCache = null;
+        static $mapSessionKey = null;
+
+        $session ??= bns_first_introduction_session();
+        $sessionKey = is_array($session)
+            ? ((string) ($session['session_number'] ?? '').'|'.(string) ($session['starts_at'] ?? '').'|'.(string) ($session['date'] ?? ''))
+            : 'none';
+
+        if ($mapCache === null || $mapSessionKey !== $sessionKey) {
+            $mapCache = bns_intro_session_replacement_map(is_array($session) ? $session : null);
+            $mapSessionKey = $sessionKey;
+        }
+
+        if ($mapCache === []) {
+            return $value;
+        }
+
+        if (is_string($value)) {
+            return str_replace(array_keys($mapCache), array_values($mapCache), $value);
+        }
+
+        if (is_array($value)) {
+            foreach ($value as $key => $child) {
+                $value[$key] = bns_apply_live_intro_session($child, $session);
+            }
+        }
+
+        return $value;
+    }
+}
+
+if (! function_exists('bns_sync_message_session_fields')) {
+    /**
+     * Force structured message payload date/time fields to the live session.
+     *
+     * @param  array<string, mixed>  $item
+     * @param  array<string, mixed>  $session
+     * @return array<string, mixed>
+     */
+    function bns_sync_message_session_fields(array $item, array $session): array
+    {
+        $live = bns_intro_session_display_formats($session);
+
+        $patchNode = function (&$node) use (&$patchNode, $live, $session): void {
+            if (! is_array($node)) {
+                return;
+            }
+
+            foreach (['date', 'date_label', 'session_date'] as $key) {
+                if (array_key_exists($key, $node) && is_string($node[$key]) && trim($node[$key]) !== '') {
+                    $node[$key] = str_contains(strtolower($node[$key]), 'session')
+                        ? $live['label'].': '.$live['date_medium']
+                        : (str_contains($node[$key], ',') ? $live['date_long'] : $live['date_medium']);
+                }
+            }
+
+            foreach (['time', 'time_label', 'session_time', 'seminar_time'] as $key) {
+                if (array_key_exists($key, $node) && is_string($node[$key]) && trim($node[$key]) !== '') {
+                    $node[$key] = str_contains(strtolower($node[$key]), 'session')
+                        ? $live['label'].': '.$live['time_to']
+                        : $live['time_to'];
+                }
+            }
+
+            foreach (['reporting', 'reporting_time', 'report_time'] as $key) {
+                if (array_key_exists($key, $node) && is_string($node[$key]) && $live['report'] !== '') {
+                    $node[$key] = str_contains(strtolower($node[$key]), 'session')
+                        ? $live['label'].': '.$live['report']
+                        : $live['report'];
+                }
+            }
+
+            foreach (['label', 'session_label', 'session_title'] as $key) {
+                if (array_key_exists($key, $node) && is_string($node[$key])) {
+                    $value = trim($node[$key]);
+                    if (preg_match('/^session\s*\d+$/i', $value) === 1
+                        || preg_match('/^introduction session\s*\d+$/i', $value) === 1
+                    ) {
+                        $node[$key] = $live['label'];
+                    }
+                }
+            }
+
+            if (isset($node['sessions']) && is_array($node['sessions'])) {
+                $upcoming = bns_introduction_sessions(true);
+                if ($upcoming !== []) {
+                    $node['sessions'] = array_map(static function (array $event) {
+                        $fmt = bns_intro_session_display_formats($event);
+
+                        return [
+                            'label' => $fmt['label'],
+                            'date' => $fmt['date_long'],
+                            'time' => $fmt['time_to'],
+                            'title' => $fmt['label'],
+                            'session_number' => $fmt['number'],
+                        ];
+                    }, $upcoming);
+                } else {
+                    $node['sessions'] = [[
+                        'label' => $live['label'],
+                        'date' => $live['date_long'],
+                        'time' => $live['time_to'],
+                        'title' => $live['label'],
+                        'session_number' => $live['number'],
+                    ]];
+                }
+            }
+
+            foreach ($node as &$child) {
+                if (is_array($child)) {
+                    $patchNode($child);
+                }
+            }
+            unset($child);
+        };
+
+        $patchNode($item);
+
+        return $item;
+    }
+}
+
 if (! function_exists('bns_enrich_message_item')) {
     /**
      * Resolve routes / session placeholders so email bodies match the web message UI.
@@ -1029,6 +1359,12 @@ if (! function_exists('bns_enrich_message_item')) {
         $session ??= function_exists('bns_first_introduction_session')
             ? bns_first_introduction_session()
             : null;
+
+        // Rewrite hardcoded Session date/time text across WhatsApp + email payloads.
+        if (is_array($session) && $session !== []) {
+            $item = bns_apply_live_intro_session($item, $session);
+            $item = bns_sync_message_session_fields($item, $session);
+        }
 
         if (! empty($item['use_next_session']) && is_array($session)) {
             $extra = array_filter([

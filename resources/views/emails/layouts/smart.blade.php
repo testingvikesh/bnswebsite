@@ -340,8 +340,8 @@
         'eyebrow' => $d['venue_eyebrow'] ?? 'Event Location',
         'headline' => $d['venue_headline'] ?? ($d['headline'] ?? 'Venue Details'),
         'intro' => '',
-        'date' => $date !== '' ? $date : ($sessions[0]['date'] ?? ''),
-        'time' => $time !== '' ? $time : ($sessions[0]['time'] ?? ''),
+        'date' => $date !== '' ? $date : (bns_first_introduction_session()['date'] ?? ($sessions[0]['date'] ?? '')),
+        'time' => $time !== '' ? $time : (bns_first_introduction_session()['time'] ?? ($sessions[0]['time'] ?? '')),
         'address' => [
             'title' => $address['title'] ?? ($venue['title'] ?? ''),
             'lines' => $address['lines'] ?? ($venue['lines'] ?? []),

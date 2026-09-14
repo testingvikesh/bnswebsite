@@ -25,8 +25,8 @@
         'eyebrow' => $d['eyebrow'] ?? 'Event Location',
         'headline' => $d['headline'] ?? 'Venue Details',
         'intro' => $d['intro'] ?? '',
-        'date' => $d['date'] ?? ($sessions[0]['date'] ?? ''),
-        'time' => $d['time'] ?? ($sessions[0]['time'] ?? ''),
+        'date' => $d['date'] ?? (bns_first_introduction_session()['date'] ?? ($sessions[0]['date'] ?? '')),
+        'time' => $d['time'] ?? (bns_first_introduction_session()['time'] ?? ($sessions[0]['time'] ?? '')),
         'address' => $address,
     ],
 ])
