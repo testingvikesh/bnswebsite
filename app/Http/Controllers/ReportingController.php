@@ -10,6 +10,7 @@ use App\Models\SessionAttendance;
 use App\Models\User;
 use App\Services\IciciPaymentGatewayService;
 use App\Services\OutboundMailer;
+use App\Support\CrmLeadStatus;
 use Illuminate\Http\JsonResponse;
 use Illuminate\Http\RedirectResponse;
 use Illuminate\Http\Request;
@@ -18,6 +19,7 @@ use Illuminate\Support\Facades\Auth;
 use Illuminate\Support\Facades\Cache;
 use Illuminate\Support\Facades\Hash;
 use Illuminate\Support\Facades\Log;
+use Illuminate\Support\Facades\Schema;
 use Illuminate\View\View;
 use RuntimeException;
 use Symfony\Component\HttpFoundation\StreamedResponse;
@@ -954,6 +956,9 @@ class ReportingController extends Controller
         };
 
         $sessionEvents = [];
+        $paidIds = Schema::hasTable('admission_payments')
+            ? array_fill_keys(CrmLeadStatus::paidInquiryIds(), true)
+            : [];
         $stats = [
             'unique_mobiles' => 0,
             'intro_session' => 0,
@@ -972,6 +977,7 @@ class ReportingController extends Controller
             $inquiry = $countSource($rows, 'inquiry-modal');
             $confirm = $countSource($rows, 'register-quick-modal');
             $total = $rows->count();
+            $paid = $rows->filter(fn (ContactInquiry $row) => isset($paidIds[(int) $row->id]))->count();
 
             $todayCount = $rows
                 ->filter(fn (ContactInquiry $row) => $row->created_at && $row->created_at->toDateString() === $today)
@@ -983,6 +989,7 @@ class ReportingController extends Controller
             $stats['session_'.$sessionNo.'_inquiry'] = $inquiry;
             $stats['session_'.$sessionNo.'_confirm'] = $confirm;
             $stats['session_'.$sessionNo.'_today'] = $todayCount;
+            $stats['session_'.$sessionNo.'_paid'] = $paid;
             $stats['unique_mobiles'] += $total;
             $stats['intro_session'] += $intro;
             $stats['inquiry'] += $inquiry;

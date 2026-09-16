@@ -8,6 +8,7 @@
     $confirmCount = (int) ($stats['session_'.$sessionNo.'_confirm'] ?? 0);
     $sessionCount = (int) ($stats['session_'.$sessionNo] ?? 0);
     $todayCount = (int) ($stats['session_'.$sessionNo.'_today'] ?? 0);
+    $paidCount = (int) ($stats['session_'.$sessionNo.'_paid'] ?? 0);
     $session1AbsentCount = (int) ($stats['session_1_absent'] ?? 0);
     $session1AttendedCount = (int) ($stats['session_1_attended'] ?? 0);
     $session1RegisteredCount = (int) ($stats['session_1_registered'] ?? 0);
@@ -38,6 +39,7 @@
         'confirm' => route('reporting.index', array_merge($boxBaseQuery, [
             'form_source' => 'register-quick-modal',
         ])).$listHash,
+        'paid' => route('reporting.payments'),
     ];
 @endphp
 
@@ -80,6 +82,13 @@
                 <div class="bns-reporting-stat__icon"><i class="bi bi-lightning-charge-fill"></i></div>
                 <div class="bns-reporting-stat__label">Confirm Admission</div>
                 <div class="bns-reporting-stat__value">{{ number_format($confirmCount) }}</div>
+            </a>
+        </div>
+        <div class="col-6 col-md-4 col-xl">
+            <a href="{{ $boxUrls['paid'] }}" class="bns-reporting-stat bns-reporting-stat--paid" title="Open payment done list">
+                <div class="bns-reporting-stat__icon"><i class="bi bi-credit-card-2-front-fill"></i></div>
+                <div class="bns-reporting-stat__label">Payment Done</div>
+                <div class="bns-reporting-stat__value">{{ number_format($paidCount) }}</div>
             </a>
         </div>
         @if($sessionNo === 2)

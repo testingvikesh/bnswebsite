@@ -317,6 +317,7 @@ a.bns-reporting-stat:focus {
 .bns-reporting-stat--inquiry { background: linear-gradient(135deg, #64748b, #334155); }
 .bns-reporting-stat--quick { background: linear-gradient(135deg, #ff5544, #e04a3a); }
 .bns-reporting-stat--missing { background: linear-gradient(135deg, #ea580c, #c2410c); }
+.bns-reporting-stat--paid { background: linear-gradient(135deg, #059669, #065f46); }
 
 .bns-reporting-filter {
     margin-bottom: 24px;

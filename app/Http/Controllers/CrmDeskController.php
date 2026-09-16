@@ -9,6 +9,7 @@ use App\Support\CrmLeadStatus;
 use App\Support\CrmPortal;
 use Illuminate\Http\RedirectResponse;
 use Illuminate\Http\Request;
+use Illuminate\Support\Facades\Schema;
 use Illuminate\Validation\Rule;
 use Illuminate\View\View;
 
@@ -41,11 +42,20 @@ class CrmDeskController extends Controller
         CrmLeadStatus::excludeConfirmed($query);
 
         $allAssigned = (clone $query)->get();
+        $paidCount = 0;
+        if (Schema::hasTable('admission_payments')) {
+            $paidCount = CrmLeadStatus::filterPaymentsForEmployee(
+                CrmLeadStatus::successfulPaymentsQuery(),
+                (int) $employee->id
+            )->count();
+        }
+
         $totals = [
             'assigned' => $allAssigned->count(),
             'present' => $allAssigned->where('attendance_status', 'present')->count(),
             'absent' => $allAssigned->where('attendance_status', 'absent')->count(),
             'followups_done' => $allAssigned->sum(fn (CrmAssignment $row) => $row->completedFollowups()),
+            'paid' => $paidCount,
         ];
 
         if ($status !== 'all') {
