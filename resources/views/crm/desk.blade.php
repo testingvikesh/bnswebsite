@@ -156,6 +156,33 @@ document.addEventListener('DOMContentLoaded', function () {
         return;
     }
 
+    function getModalInstance() {
+        if (!window.bootstrap || !bootstrap.Modal) {
+            return null;
+        }
+        if (typeof bootstrap.Modal.getOrCreateInstance === 'function') {
+            return bootstrap.Modal.getOrCreateInstance(modalEl);
+        }
+        var existing = typeof bootstrap.Modal.getInstance === 'function'
+            ? bootstrap.Modal.getInstance(modalEl)
+            : null;
+        return existing || new bootstrap.Modal(modalEl);
+    }
+
+    function showModal() {
+        modalEl.classList.remove('bns-modal-is-closed');
+        modalEl.style.removeProperty('display');
+        var instance = getModalInstance();
+        if (instance) {
+            instance.show();
+            return;
+        }
+        modalEl.classList.add('show');
+        modalEl.style.display = 'block';
+        modalEl.removeAttribute('aria-hidden');
+        document.body.classList.add('modal-open');
+    }
+
     document.querySelectorAll('.js-crm-remark').forEach(function (btn) {
         btn.addEventListener('click', function () {
             var name = btn.getAttribute('data-name') || 'Member';
@@ -173,13 +200,7 @@ document.addEventListener('DOMContentLoaded', function () {
                 ? note
                 : 'No remark saved yet.';
 
-            if (window.bootstrap && bootstrap.Modal) {
-                bootstrap.Modal.getOrCreateInstance(modalEl).show();
-            } else {
-                modalEl.classList.add('show');
-                modalEl.style.display = 'block';
-                document.body.classList.add('modal-open');
-            }
+            showModal();
         });
     });
 });
