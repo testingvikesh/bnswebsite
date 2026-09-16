@@ -7,17 +7,24 @@ use App\Models\CrmAssignment;
 use App\Models\CrmEmployee;
 use App\Models\SessionAttendance;
 use App\Support\CrmLeadStatus;
+use Illuminate\Support\Collection;
 use Illuminate\Support\Facades\Cache;
 use Illuminate\Support\Facades\Schema;
 
 class CrmAllocationService
 {
     /**
-     * Spread unassigned registered members across active employees.
+     * Divide last-session registered members evenly across all active employees.
+     * Confirmed / paid members are skipped.
      */
     public function allocateUnassigned(): int
     {
         if (! Schema::hasTable('crm_employees') || ! Schema::hasTable('crm_assignments')) {
+            return 0;
+        }
+
+        $sessionNo = $this->lastSessionNumber();
+        if ($sessionNo < 1) {
             return 0;
         }
 
@@ -30,58 +37,38 @@ class CrmAllocationService
             return 0;
         }
 
-        $counts = [];
-        foreach ($employees as $employee) {
-            $counts[(int) $employee->id] = CrmAssignment::query()
-                ->where('crm_employee_id', $employee->id)
-                ->count();
+        $members = $this->registeredMembersForSession($sessionNo);
+        if ($members->isEmpty()) {
+            return 0;
         }
 
-        $assignedLookup = [];
-        foreach (CrmAssignment::query()->get(['contact_inquiry_id', 'session_number']) as $row) {
-            $assignedLookup[$row->contact_inquiry_id.'-'.$row->session_number] = true;
-        }
-
+        $employeeIds = $employees->pluck('id')->map(fn ($id) => (int) $id)->values()->all();
+        $employeeCount = count($employeeIds);
         $created = 0;
 
-        foreach (bns_intro_session_allowed_numbers() as $sessionNo) {
-            $breakdown = bns_session_attendance_breakdown((int) $sessionNo);
+        // Stable order so re-runs keep the same even split.
+        $members = $members->sortBy('id')->values();
 
-            foreach (['present' => $breakdown['present_rows'], 'absent' => $breakdown['absent_rows']] as $status => $rows) {
-                foreach ($rows as $inquiry) {
-                    if (! $inquiry instanceof ContactInquiry) {
-                        continue;
-                    }
-                    if (CrmLeadStatus::isConfirmed($inquiry)) {
-                        continue;
-                    }
+        foreach ($members as $index => $row) {
+            /** @var ContactInquiry $inquiry */
+            $inquiry = $row['inquiry'];
+            $status = $row['attendance_status'];
+            $employeeId = $employeeIds[$index % $employeeCount];
 
-                    $key = $inquiry->id.'-'.$sessionNo;
-                    if (isset($assignedLookup[$key])) {
-                        continue;
-                    }
+            $assignment = CrmAssignment::query()->updateOrCreate(
+                [
+                    'contact_inquiry_id' => (int) $inquiry->id,
+                    'session_number' => $sessionNo,
+                ],
+                [
+                    'crm_employee_id' => $employeeId,
+                    'attendance_status' => $status,
+                    'assigned_at' => now(),
+                ]
+            );
 
-                    $employeeId = $this->lightestEmployeeId($counts);
-                    if ($employeeId < 1) {
-                        continue;
-                    }
-
-                    CrmAssignment::query()->updateOrCreate(
-                        [
-                            'contact_inquiry_id' => (int) $inquiry->id,
-                            'session_number' => (int) $sessionNo,
-                        ],
-                        [
-                            'crm_employee_id' => $employeeId,
-                            'attendance_status' => $status === 'present' ? 'present' : 'absent',
-                            'assigned_at' => now(),
-                        ]
-                    );
-
-                    $assignedLookup[$key] = true;
-                    $counts[$employeeId]++;
-                    $created++;
-                }
+            if ($assignment->wasRecentlyCreated || $assignment->wasChanged()) {
+                $created++;
             }
         }
 
@@ -102,7 +89,11 @@ class CrmAllocationService
             return null;
         }
 
-        $sessionNo = $this->sessionForInquiry($inquiry);
+        // New registrations go only into the last-session pool.
+        $sessionNo = $this->lastSessionNumber();
+        if ($sessionNo < 1) {
+            $sessionNo = $this->sessionForInquiry($inquiry);
+        }
         if ($sessionNo < 1) {
             return null;
         }
@@ -120,10 +111,12 @@ class CrmAllocationService
             return null;
         }
 
+        // Balance against last-session assignments only.
         $counts = [];
         foreach ($employees as $employee) {
             $counts[(int) $employee->id] = CrmAssignment::query()
                 ->where('crm_employee_id', $employee->id)
+                ->where('session_number', $sessionNo)
                 ->count();
         }
 
@@ -159,6 +152,64 @@ class CrmAllocationService
         });
 
         return $created;
+    }
+
+    public function lastSessionNumber(): int
+    {
+        $selectable = bns_intro_session_selectable_numbers();
+        if ($selectable !== []) {
+            return (int) max($selectable);
+        }
+
+        try {
+            $scheduler = app(IntroSessionScheduleService::class);
+            $forced = $scheduler->forcedSessionNumber();
+            if ($forced && $forced > 0) {
+                return (int) $forced;
+            }
+            $default = $scheduler->defaultSessionNumber();
+            if ($default > 0) {
+                return (int) $default;
+            }
+        } catch (\Throwable) {
+            // fall through
+        }
+
+        $next = bns_first_introduction_session();
+        if (is_array($next) && (int) ($next['session_number'] ?? 0) > 0) {
+            return (int) $next['session_number'];
+        }
+
+        $allowed = bns_intro_session_allowed_numbers();
+
+        return (int) (max($allowed ?: [0]));
+    }
+
+    /**
+     * @return Collection<int, array{inquiry: ContactInquiry, attendance_status: string}>
+     */
+    private function registeredMembersForSession(int $sessionNo): Collection
+    {
+        $breakdown = bns_session_attendance_breakdown($sessionNo);
+        $rows = collect();
+
+        foreach (['present' => $breakdown['present_rows'], 'absent' => $breakdown['absent_rows']] as $status => $list) {
+            foreach ($list as $inquiry) {
+                if (! $inquiry instanceof ContactInquiry) {
+                    continue;
+                }
+                if (CrmLeadStatus::isConfirmed($inquiry)) {
+                    continue;
+                }
+
+                $rows->push([
+                    'inquiry' => $inquiry,
+                    'attendance_status' => $status === 'present' ? 'present' : 'absent',
+                ]);
+            }
+        }
+
+        return $rows->unique(fn (array $row) => (int) $row['inquiry']->id)->values();
     }
 
     private function isAllocatableInquiry(ContactInquiry $inquiry): bool

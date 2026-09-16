@@ -58,7 +58,7 @@
                 </div>
             </div>
 
-            <p class="bns-crm-section-copy">Select one employee, tick members, then assign. Or click <strong>Allocation</strong> to auto-assign all unassigned registered members evenly to employees. Allocation also runs every hour for new registrations.</p>
+            <p class="bns-crm-section-copy">Select one employee, tick members, then assign. Or click <strong>Allocation</strong> to divide <strong>last session</strong> registered members evenly across all employees. Allocation also runs every hour for new registrations.</p>
 
             @if($employees->isEmpty())
                 <div class="bns-crm-list-card">

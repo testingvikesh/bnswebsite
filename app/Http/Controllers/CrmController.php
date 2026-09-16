@@ -482,12 +482,16 @@ class CrmController extends Controller
         }
 
         $count = $allocation->allocateUnassigned();
+        $lastSession = $allocation->lastSessionNumber();
 
-        return redirect()->route('crm.assign.board')->with(
+        return redirect()->route('crm.assign.board', array_filter([
+            'session' => $lastSession > 0 ? $lastSession : null,
+            'scope' => 'all',
+        ]))->with(
             'status',
             $count > 0
-                ? $count.' '.Str::plural('member', $count).' auto-assigned evenly to employees.'
-                : 'No unassigned registered members left to allocate.'
+                ? $count.' Session '.$lastSession.' member(s) divided evenly across all employees.'
+                : 'No Session '.$lastSession.' registered members left to allocate.'
         );
     }
 
