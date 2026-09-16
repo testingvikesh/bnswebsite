@@ -100,7 +100,16 @@
                                     <td>
                                         @for($n = 1; $n <= 3; $n++)
                                             @php($fu = $assignment->followup($n))
-                                            <span class="bns-crm-dot {{ $fu && $fu->isDone() ? 'is-done' : '' }}" title="Follow-up {{ $n }}">{{ $n }}</span>
+                                            <button
+                                                type="button"
+                                                class="bns-crm-dot {{ $fu && $fu->isDone() ? 'is-done' : '' }} js-crm-remark"
+                                                title="View follow-up {{ $n }} remark"
+                                                data-name="{{ $item->full_name ?? 'Member' }}"
+                                                data-followup="{{ $n }}"
+                                                data-status="{{ $fu ? $fu->statusLabel() : 'Not saved yet' }}"
+                                                data-when="{{ $fu && $fu->called_at ? $fu->called_at->timezone('Asia/Kolkata')->format('d M Y, h:i A') : '' }}"
+                                                data-note="{{ $fu && filled($fu->note) ? $fu->note : '' }}"
+                                            >{{ $n }}</button>
                                         @endfor
                                     </td>
                                     <td>
@@ -119,4 +128,60 @@
         </div>
     </section>
 </div>
+
+<div class="modal fade bns-crm-remark-modal" id="crmRemarkModal" tabindex="-1" aria-labelledby="crmRemarkModalTitle" aria-hidden="true">
+    <div class="modal-dialog modal-dialog-centered">
+        <div class="modal-content">
+            <div class="modal-header">
+                <div>
+                    <span class="bns-crm-remark-modal__eyebrow" id="crmRemarkModalFollowup">Follow-up</span>
+                    <h5 class="modal-title" id="crmRemarkModalTitle">Remarks</h5>
+                </div>
+                @include('partials.modal-close-button', ['onLight' => true])
+            </div>
+            <div class="modal-body">
+                <p class="bns-crm-remark-modal__meta" id="crmRemarkModalMeta"></p>
+                <div class="bns-crm-remark-modal__note" id="crmRemarkModalNote"></div>
+            </div>
+        </div>
+    </div>
+</div>
 @endsection
+
+@push('scripts')
+<script>
+document.addEventListener('DOMContentLoaded', function () {
+    var modalEl = document.getElementById('crmRemarkModal');
+    if (!modalEl) {
+        return;
+    }
+
+    document.querySelectorAll('.js-crm-remark').forEach(function (btn) {
+        btn.addEventListener('click', function () {
+            var name = btn.getAttribute('data-name') || 'Member';
+            var n = btn.getAttribute('data-followup') || '';
+            var status = btn.getAttribute('data-status') || 'Not saved yet';
+            var when = btn.getAttribute('data-when') || '';
+            var note = (btn.getAttribute('data-note') || '').trim();
+
+            document.getElementById('crmRemarkModalFollowup').textContent = 'Follow-up ' + n;
+            document.getElementById('crmRemarkModalTitle').textContent = name;
+            document.getElementById('crmRemarkModalMeta').textContent = when
+                ? status + ' · ' + when
+                : status;
+            document.getElementById('crmRemarkModalNote').textContent = note !== ''
+                ? note
+                : 'No remark saved yet.';
+
+            if (window.bootstrap && bootstrap.Modal) {
+                bootstrap.Modal.getOrCreateInstance(modalEl).show();
+            } else {
+                modalEl.classList.add('show');
+                modalEl.style.display = 'block';
+                document.body.classList.add('modal-open');
+            }
+        });
+    });
+});
+</script>
+@endpush

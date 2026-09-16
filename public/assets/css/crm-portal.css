@@ -544,6 +544,8 @@
     width: 22px;
     height: 22px;
     margin-right: 4px;
+    padding: 0;
+    border: 0;
     border-radius: 50%;
     align-items: center;
     justify-content: center;
@@ -551,11 +553,64 @@
     color: #475569;
     font-size: 0.7rem;
     font-weight: 800;
+    font-family: inherit;
+    cursor: pointer;
 }
 
 .bns-crm-dot.is-done {
     background: #16a34a;
     color: #fff;
+}
+
+.bns-crm-dot:hover,
+.bns-crm-dot:focus {
+    outline: 2px solid #0a1d37;
+    outline-offset: 2px;
+}
+
+.bns-crm-remark-modal .modal-content {
+    border: 0;
+    border-radius: 18px;
+    overflow: hidden;
+}
+
+.bns-crm-remark-modal .modal-header {
+    align-items: flex-start;
+    padding: 18px 18px 10px;
+    border-bottom: 1px solid rgba(15, 23, 42, 0.06);
+}
+
+.bns-crm-remark-modal__eyebrow {
+    display: block;
+    color: #15803d;
+    font-size: 0.75rem;
+    font-weight: 800;
+    letter-spacing: 0.04em;
+    text-transform: uppercase;
+}
+
+.bns-crm-remark-modal .modal-title {
+    margin: 4px 0 0;
+    color: #0a1d37;
+    font-size: 1.2rem;
+    font-weight: 800;
+}
+
+.bns-crm-remark-modal__meta {
+    margin: 0 0 12px;
+    color: #64748b;
+    font-size: 0.88rem;
+    font-weight: 700;
+}
+
+.bns-crm-remark-modal__note {
+    white-space: pre-wrap;
+    padding: 14px 16px;
+    border-radius: 12px;
+    background: #f8fafc;
+    color: #0a1d37;
+    font-size: 0.95rem;
+    line-height: 1.55;
 }
 
 .bns-crm-employee-picks {
