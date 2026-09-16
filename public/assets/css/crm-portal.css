@@ -1,0 +1,620 @@
+/* BNS CRM portal */
+
+.bns-crm-stats {
+    display: grid;
+    grid-template-columns: repeat(auto-fit, minmax(140px, 1fr));
+    gap: 12px;
+    margin: 0 0 22px;
+}
+
+.bns-crm-stat {
+    display: block;
+    padding: 16px 18px;
+    border-radius: 18px;
+    border: 1px solid rgba(15, 23, 42, 0.08);
+    background: #fff;
+    text-decoration: none;
+    color: inherit;
+    box-shadow: 0 10px 24px rgba(15, 23, 42, 0.05);
+}
+
+.bns-crm-stat span {
+    display: block;
+    color: #64748b;
+    font-size: 0.78rem;
+    font-weight: 700;
+    letter-spacing: 0.04em;
+    text-transform: uppercase;
+}
+
+.bns-crm-stat strong {
+    display: block;
+    margin-top: 6px;
+    color: #0a1d37;
+    font-size: 1.55rem;
+    font-weight: 800;
+}
+
+.bns-crm-stat--present strong { color: #15803d; }
+.bns-crm-stat--absent strong { color: #b91c1c; }
+.bns-crm-stat--spot strong { color: #c2410c; }
+
+.bns-crm-stat.is-active {
+    border-color: #0a1d37;
+    box-shadow: 0 12px 28px rgba(10, 29, 55, 0.12);
+}
+
+.bns-crm-search {
+    margin: 0 0 22px;
+}
+
+.bns-crm-search label {
+    display: block;
+    margin-bottom: 8px;
+    color: #0a1d37;
+    font-size: 0.82rem;
+    font-weight: 700;
+}
+
+.bns-crm-search__row {
+    display: flex;
+    flex-wrap: wrap;
+    gap: 10px;
+}
+
+.bns-crm-search input {
+    flex: 1 1 240px;
+    min-width: 0;
+    padding: 12px 14px;
+    border-radius: 12px;
+    border: 1px solid rgba(15, 23, 42, 0.12);
+    background: #fff;
+}
+
+.bns-crm-search__date {
+    flex: 0 0 180px;
+    max-width: 220px;
+}
+
+.bns-crm-search button,
+.bns-crm-search__reset {
+    display: inline-flex;
+    align-items: center;
+    gap: 8px;
+    padding: 12px 16px;
+    border-radius: 12px;
+    border: 0;
+    font-weight: 700;
+    text-decoration: none;
+}
+
+.bns-crm-search button {
+    background: #0a1d37;
+    color: #fff;
+    cursor: pointer;
+}
+
+.bns-crm-search__reset {
+    background: #e2e8f0;
+    color: #0a1d37;
+}
+
+.bns-crm-section-title {
+    margin: 8px 0 4px;
+    color: #0a1d37;
+    font-size: 1.2rem;
+    font-weight: 800;
+}
+
+.bns-crm-section-copy {
+    margin: 0 0 16px;
+    color: #64748b;
+}
+
+.bns-crm-sessions {
+    display: grid;
+    grid-template-columns: repeat(2, minmax(0, 1fr));
+    gap: 16px;
+}
+
+.bns-crm-session {
+    display: flex;
+    flex-direction: column;
+    gap: 8px;
+    padding: 22px 20px;
+    border-radius: 22px;
+    border: 1px solid rgba(15, 23, 42, 0.08);
+    background:
+        radial-gradient(circle at 100% 0%, rgba(253, 110, 1, 0.12), transparent 46%),
+        #fff;
+    text-decoration: none;
+    color: inherit;
+    box-shadow: 0 14px 32px rgba(15, 23, 42, 0.06);
+}
+
+.bns-crm-session:hover {
+    transform: translateY(-2px);
+}
+
+.bns-crm-session__no {
+    display: inline-flex;
+    width: max-content;
+    padding: 5px 10px;
+    border-radius: 999px;
+    background: rgba(37, 99, 235, 0.1);
+    color: #1d4ed8;
+    font-size: 0.72rem;
+    font-weight: 800;
+    letter-spacing: 0.06em;
+    text-transform: uppercase;
+}
+
+.bns-crm-session strong {
+    color: #0a1d37;
+    font-size: 1.15rem;
+}
+
+.bns-crm-session em {
+    color: #64748b;
+    font-style: normal;
+    font-size: 0.9rem;
+}
+
+.bns-crm-session__counts {
+    display: flex;
+    flex-wrap: wrap;
+    gap: 10px;
+    font-size: 0.85rem;
+    font-weight: 700;
+}
+
+.bns-crm-session__counts .is-present { color: #15803d; }
+.bns-crm-session__counts .is-absent { color: #b91c1c; }
+
+.bns-crm-session__bar {
+    height: 8px;
+    border-radius: 999px;
+    background: #fee2e2;
+    overflow: hidden;
+}
+
+.bns-crm-session__bar span {
+    display: block;
+    height: 100%;
+    background: #16a34a;
+}
+
+.bns-crm-session__cta {
+    margin-top: 4px;
+    color: #fd6e01;
+    font-size: 0.88rem;
+    font-weight: 800;
+}
+
+.bns-crm-session-head h2 {
+    margin: 6px 0 4px;
+    color: #0a1d37;
+}
+
+.bns-crm-session-head p {
+    color: #64748b;
+}
+
+.bns-crm-pills {
+    display: flex;
+    flex-wrap: wrap;
+    gap: 8px;
+    margin: 0 0 18px;
+}
+
+.bns-crm-pills a {
+    padding: 8px 14px;
+    border-radius: 999px;
+    border: 1px solid rgba(15, 23, 42, 0.1);
+    background: #fff;
+    color: #0a1d37;
+    font-size: 0.86rem;
+    font-weight: 700;
+    text-decoration: none;
+}
+
+.bns-crm-pills a.is-active {
+    background: #0a1d37;
+    border-color: #0a1d37;
+    color: #fff;
+}
+
+.bns-crm-list-card {
+    margin: 0 0 22px;
+    border-radius: 22px;
+    border: 1px solid rgba(15, 23, 42, 0.08);
+    background: #fff;
+    overflow: hidden;
+    box-shadow: 0 12px 28px rgba(15, 23, 42, 0.05);
+}
+
+.bns-crm-list-card__head {
+    display: flex;
+    justify-content: space-between;
+    gap: 12px;
+    flex-wrap: wrap;
+    padding: 16px 18px 12px;
+    border-bottom: 1px solid rgba(15, 23, 42, 0.06);
+}
+
+.bns-crm-list-card__head h3 {
+    margin: 0;
+    color: #0a1d37;
+    font-size: 1.05rem;
+}
+
+.bns-crm-list-card__head span {
+    color: #64748b;
+    font-size: 0.88rem;
+}
+
+.bns-crm-table-wrap {
+    overflow-x: auto;
+}
+
+.bns-crm-table {
+    width: 100%;
+    border-collapse: collapse;
+}
+
+.bns-crm-table th,
+.bns-crm-table td {
+    padding: 12px 14px;
+    border-top: 1px solid rgba(15, 23, 42, 0.06);
+    text-align: left;
+    vertical-align: top;
+    font-size: 0.9rem;
+}
+
+.bns-crm-table th {
+    color: #64748b;
+    font-size: 0.75rem;
+    letter-spacing: 0.04em;
+    text-transform: uppercase;
+}
+
+.bns-crm-table .is-muted {
+    color: #64748b;
+    font-size: 0.8rem;
+}
+
+.bns-crm-empty {
+    text-align: center;
+    color: #64748b;
+    padding: 28px 14px !important;
+}
+
+.bns-crm-badge {
+    display: inline-flex;
+    padding: 4px 10px;
+    border-radius: 999px;
+    font-size: 0.75rem;
+    font-weight: 800;
+}
+
+.bns-crm-badge--present {
+    background: #dcfce7;
+    color: #166534;
+}
+
+.bns-crm-badge--paid {
+    background: #dbeafe;
+    color: #1d4ed8;
+}
+
+.bns-crm-badge--admitted {
+    background: #dcfce7;
+    color: #166534;
+}
+
+.bns-crm-mini-btn--confirm {
+    background: #15803d;
+}
+
+.bns-crm-confirm-form {
+    display: inline-flex;
+    margin-top: 6px;
+}
+
+.bns-crm-assign {
+    display: flex;
+    flex-wrap: wrap;
+    gap: 6px;
+    align-items: center;
+}
+
+.bns-crm-assign select,
+.bns-crm-form select,
+.bns-crm-form input,
+.bns-crm-form textarea {
+    width: 100%;
+    padding: 10px 12px;
+    border-radius: 10px;
+    border: 1px solid rgba(15, 23, 42, 0.12);
+}
+
+.bns-crm-assign select {
+    width: auto;
+    min-width: 140px;
+}
+
+.bns-crm-assign button,
+.bns-crm-mini-btn {
+    padding: 8px 12px;
+    border-radius: 10px;
+    border: 0;
+    background: #0a1d37;
+    color: #fff;
+    font-size: 0.8rem;
+    font-weight: 700;
+    cursor: pointer;
+    text-decoration: none;
+}
+
+.bns-crm-mini-btn--primary {
+    background: #fd6e01;
+}
+
+.bns-crm-form {
+    display: grid;
+    gap: 8px;
+    padding: 16px 18px 20px;
+}
+
+.bns-crm-form label {
+    margin-top: 6px;
+    color: #0a1d37;
+    font-size: 0.82rem;
+    font-weight: 700;
+}
+
+.bns-crm-staff-list {
+    display: grid;
+    gap: 12px;
+    padding: 14px 16px 18px;
+}
+
+.bns-crm-staff-card {
+    padding: 16px;
+    border-radius: 16px;
+    border: 1px solid rgba(15, 23, 42, 0.08);
+    background: #f8fafc;
+}
+
+.bns-crm-staff-card.is-inactive {
+    opacity: 0.72;
+    background: #f1f5f9;
+}
+
+.bns-crm-staff-card__top {
+    display: flex;
+    align-items: center;
+    gap: 12px;
+}
+
+.bns-crm-staff-avatar {
+    flex: 0 0 46px;
+    width: 46px;
+    height: 46px;
+    border-radius: 14px;
+    display: grid;
+    place-items: center;
+    background: #0a1d37;
+    color: #fff;
+    font-size: 0.92rem;
+    font-weight: 800;
+    letter-spacing: 0.04em;
+}
+
+.bns-crm-staff-id {
+    flex: 1;
+    min-width: 0;
+}
+
+.bns-crm-staff-id strong {
+    display: block;
+    color: #0a1d37;
+    font-size: 1rem;
+}
+
+.bns-crm-staff-id span {
+    display: block;
+    color: #64748b;
+    font-size: 0.82rem;
+}
+
+.bns-crm-staff-meta {
+    display: grid;
+    grid-template-columns: 1fr 1fr;
+    gap: 10px 14px;
+    margin: 14px 0 12px;
+}
+
+.bns-crm-staff-meta span {
+    display: block;
+    color: #64748b;
+    font-size: 0.7rem;
+    font-weight: 700;
+    letter-spacing: 0.04em;
+    text-transform: uppercase;
+}
+
+.bns-crm-staff-meta em {
+    display: block;
+    margin-top: 2px;
+    color: #0a1d37;
+    font-style: normal;
+    font-size: 0.88rem;
+    font-weight: 600;
+    word-break: break-word;
+}
+
+.bns-crm-staff-actions {
+    display: flex;
+    flex-wrap: wrap;
+    gap: 8px;
+    align-items: center;
+}
+
+.bns-crm-staff-actions form {
+    margin: 0;
+}
+
+.bns-crm-staff-edit {
+    margin-top: 12px;
+    padding-top: 10px;
+    border-top: 1px dashed rgba(15, 23, 42, 0.1);
+}
+
+.bns-crm-staff-edit summary {
+    cursor: pointer;
+    color: #1d4ed8;
+    font-size: 0.82rem;
+    font-weight: 700;
+}
+
+.bns-crm-staff-edit__form {
+    display: grid;
+    gap: 8px;
+    margin-top: 10px;
+}
+
+.bns-crm-staff-edit__form input {
+    width: 100%;
+    padding: 10px 12px;
+    border-radius: 10px;
+    border: 1px solid rgba(15, 23, 42, 0.12);
+    background: #fff;
+}
+
+.bns-crm-grid-2 {
+    display: grid;
+    grid-template-columns: minmax(280px, 0.9fr) minmax(0, 1.1fr);
+    gap: 16px;
+}
+
+.bns-crm-member-meta {
+    display: grid;
+    grid-template-columns: repeat(auto-fit, minmax(160px, 1fr));
+    gap: 12px;
+    padding: 16px 18px;
+}
+
+.bns-crm-member-meta span {
+    display: block;
+    color: #64748b;
+    font-size: 0.75rem;
+    font-weight: 700;
+    text-transform: uppercase;
+}
+
+.bns-crm-call-row {
+    display: flex;
+    flex-wrap: wrap;
+    gap: 10px;
+    align-items: center;
+    padding: 0 18px 18px;
+}
+
+.bns-crm-call-btn {
+    display: inline-flex;
+    align-items: center;
+    gap: 8px;
+    padding: 12px 18px;
+    border-radius: 12px;
+    background: #16a34a;
+    color: #fff;
+    font-weight: 800;
+    text-decoration: none;
+}
+
+.bns-crm-followups {
+    display: grid;
+    grid-template-columns: repeat(3, minmax(0, 1fr));
+    gap: 16px;
+}
+
+.bns-crm-dot {
+    display: inline-flex;
+    width: 22px;
+    height: 22px;
+    margin-right: 4px;
+    border-radius: 50%;
+    align-items: center;
+    justify-content: center;
+    background: #e2e8f0;
+    color: #475569;
+    font-size: 0.7rem;
+    font-weight: 800;
+}
+
+.bns-crm-dot.is-done {
+    background: #16a34a;
+    color: #fff;
+}
+
+.bns-crm-employee-picks {
+    display: grid;
+    grid-template-columns: repeat(auto-fit, minmax(160px, 1fr));
+    gap: 12px;
+    margin: 0 0 18px;
+}
+
+.bns-crm-bulkbar {
+    display: flex;
+    flex-wrap: wrap;
+    gap: 12px;
+    align-items: center;
+    justify-content: space-between;
+    padding: 12px 18px;
+    border-bottom: 1px solid rgba(15, 23, 42, 0.06);
+    background: #f8fafc;
+}
+
+.bns-crm-bulkbar label {
+    display: inline-flex;
+    gap: 8px;
+    align-items: center;
+    font-size: 0.86rem;
+    font-weight: 700;
+    color: #0a1d37;
+}
+
+@media (max-width: 1000px) {
+    .bns-crm-grid-2,
+    .bns-crm-followups {
+        grid-template-columns: 1fr;
+    }
+}
+
+.bns-crm-allocate-form {
+    display: inline;
+    margin: 0;
+}
+
+.bns-crm-allocate-form .bns-mail-toolbar__link {
+    font-family: inherit;
+    cursor: pointer;
+}
+
+@media (max-width: 900px) {
+    .bns-crm-stats,
+    .bns-crm-sessions {
+        grid-template-columns: 1fr 1fr;
+    }
+}
+
+@media (max-width: 640px) {
+    .bns-crm-stats {
+        grid-template-columns: 1fr 1fr;
+    }
+
+    .bns-crm-sessions {
+        grid-template-columns: 1fr;
+    }
+}

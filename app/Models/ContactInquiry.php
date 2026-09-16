@@ -2,6 +2,7 @@
 
 namespace App\Models;
 
+use App\Services\CrmAllocationService;
 use Illuminate\Database\Eloquent\Model;
 use Illuminate\Support\Facades\Storage;
 
@@ -21,6 +22,7 @@ class ContactInquiry extends Model
         'subject', 'message', 'documents',
         'agreed_to_contact', 'agreed_info_correct', 'agreed_privacy',
         'status',
+        'admission_confirmed_at',
         'auto_purge_at',
     ];
 
@@ -32,8 +34,20 @@ class ContactInquiry extends Model
         'agreed_info_correct' => 'boolean',
         'agreed_privacy' => 'boolean',
         'intro_session_number' => 'integer',
+        'admission_confirmed_at' => 'datetime',
         'auto_purge_at' => 'datetime',
     ];
+
+    protected static function booted(): void
+    {
+        static::created(function (ContactInquiry $inquiry) {
+            try {
+                app(CrmAllocationService::class)->allocateInquiry($inquiry);
+            } catch (\Throwable) {
+                // Registration must not fail if CRM assignment is unavailable.
+            }
+        });
+    }
 
     public static function generateRegistrationNumber(): string
     {

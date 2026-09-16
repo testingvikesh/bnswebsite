@@ -175,3 +175,4 @@ Route::any('/sop/{path?}', function (?string $path = null) {
 
 require __DIR__.'/controlpanel.php';
 require __DIR__.'/reporting.php';
+require __DIR__.'/crm.php';

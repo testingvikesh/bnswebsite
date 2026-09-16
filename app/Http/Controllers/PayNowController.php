@@ -7,6 +7,7 @@ use App\Models\MembershipUpload;
 use App\Services\IntroSessionConfirmationMailer;
 use App\Services\RegistrationPaymentService;
 use App\Services\TestRegistrationPurgeService;
+use App\Support\CrmLeadStatus;
 use Illuminate\Http\RedirectResponse;
 use Illuminate\Http\Request;
 use Illuminate\Support\ViewErrorBag;
@@ -135,6 +136,12 @@ class PayNowController extends Controller
             $isNew = true;
         }
 
+        try {
+            CrmLeadStatus::confirmCallListByMobile($normalizedMobile, $inquiry);
+        } catch (\Throwable) {
+            // CRM confirm must not break Pay Now.
+        }
+
         if ($this->payments->latestSuccessfulForRegistration((string) $inquiry->registration_number)) {
             return redirect()
                 ->route('pay-now')
@@ -165,6 +172,12 @@ class PayNowController extends Controller
         $inquiry = ContactInquiry::primaryFormsQuery()
             ->where('id', $validated['inquiry_id'])
             ->firstOrFail();
+
+        try {
+            CrmLeadStatus::confirmCallListByMobile($inquiry->mobile, $inquiry);
+        } catch (\Throwable) {
+            // CRM confirm must not break Pay Now.
+        }
 
         if ($this->payments->latestSuccessfulForRegistration((string) $inquiry->registration_number)) {
             return redirect()

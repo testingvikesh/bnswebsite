@@ -67,5 +67,7 @@ class Kernel extends HttpKernel
         'sop.admin' => \App\Http\Middleware\EnsureSopAdmin::class,
         'mail.auth' => \App\Http\Middleware\EnsureMailPortalAuth::class,
         'institute.api' => \App\Http\Middleware\EnsureInstituteApiKey::class,
+        'crm.auth' => \App\Http\Middleware\EnsureCrmAuth::class,
+        'crm.admin' => \App\Http\Middleware\EnsureCrmAdmin::class,
     ];
 }

@@ -3,6 +3,7 @@
 namespace App\Services;
 
 use App\Models\AdmissionPayment;
+use App\Support\CrmLeadStatus;
 use Illuminate\Database\Eloquent\Model;
 use Illuminate\Http\RedirectResponse;
 use Illuminate\Support\Facades\Schema;
@@ -174,6 +175,11 @@ class RegistrationPaymentService
 
             if (! $wasAlreadyPaid && $freshPayment) {
                 $this->paymentSuccessMailer->send($freshPayment);
+                try {
+                    CrmLeadStatus::confirmFromPayment($freshPayment);
+                } catch (\Throwable) {
+                    // CRM confirm must not break payment success flow.
+                }
             }
 
             return $freshPayment ?? $payment->fresh();

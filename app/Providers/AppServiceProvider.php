@@ -3,6 +3,7 @@
 namespace App\Providers;
 
 use App\Mail\Transport\PhpMailTransport;
+use App\Services\CrmAllocationService;
 use App\Services\OutboundMailer;
 use App\Services\SiteSettingsService;
 use App\Services\TestRegistrationPurgeService;
@@ -53,9 +54,10 @@ class AppServiceProvider extends ServiceProvider
                 }
             }
 
-            // Opportunistic purge for test mobiles when cron is not configured.
+            // Opportunistic purge / CRM allocate when cron is not configured.
             try {
                 app(TestRegistrationPurgeService::class)->purgeDueThrottled();
+                app(CrmAllocationService::class)->allocateThrottled();
             } catch (\Throwable) {
                 // never block page load
             }
