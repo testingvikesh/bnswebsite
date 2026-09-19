@@ -9,7 +9,7 @@
   <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
   <link href="https://fonts.googleapis.com/css2?family=Outfit:wght@400;500;600;700;800&display=swap" rel="stylesheet">
   <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.2/css/all.min.css">
-  <link rel="stylesheet" href="assets/css/mehul-portfolio.css?v=34">
+  <link rel="stylesheet" href="assets/css/mehul-portfolio.css?v=35">
 </head>
 <body>
   <div class="page-bg" aria-hidden="true"></div>
@@ -97,10 +97,20 @@
                 <span class="section-label">Our Prayer</span>
                 <h2>May We…</h2>
               </div>
-              <button type="button" class="btn-video" data-video="WDWGwoJhThQ" aria-label="Watch prayer video">
-                <i class="fa-brands fa-youtube"></i>
-                Click to View Video
-              </button>
+              <div class="video-actions" aria-label="Prathana videos">
+                <button type="button" class="btn-video" id="prathana-video-one" data-video="nZrjc1329ek" aria-label="Watch Prathana video one">
+                  <i class="fa-brands fa-youtube"></i>
+                  Video one
+                </button>
+                <button type="button" class="btn-video" id="prathana-video-two" data-video="usWK900pkF8" aria-label="Watch Prathana video">
+                  <i class="fa-brands fa-youtube"></i>
+                  Prathana
+                </button>
+                <button type="button" class="btn-video" id="prathana-video-three" data-video="lqS0hdSJ_wI" data-video-format="short" aria-label="Watch Prathana short video">
+                  <i class="fa-brands fa-youtube"></i>
+                  Prathana
+                </button>
+              </div>
             </div>
 
             <div class="guest-banner-actions" id="guest" aria-label="Welcome banners">
@@ -1177,8 +1187,20 @@
       <div class="summary-modal__body">
         <ol class="summary-index">
           <li>
-            <button type="button" class="summary-index__btn" data-index-target="#prayer-video" data-index-video="WDWGwoJhThQ">
-              <span class="summary-index__label">Prayer Video</span>
+            <button type="button" class="summary-index__btn" data-index-target="#prathana-video-one" data-index-video="nZrjc1329ek">
+              <span class="summary-index__label">Prayer Video one</span>
+              <span class="summary-index__tag"><i class="fa-brands fa-youtube"></i> Video</span>
+            </button>
+          </li>
+          <li>
+            <button type="button" class="summary-index__btn" data-index-target="#prathana-video-two" data-index-video="usWK900pkF8">
+              <span class="summary-index__label">Prathana</span>
+              <span class="summary-index__tag"><i class="fa-brands fa-youtube"></i> Video</span>
+            </button>
+          </li>
+          <li>
+            <button type="button" class="summary-index__btn" data-index-target="#prathana-video-three" data-index-video="lqS0hdSJ_wI">
+              <span class="summary-index__label">Prathana</span>
               <span class="summary-index__tag"><i class="fa-brands fa-youtube"></i> Video</span>
             </button>
           </li>

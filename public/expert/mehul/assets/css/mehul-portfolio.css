@@ -594,6 +594,14 @@ body {
   margin-top: 20px;
 }
 
+.video-actions {
+  display: flex;
+  flex-wrap: wrap;
+  align-items: center;
+  justify-content: flex-end;
+  gap: 10px;
+}
+
 .btn-video {
   display: inline-flex;
   align-items: center;
