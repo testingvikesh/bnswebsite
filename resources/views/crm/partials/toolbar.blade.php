@@ -30,7 +30,7 @@
             <a href="{{ route('crm.employees') }}" class="bns-mail-toolbar__link{{ ($active ?? '') === 'employees' ? ' is-active' : '' }}">
                 <i class="fas fa-user-tie" aria-hidden="true"></i> CRM Cordinate
             </a>
-            <a href="{{ route('crm.assign.board') }}" class="bns-mail-toolbar__link{{ ($active ?? '') === 'assign' ? ' is-active' : '' }}">
+            <a href="{{ route('crm.assign.board', $sessionNo > 0 ? ['session' => $sessionNo] : []) }}" class="bns-mail-toolbar__link{{ ($active ?? '') === 'assign' ? ' is-active' : '' }}">
                 <i class="fas fa-user-plus" aria-hidden="true"></i> Assign ( calling team)
             </a>
             <form method="POST" action="{{ route('crm.allocate') }}" class="bns-crm-allocate-form">
@@ -41,6 +41,9 @@
             </form>
             <a href="{{ route('crm.today-attendance') }}" class="bns-mail-toolbar__link{{ ($active ?? '') === 'today-attendance' ? ' is-active' : '' }}">
                 <i class="fas fa-calendar-check" aria-hidden="true"></i> Today Attendance
+            </a>
+            <a href="{{ route('reporting.index', $sessionNo > 0 ? ['session' => $sessionNo] : []) }}" class="bns-mail-toolbar__link" target="_blank" rel="noopener">
+                <i class="fas fa-chart-line" aria-hidden="true"></i> Reporting
             </a>
         @else
             <a href="{{ route('crm.desk') }}" class="bns-mail-toolbar__link{{ ($active ?? '') === 'desk' ? ' is-active' : '' }}">

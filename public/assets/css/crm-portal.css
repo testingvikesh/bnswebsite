@@ -191,6 +191,15 @@
     font-weight: 800;
 }
 
+.bns-crm-session-head {
+    display: flex;
+    flex-wrap: wrap;
+    justify-content: space-between;
+    align-items: flex-start;
+    gap: 12px;
+    margin: 0 0 18px;
+}
+
 .bns-crm-session-head h2 {
     margin: 6px 0 4px;
     color: #0a1d37;

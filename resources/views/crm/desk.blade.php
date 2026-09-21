@@ -49,20 +49,30 @@
 
             <form method="GET" action="{{ route('crm.desk') }}" class="bns-crm-search">
                 <input type="hidden" name="status" value="{{ $status }}">
+                @if(($sessionFilter ?? 0) > 0)
+                    <input type="hidden" name="session" value="{{ $sessionFilter }}">
+                @endif
                 <label for="crmDeskSearch">Search assigned members</label>
                 <div class="bns-crm-search__row">
                     <input id="crmDeskSearch" type="search" name="q" value="{{ $search }}" placeholder="Name, mobile, email, registration number">
                     <button type="submit"><i class="fas fa-search" aria-hidden="true"></i> Search</button>
-                    @if($search !== '' || $status !== 'all')
+                    @if($search !== '' || $status !== 'all' || (int) ($sessionFilter ?? 0) > 0)
                         <a href="{{ route('crm.desk') }}" class="bns-crm-search__reset">Clear</a>
                     @endif
                 </div>
             </form>
 
             <div class="bns-crm-pills">
-                <a href="{{ route('crm.desk', ['status' => 'all', 'q' => $search]) }}" class="{{ $status === 'all' ? 'is-active' : '' }}">All</a>
-                <a href="{{ route('crm.desk', ['status' => 'present', 'q' => $search]) }}" class="{{ $status === 'present' ? 'is-active' : '' }}">Present</a>
-                <a href="{{ route('crm.desk', ['status' => 'absent', 'q' => $search]) }}" class="{{ $status === 'absent' ? 'is-active' : '' }}">Absent</a>
+                <a href="{{ route('crm.desk', array_filter(['status' => $status, 'q' => $search])) }}" class="{{ (int) ($sessionFilter ?? 0) === 0 ? 'is-active' : '' }}">All sessions</a>
+                @foreach(($allowedSessions ?? bns_intro_session_allowed_numbers()) as $no)
+                    <a href="{{ route('crm.desk', array_filter(['session' => $no, 'status' => $status, 'q' => $search])) }}" class="{{ (int) ($sessionFilter ?? 0) === (int) $no ? 'is-active' : '' }}">S{{ $no }}</a>
+                @endforeach
+            </div>
+
+            <div class="bns-crm-pills">
+                <a href="{{ route('crm.desk', array_filter(['session' => ($sessionFilter ?? 0) ?: null, 'status' => 'all', 'q' => $search])) }}" class="{{ $status === 'all' ? 'is-active' : '' }}">All</a>
+                <a href="{{ route('crm.desk', array_filter(['session' => ($sessionFilter ?? 0) ?: null, 'status' => 'present', 'q' => $search])) }}" class="{{ $status === 'present' ? 'is-active' : '' }}">Present</a>
+                <a href="{{ route('crm.desk', array_filter(['session' => ($sessionFilter ?? 0) ?: null, 'status' => 'absent', 'q' => $search])) }}" class="{{ $status === 'absent' ? 'is-active' : '' }}">Absent</a>
             </div>
 
             <section class="bns-crm-list-card">
@@ -91,7 +101,7 @@
                                         <div>{{ $item->mobile ?? '—' }}</div>
                                         <div class="is-muted">{{ $item->email ?? '—' }}</div>
                                     </td>
-                                    <td>Session {{ $assignment->session_number }}</td>
+                                    <td>{{ bns_intro_session_label((int) $assignment->session_number) }}</td>
                                     <td>
                                         <span class="bns-crm-badge bns-crm-badge--{{ $assignment->attendance_status }}">
                                             {{ $assignment->attendance_status === 'present' ? 'Present' : 'Absent' }}

@@ -285,6 +285,7 @@ class CrmController extends Controller
         if (! in_array($status, ['all', 'present', 'absent', 'paid'], true)) {
             $status = 'all';
         }
+        $team = trim((string) $request->query('team', ''));
 
         $event = bns_introduction_session($session) ?? [
             'title' => 'Introduction Session '.$session,
@@ -295,13 +296,6 @@ class CrmController extends Controller
         $presentRows = $this->filterRows($buckets['present_rows'], $search);
         $absentRows = $this->filterRows($buckets['absent_rows'], $search);
         $paidRows = $this->filterRows($buckets['paid_rows'], $search);
-
-        $listRows = match ($status) {
-            'present' => $presentRows,
-            'absent' => $absentRows,
-            'paid' => $paidRows,
-            default => $presentRows->concat($absentRows)->concat($paidRows)->values(),
-        };
 
         $assignments = Schema::hasTable('crm_assignments')
             ? CrmAssignment::query()
@@ -315,6 +309,47 @@ class CrmController extends Controller
             ? CrmEmployee::query()->where('is_active', true)->orderBy('name')->get()
             : collect();
 
+        $teamCounts = [];
+        foreach ($employees as $employee) {
+            $teamCounts[(int) $employee->id] = $assignments->where('crm_employee_id', (int) $employee->id)->count();
+        }
+        $unassignedCount = collect($presentRows)
+            ->concat($absentRows)
+            ->concat($paidRows)
+            ->filter(fn ($row) => ! $assignments->has($row->id))
+            ->count();
+
+        $allowedTeamIds = $employees->pluck('id')->map(fn ($id) => (string) $id)->all();
+        if ($team !== '' && $team !== 'unassigned' && ! in_array($team, $allowedTeamIds, true)) {
+            $team = '';
+        }
+
+        $filterByTeam = function ($rows) use ($assignments, $team) {
+            if ($team === '') {
+                return $rows->values();
+            }
+            if ($team === 'unassigned') {
+                return $rows->filter(fn ($row) => ! $assignments->has($row->id))->values();
+            }
+
+            $employeeId = (int) $team;
+
+            return $rows
+                ->filter(fn ($row) => (int) optional($assignments->get($row->id))->crm_employee_id === $employeeId)
+                ->values();
+        };
+
+        $presentRows = $filterByTeam($presentRows);
+        $absentRows = $filterByTeam($absentRows);
+        $paidRows = $filterByTeam($paidRows);
+
+        $listRows = match ($status) {
+            'present' => $presentRows,
+            'absent' => $absentRows,
+            'paid' => $paidRows,
+            default => $presentRows->concat($absentRows)->concat($paidRows)->values(),
+        };
+
         return view('crm.session', [
             'heroImage' => $this->heroImage(),
             'page' => config('crm.page', []),
@@ -322,6 +357,7 @@ class CrmController extends Controller
             'event' => $event,
             'search' => $search,
             'status' => $status,
+            'team' => $team,
             'registered' => (int) $buckets['registered'],
             'present' => (int) $buckets['present'],
             'absent' => (int) $buckets['absent'],
@@ -333,6 +369,8 @@ class CrmController extends Controller
             'allowedSessions' => $allowed,
             'employees' => $employees,
             'assignments' => $assignments,
+            'teamCounts' => $teamCounts,
+            'unassignedCount' => $unassignedCount,
             'isAdmin' => true,
         ]);
     }
@@ -378,7 +416,16 @@ class CrmController extends Controller
     public function assignBoard(Request $request): View
     {
         $employees = Schema::hasTable('crm_employees')
-            ? CrmEmployee::query()->where('is_active', true)->withCount('assignments')->orderBy('name')->get()
+            ? CrmEmployee::query()
+                ->where('is_active', true)
+                ->withCount(['assignments as assignments_count' => function ($query) use ($request) {
+                    $sessionFilter = (int) $request->query('session', 0);
+                    if ($sessionFilter > 0) {
+                        $query->where('session_number', $sessionFilter);
+                    }
+                }])
+                ->orderBy('name')
+                ->get()
             : collect();
 
         $employeeId = (int) $request->query('employee', 0);
@@ -418,6 +465,15 @@ class CrmController extends Controller
             return true;
         })->values();
 
+        $sessionAssignments = $sessionNo > 0
+            ? $assignments->where('session_number', $sessionNo)
+            : $assignments;
+
+        $unassignedCount = $this->attendanceRows($sessionNo, '')->filter(function (object $hit) use ($assignmentMap) {
+            return ! $assignmentMap->has($hit->inquiry->id.'-'.$hit->session_number)
+                && ! CrmLeadStatus::isConfirmed($hit->inquiry);
+        })->count();
+
         return view('crm.assign', [
             'heroImage' => $this->heroImage(),
             'page' => config('crm.page', []),
@@ -432,12 +488,9 @@ class CrmController extends Controller
             'isAdmin' => true,
             'totals' => [
                 'employees' => $employees->count(),
-                'assigned' => $assignments->count(),
-                'unassigned' => $this->attendanceRows(0, '')->filter(function (object $hit) use ($assignmentMap) {
-                    return ! $assignmentMap->has($hit->inquiry->id.'-'.$hit->session_number)
-                        && ! CrmLeadStatus::isConfirmed($hit->inquiry);
-                })->count(),
-                'mine' => $assignments->where('crm_employee_id', $employeeId)->count(),
+                'assigned' => $sessionAssignments->count(),
+                'unassigned' => $unassignedCount,
+                'mine' => $sessionAssignments->where('crm_employee_id', $employeeId)->count(),
             ],
         ]);
     }

@@ -49,11 +49,11 @@
                     <strong>{{ number_format($totals['employees']) }}</strong>
                 </div>
                 <div class="bns-crm-stat">
-                    <span>Unassigned</span>
+                    <span>Unassigned{{ $sessionNo > 0 ? ' · S'.$sessionNo : '' }}</span>
                     <strong>{{ number_format($totals['unassigned']) }}</strong>
                 </div>
                 <div class="bns-crm-stat bns-crm-stat--present">
-                    <span>{{ $selectedEmployee->name ?? 'Employee' }} assigned</span>
+                    <span>{{ $selectedEmployee->name ?? 'Employee' }} assigned{{ $sessionNo > 0 ? ' · S'.$sessionNo : '' }}</span>
                     <strong>{{ number_format($totals['mine']) }}</strong>
                 </div>
             </div>
@@ -149,7 +149,7 @@
                                                 <div>{{ $item->mobile ?: '—' }}</div>
                                                 <div class="is-muted">{{ $item->email ?: '—' }}</div>
                                             </td>
-                                            <td>Session {{ $hit->session_number }}</td>
+                                            <td>{{ bns_intro_session_label((int) $hit->session_number) }}</td>
                                             <td>
                                                 <span class="bns-crm-badge bns-crm-badge--{{ $hit->status }}">
                                                     {{ $hit->status === 'present' ? 'Present' : 'Absent' }}

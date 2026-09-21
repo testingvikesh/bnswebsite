@@ -33,11 +33,20 @@ class CrmDeskController extends Controller
         if (! in_array($status, ['all', 'present', 'absent'], true)) {
             $status = 'all';
         }
+        $allowed = bns_intro_session_allowed_numbers();
+        $sessionFilter = (int) $request->query('session', 0);
+        if (! in_array($sessionFilter, $allowed, true)) {
+            $sessionFilter = 0;
+        }
 
         $query = CrmAssignment::query()
             ->with(['inquiry', 'followups', 'employee'])
             ->where('crm_employee_id', $employee->id)
             ->latest('assigned_at');
+
+        if ($sessionFilter > 0) {
+            $query->where('session_number', $sessionFilter);
+        }
 
         CrmLeadStatus::excludeConfirmed($query);
 
@@ -89,6 +98,8 @@ class CrmDeskController extends Controller
             'assignments' => $assignments,
             'search' => $search,
             'status' => $status,
+            'sessionFilter' => $sessionFilter,
+            'allowedSessions' => $allowed,
             'isAdmin' => false,
             'totals' => $totals,
         ]);
