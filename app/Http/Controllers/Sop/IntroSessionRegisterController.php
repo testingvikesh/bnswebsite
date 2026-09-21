@@ -7,10 +7,10 @@ use App\Models\AdmissionPayment;
 use App\Models\ContactInquiry;
 use App\Support\CrmLeadStatus;
 use Illuminate\Http\Request;
+use Illuminate\Http\Response;
 use Illuminate\Support\Collection;
 use Illuminate\Support\Facades\Schema;
 use Illuminate\View\View;
-use Symfony\Component\HttpFoundation\StreamedResponse;
 
 class IntroSessionRegisterController extends Controller
 {
@@ -27,66 +27,35 @@ class IntroSessionRegisterController extends Controller
         ]);
     }
 
-    public function export(Request $request): StreamedResponse
+    public function export(Request $request): Response
     {
         $state = $this->stateFromRequest($request);
         $rows = $this->rowsForView($state);
         $isPaid = $state['view'] === 'paid';
         $sessionLabel = $state['session'] > 0 ? 'session-'.$state['session'] : 'all-sessions';
         $filename = 'bns-intro-'.$state['view'].'-'.$sessionLabel.'-'.now()->format('Ymd-His').'.xls';
+        $title = $isPaid ? 'Payment Done Users' : 'Intro Session Registered Users';
+        $sessionTitle = $state['session'] > 0
+            ? 'Session '.$state['session']
+            : 'All Sessions';
+        $event = $state['session'] > 0 ? bns_introduction_session($state['session']) : null;
 
-        $headers = $isPaid
-            ? ['Sr. No.', 'Session', 'Paid Date', 'Name', 'Mobile', 'Email', 'Reg. No.', 'Amount', 'Payment Mode', 'Txn No.', 'Program']
-            : ['Sr. No.', 'Session', 'Registered At', 'Name', 'Mobile', 'Email', 'Reg. No.', 'Form Source', 'Program', 'Payment', 'Amount', 'Paid Date'];
+        $html = view('sop.intro-session-registers.export-excel', [
+            ...$state,
+            'rows' => $rows,
+            'isPaid' => $isPaid,
+            'title' => $title,
+            'sessionTitle' => $sessionTitle,
+            'event' => $event,
+            'generatedAt' => now('Asia/Kolkata'),
+            'stats' => $this->stats($state),
+        ])->render();
 
-        return response()->streamDownload(function () use ($rows, $headers, $isPaid) {
-            $handle = fopen('php://output', 'w');
-            fwrite($handle, "\xEF\xBB\xBF");
-            fputcsv($handle, $headers);
-
-            $sr = 0;
-            foreach ($rows as $row) {
-                $sr++;
-                $inquiry = $row['inquiry'];
-                $payment = $row['payment'];
-                $sessionNo = (int) $row['session'];
-
-                if ($isPaid) {
-                    fputcsv($handle, [
-                        $sr,
-                        $sessionNo > 0 ? 'Session '.$sessionNo : '',
-                        $payment?->paid_at?->timezone('Asia/Kolkata')->format('d M Y, h:i A') ?? '',
-                        $payment?->customer_name ?: ($inquiry->full_name ?? ''),
-                        $payment?->customer_mobile ?: ($inquiry->mobile ?? ''),
-                        $payment?->customer_email ?: ($inquiry->email ?? ''),
-                        $payment?->registration_number ?: ($inquiry->registration_number ?? ''),
-                        $payment ? number_format((float) $payment->amount, 2, '.', '') : '',
-                        $payment?->payment_mode ?? '',
-                        $payment?->merchant_txn_no ?? '',
-                        $inquiry->interested_program ?? '',
-                    ]);
-                    continue;
-                }
-
-                fputcsv($handle, [
-                    $sr,
-                    $sessionNo > 0 ? 'Session '.$sessionNo : '',
-                    $inquiry?->created_at?->timezone('Asia/Kolkata')->format('d M Y, h:i A') ?? '',
-                    $inquiry->full_name ?? '',
-                    $inquiry->mobile ?? '',
-                    $inquiry->email ?? '',
-                    $inquiry->registration_number ?? '',
-                    $inquiry?->formSourceLabel() ?? '',
-                    $inquiry->interested_program ?? '',
-                    $payment ? 'Payment done' : 'Not paid',
-                    $payment ? number_format((float) $payment->amount, 2, '.', '') : '',
-                    $payment?->paid_at?->timezone('Asia/Kolkata')->format('d M Y, h:i A') ?? '',
-                ]);
-            }
-
-            fclose($handle);
-        }, $filename, [
+        return response("\xEF\xBB\xBF".$html, 200, [
             'Content-Type' => 'application/vnd.ms-excel; charset=UTF-8',
+            'Content-Disposition' => 'attachment; filename="'.$filename.'"',
+            'Cache-Control' => 'max-age=0, no-cache, must-revalidate',
+            'Pragma' => 'public',
         ]);
     }
 
