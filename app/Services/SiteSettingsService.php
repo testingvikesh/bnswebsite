@@ -55,6 +55,8 @@ class SiteSettingsService
 
     private const DEFAULT_LOGO = 'assets/bnslogo.png';
 
+    private const DEFAULT_FAVICON = 'favicon.png';
+
     private const LEGAL_DATE_FALLBACK = 'As published on the BNS official website';
 
     /** @var array<string, string|null>|null */
@@ -67,7 +69,7 @@ class SiteSettingsService
 
     public function faviconUrl(): string
     {
-        return $this->assetUrl(self::KEY_FAVICON, self::DEFAULT_LOGO);
+        return $this->assetUrl(self::KEY_FAVICON, self::DEFAULT_FAVICON);
     }
 
     public function logoAlt(): string

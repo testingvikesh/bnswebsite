@@ -166,6 +166,33 @@ Route::get('/venue-inspection', [VenueInspectionController::class, 'index'])->na
 Route::post('/venue-inspection', [VenueInspectionController::class, 'store'])->name('venue-inspection.store');
 Route::get('/cart', function () { return view('home'); });
 
+Route::get('/manifest.webmanifest', function () {
+    $icon = asset('favicon.png');
+    try {
+        $icon = app(\App\Services\SiteSettingsService::class)->faviconUrl();
+    } catch (\Throwable) {
+        // keep public/favicon.png
+    }
+
+    return response()->json([
+        'id' => url('/'),
+        'name' => 'Business Navachar School',
+        'short_name' => 'BNS',
+        'description' => 'Business Navachar School',
+        'start_url' => url('/'),
+        'scope' => url('/'),
+        'display' => 'standalone',
+        'background_color' => '#0a1d37',
+        'theme_color' => '#ff5544',
+        'icons' => [
+            ['src' => $icon, 'sizes' => '192x192', 'type' => 'image/png', 'purpose' => 'any'],
+            ['src' => $icon, 'sizes' => '512x512', 'type' => 'image/png', 'purpose' => 'any maskable'],
+        ],
+    ], 200, [
+        'Content-Type' => 'application/manifest+json',
+    ]);
+})->name('pwa.manifest');
+
 Route::any('/sop/{path?}', function (?string $path = null) {
     $target = '/controlpanel'.($path ? '/'.$path : '');
     $query = request()->getQueryString();

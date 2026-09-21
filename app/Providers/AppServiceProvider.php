@@ -89,7 +89,7 @@ class AppServiceProvider extends ServiceProvider
                 $view->with('siteLegalDates', $settings->legalDates());
             } catch (\Throwable) {
                 $view->with('siteLogoUrl', asset('assets/bnslogo.png'));
-                $view->with('siteFaviconUrl', asset('assets/bnslogo.png'));
+                $view->with('siteFaviconUrl', asset('favicon.png'));
                 $view->with('siteLogoAlt', 'BNS');
                 $view->with('siteHeader', []);
                 $view->with('siteBrochure', []);

@@ -6,7 +6,7 @@
     <meta name="csrf-token" content="{{ csrf_token() }}">
     <meta name="csrf-token-url" content="{{ route('csrf-token') }}">
     <title>{{ bns_document_title($__env->yieldContent('title')) }}</title>
-    <link rel="icon" type="image/png" href="{{ $siteFaviconUrl }}" />
+    @include('partials.pwa-head')
     <meta name="description" content="Business Navachar School" />
     <!-- Meta Pixel Code -->
     <script>
@@ -603,6 +603,7 @@
     </script>
     @stack('modals')
     @stack('scripts')
+    @include('partials.pwa-scripts')
     <script>
     (function () {
         var authSelect = document.getElementById('headerAuthSelect');
