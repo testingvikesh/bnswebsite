@@ -156,6 +156,12 @@
                     </a>
                 </div>
                 <div class="col-sm-6">
+                    <a href="{{ route('controlpanel.intro-session-registers.index') }}" class="bns-action-btn">
+                        <span class="bns-action-btn__icon bg-success bg-opacity-10 text-success"><i class="bi bi-people"></i></span>
+                        <span><strong>Intro Session Registers</strong><br><small class="text-muted">Registered &amp; payment done + Excel</small></span>
+                    </a>
+                </div>
+                <div class="col-sm-6">
                     <a href="{{ route('controlpanel.intro-session-schedules.edit') }}" class="bns-action-btn">
                         <span class="bns-action-btn__icon bg-warning bg-opacity-10 text-warning"><i class="bi bi-calendar2-week"></i></span>
                         <span><strong>Intro Session Dates</strong><br><small class="text-muted">Change session date &amp; time</small></span>
