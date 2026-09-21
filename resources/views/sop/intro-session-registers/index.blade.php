@@ -8,14 +8,31 @@
     $view = $view ?? 'registered';
     $session = (int) ($session ?? 0);
     $search = $search ?? '';
+    $payment = $payment ?? '';
+    $program = $program ?? '';
+    $source = $source ?? '';
+    $dateFrom = $date_from ?? '';
+    $dateTo = $date_to ?? '';
     $sessions = $sessions ?? bns_introduction_sessions();
     $allowed = $allowed ?? bns_intro_session_allowed_numbers();
     $stats = $stats ?? ['registered' => 0, 'paid' => 0, 'filtered' => 0, 'session_totals' => [], 'session_paid' => []];
+    $programOptions = $programOptions ?? [];
+    $formSourceOptions = $formSourceOptions ?? [];
     $keep = array_filter([
         'view' => $view !== 'registered' ? $view : null,
         'session' => $session > 0 ? $session : null,
         'q' => $search !== '' ? $search : null,
+        'payment' => $payment !== '' ? $payment : null,
+        'program' => $program !== '' ? $program : null,
+        'source' => $source !== '' ? $source : null,
+        'date_from' => $dateFrom !== '' ? $dateFrom : null,
+        'date_to' => $dateTo !== '' ? $dateTo : null,
     ]);
+    $hasFilters = $search !== '' || $payment !== '' || $program !== '' || $source !== '' || $dateFrom !== '' || $dateTo !== '' || $session > 0;
+    $linkKeep = function (array $overrides = []) use ($keep) {
+        $merged = array_filter(array_merge($keep, $overrides), fn ($value) => $value !== null && $value !== '' && $value !== 0);
+        return $merged;
+    };
 @endphp
 
 <div class="d-flex flex-wrap justify-content-between align-items-start gap-3 mb-4">
@@ -29,7 +46,7 @@
 
 <div class="row g-3 mb-4">
     <div class="col-sm-6 col-xl-3">
-        <a href="{{ route('controlpanel.intro-session-registers.index', array_filter(['session' => $session ?: null, 'q' => $search ?: null])) }}" class="text-decoration-none">
+        <a href="{{ route('controlpanel.intro-session-registers.index', $linkKeep(['view' => null, 'session' => $session ?: null])) }}" class="text-decoration-none">
             <div class="sop-stat {{ $view === 'registered' ? 'border-primary' : '' }}">
                 <div class="sop-stat__icon bg-primary-subtle text-primary"><i class="bi bi-people-fill"></i></div>
                 <div>
@@ -40,7 +57,7 @@
         </a>
     </div>
     <div class="col-sm-6 col-xl-3">
-        <a href="{{ route('controlpanel.intro-session-registers.index', array_filter(['view' => 'paid', 'session' => $session ?: null, 'q' => $search ?: null])) }}" class="text-decoration-none">
+        <a href="{{ route('controlpanel.intro-session-registers.index', $linkKeep(['view' => 'paid', 'session' => $session ?: null, 'payment' => null])) }}" class="text-decoration-none">
             <div class="sop-stat {{ $view === 'paid' ? 'border-success' : '' }}">
                 <div class="sop-stat__icon bg-success-subtle text-success"><i class="bi bi-check-circle-fill"></i></div>
                 <div>
@@ -65,16 +82,15 @@
     <div class="d-flex flex-wrap justify-content-between align-items-start gap-2 mb-3">
         <div>
             <h5 class="mb-1">{{ $view === 'paid' ? 'Payment done users' : 'Registered users' }}</h5>
-            <p class="text-muted small mb-0">Filter by session, then download Excel.</p>
+            <p class="text-muted small mb-0">Filter by session, payment, program, source, or date, then download Excel.</p>
         </div>
         <div class="btn-group flex-wrap">
-            <a href="{{ route('controlpanel.intro-session-registers.index', array_filter(['view' => $view !== 'registered' ? $view : null, 'q' => $search ?: null])) }}"
+            <a href="{{ route('controlpanel.intro-session-registers.index', $linkKeep(['session' => null])) }}"
                class="btn btn-sm {{ $session === 0 ? 'btn-dark' : 'btn-outline-secondary' }}">
                 All sessions
             </a>
             @foreach($allowed as $sessionNo)
-                @php $sessionOption = collect($sessions)->firstWhere('session_number', $sessionNo); @endphp
-                <a href="{{ route('controlpanel.intro-session-registers.index', array_filter(['view' => $view !== 'registered' ? $view : null, 'session' => $sessionNo, 'q' => $search ?: null])) }}"
+                <a href="{{ route('controlpanel.intro-session-registers.index', $linkKeep(['session' => $sessionNo])) }}"
                    class="btn btn-sm {{ $session === (int) $sessionNo ? 'btn-danger' : 'btn-outline-secondary' }}">
                     S{{ $sessionNo }}
                     <span class="ms-1">{{ number_format($view === 'paid' ? ($stats['session_paid'][$sessionNo] ?? 0) : ($stats['session_totals'][$sessionNo] ?? 0)) }}</span>
@@ -90,16 +106,52 @@
         @if($session > 0)
             <input type="hidden" name="session" value="{{ $session }}">
         @endif
-        <div class="col-md-6">
+        <div class="col-md-4">
             <label class="form-label">Search</label>
             <input type="text" name="q" class="form-control" value="{{ $search }}" placeholder="Name, mobile, email, registration number">
         </div>
-        <div class="col-md-6 d-flex gap-2">
+        @if($view !== 'paid')
+            <div class="col-md-2">
+                <label class="form-label">Payment</label>
+                <select name="payment" class="form-select">
+                    <option value="">All</option>
+                    <option value="paid" @selected($payment === 'paid')>Payment done</option>
+                    <option value="unpaid" @selected($payment === 'unpaid')>Not paid</option>
+                </select>
+            </div>
+        @endif
+        <div class="col-md-3">
+            <label class="form-label">Program</label>
+            <select name="program" class="form-select">
+                <option value="">All programs</option>
+                @foreach($programOptions as $option)
+                    <option value="{{ $option }}" @selected($program === $option)>{{ $option }}</option>
+                @endforeach
+            </select>
+        </div>
+        <div class="col-md-3">
+            <label class="form-label">Form source</label>
+            <select name="source" class="form-select">
+                <option value="">All sources</option>
+                @foreach($formSourceOptions as $value => $label)
+                    <option value="{{ $value }}" @selected($source === $value)>{{ $label }}</option>
+                @endforeach
+            </select>
+        </div>
+        <div class="col-md-2">
+            <label class="form-label">From date</label>
+            <input type="date" name="date_from" class="form-control" value="{{ $dateFrom }}">
+        </div>
+        <div class="col-md-2">
+            <label class="form-label">To date</label>
+            <input type="date" name="date_to" class="form-control" value="{{ $dateTo }}">
+        </div>
+        <div class="col-md-4 d-flex gap-2">
             <button type="submit" class="btn btn-sop-primary">
-                <i class="bi bi-search me-1"></i> Search
+                <i class="bi bi-funnel me-1"></i> Apply
             </button>
-            @if($search !== '')
-                <a href="{{ route('controlpanel.intro-session-registers.index', array_filter(['view' => $view !== 'registered' ? $view : null, 'session' => $session ?: null])) }}" class="btn btn-outline-secondary">Clear</a>
+            @if($hasFilters)
+                <a href="{{ route('controlpanel.intro-session-registers.index', array_filter(['view' => $view !== 'registered' ? $view : null])) }}" class="btn btn-outline-secondary">Clear</a>
             @endif
         </div>
     </form>

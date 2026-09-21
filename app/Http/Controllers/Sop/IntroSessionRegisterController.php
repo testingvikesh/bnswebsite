@@ -25,6 +25,8 @@ class IntroSessionRegisterController extends Controller
             'rows' => $rows,
             'sessions' => bns_introduction_sessions(),
             'stats' => $this->stats($state),
+            'programOptions' => config('contact.form.interested_programs', []),
+            'formSourceOptions' => config('reporting.form_sources', []),
         ]);
     }
 
@@ -60,6 +62,18 @@ class IntroSessionRegisterController extends Controller
         }
         if ($state['search'] !== '') {
             $meta .= ' · Search: '.$state['search'];
+        }
+        if (($state['payment'] ?? '') !== '') {
+            $meta .= ' · Payment: '.(($state['payment'] ?? '') === 'paid' ? 'Payment done' : 'Not paid');
+        }
+        if (($state['program'] ?? '') !== '') {
+            $meta .= ' · Program: '.$state['program'];
+        }
+        if (($state['source'] ?? '') !== '') {
+            $meta .= ' · Source: '.(config('reporting.form_sources.'.$state['source']) ?: $state['source']);
+        }
+        if (($state['date_from'] ?? '') !== '' || ($state['date_to'] ?? '') !== '') {
+            $meta .= ' · Date: '.trim(($state['date_from'] ?? '').' to '.($state['date_to'] ?? ''));
         }
 
         $sheet = [
@@ -163,7 +177,17 @@ class IntroSessionRegisterController extends Controller
     }
 
     /**
-     * @return array{view: string, session: int, search: string, allowed: list<int>}
+     * @return array{
+     *     view: string,
+     *     session: int,
+     *     search: string,
+     *     payment: string,
+     *     program: string,
+     *     source: string,
+     *     date_from: string,
+     *     date_to: string,
+     *     allowed: list<int>
+     * }
      */
     private function stateFromRequest(Request $request): array
     {
@@ -178,10 +202,28 @@ class IntroSessionRegisterController extends Controller
             $session = 0;
         }
 
+        $payment = strtolower(trim((string) $request->query('payment', '')));
+        if (! in_array($payment, ['paid', 'unpaid'], true)) {
+            $payment = '';
+        }
+        if ($view === 'paid') {
+            $payment = '';
+        }
+
+        $program = trim((string) $request->query('program', ''));
+        $source = trim((string) $request->query('source', ''));
+        $dateFrom = trim((string) $request->query('date_from', ''));
+        $dateTo = trim((string) $request->query('date_to', ''));
+
         return [
             'view' => $view,
             'session' => $session,
             'search' => trim((string) $request->query('q', '')),
+            'payment' => $payment,
+            'program' => $program,
+            'source' => $source,
+            'date_from' => $dateFrom,
+            'date_to' => $dateTo,
             'allowed' => $allowed,
         ];
     }
@@ -218,9 +260,72 @@ class IntroSessionRegisterController extends Controller
      */
     private function rowsForView(array $state): Collection
     {
-        return $state['view'] === 'paid'
+        $rows = $state['view'] === 'paid'
             ? $this->paidRows($state['session'], $state['search'])
             : $this->registeredRows($state['session'], $state['search']);
+
+        return $this->applyRowFilters($rows, $state);
+    }
+
+    /**
+     * @param  Collection<int, array{session: int, inquiry: ?ContactInquiry, payment: ?AdmissionPayment}>  $rows
+     * @param  array{payment: string, program: string, source: string, date_from: string, date_to: string}  $state
+     * @return Collection<int, array{session: int, inquiry: ?ContactInquiry, payment: ?AdmissionPayment}>
+     */
+    private function applyRowFilters(Collection $rows, array $state): Collection
+    {
+        $payment = (string) ($state['payment'] ?? '');
+        $program = (string) ($state['program'] ?? '');
+        $source = (string) ($state['source'] ?? '');
+        $dateFrom = (string) ($state['date_from'] ?? '');
+        $dateTo = (string) ($state['date_to'] ?? '');
+
+        if ($payment === '' && $program === '' && $source === '' && $dateFrom === '' && $dateTo === '') {
+            return $rows->values();
+        }
+
+        return $rows
+            ->filter(function (array $row) use ($payment, $program, $source, $dateFrom, $dateTo) {
+                $inquiry = $row['inquiry'] ?? null;
+                $paid = $row['payment'] ?? null;
+
+                if ($payment === 'paid' && ! $paid) {
+                    return false;
+                }
+                if ($payment === 'unpaid' && $paid) {
+                    return false;
+                }
+
+                if ($program !== '') {
+                    $rowProgram = trim((string) ($inquiry?->interested_program ?? ''));
+                    if ($rowProgram !== $program) {
+                        return false;
+                    }
+                }
+
+                if ($source !== '') {
+                    if (! $inquiry || $inquiry->resolvedFormSource() !== $source) {
+                        return false;
+                    }
+                }
+
+                if ($dateFrom !== '' || $dateTo !== '') {
+                    $when = $inquiry?->created_at ?? $paid?->paid_at;
+                    if (! $when) {
+                        return false;
+                    }
+                    $day = $when->timezone('Asia/Kolkata')->toDateString();
+                    if ($dateFrom !== '' && $day < $dateFrom) {
+                        return false;
+                    }
+                    if ($dateTo !== '' && $day > $dateTo) {
+                        return false;
+                    }
+                }
+
+                return true;
+            })
+            ->values();
     }
 
     /**
