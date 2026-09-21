@@ -162,9 +162,11 @@ class CrmDeskController extends Controller
         if ($validated['status'] === CrmFollowup::STATUS_ADMITTED && $assignment->inquiry) {
             CrmLeadStatus::confirm($assignment->inquiry);
 
-            return redirect()
-                ->route('crm.desk')
-                ->with('status', 'Follow-up '.$row->followup_no.' saved. This member is hidden from the call list.');
+            if (! CrmPortal::isAdmin($request)) {
+                return redirect()
+                    ->route('crm.desk')
+                    ->with('status', 'Follow-up '.$row->followup_no.' saved. This member is hidden from the call list.');
+            }
         }
 
         return back()->with('status', 'Follow-up '.$row->followup_no.' saved.');

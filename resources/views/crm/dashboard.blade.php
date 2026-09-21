@@ -35,13 +35,6 @@
                 $statusUrl = function (string $value) use ($filterKeep) {
                     return route('crm.dashboard', array_filter($filterKeep + ['status' => $value]));
                 };
-                $sessionUrl = function (int $sessionNo) use ($search, $status) {
-                    return route('crm.dashboard', array_filter([
-                        'q' => $search !== '' ? $search : null,
-                        'status' => $status !== '' ? $status : null,
-                        'session' => $sessionNo > 0 ? $sessionNo : null,
-                    ]));
-                };
                 $statusHeading = match ($status) {
                     'present' => 'Present',
                     'absent' => 'Absent',
@@ -84,24 +77,9 @@
             </div>
             <p class="bns-crm-section-copy">Click a box to filter the list. Total = Present + Absent + Payment done.</p>
 
-            <div class="bns-crm-pills" role="tablist" aria-label="Filter by session">
-                <a href="{{ $sessionUrl(0) }}" class="{{ $sessionFilter === 0 ? 'is-active' : '' }}">All sessions</a>
-                @foreach($allowed ?? bns_intro_session_allowed_numbers() as $no)
-                    <a href="{{ $sessionUrl((int) $no) }}" class="{{ $sessionFilter === (int) $no ? 'is-active' : '' }}">
-                        S{{ $no }}
-                    </a>
-                @endforeach
-            </div>
-
-            <form method="GET" action="{{ route('crm.dashboard') }}" class="bns-crm-search">
-                @if($status !== '')
-                    <input type="hidden" name="status" value="{{ $status }}">
-                @endif
-                @if($sessionFilter > 0)
-                    <input type="hidden" name="session" value="{{ $sessionFilter }}">
-                @endif
-                <label for="crmSearch">Search{{ $sessionFilter > 0 ? ' this session' : ' all sessions' }}</label>
-                <div class="bns-crm-search__row">
+            <form method="GET" action="{{ route('crm.dashboard') }}" class="bns-crm-filters">
+                <div>
+                    <label for="crmSearch">Search</label>
                     <input
                         id="crmSearch"
                         type="search"
@@ -109,7 +87,29 @@
                         value="{{ $search }}"
                         placeholder="Name, mobile, email, registration number"
                     >
-                    <button type="submit"><i class="fas fa-search" aria-hidden="true"></i> Search</button>
+                </div>
+                <div>
+                    <label for="crmDashSession">Session</label>
+                    <select id="crmDashSession" name="session">
+                        <option value="">All sessions</option>
+                        @foreach($allowed ?? bns_intro_session_allowed_numbers() as $no)
+                            <option value="{{ $no }}" @selected($sessionFilter === (int) $no)>S{{ $no }}</option>
+                        @endforeach
+                    </select>
+                </div>
+                <div>
+                    <label for="crmDashStatus">Status</label>
+                    <select id="crmDashStatus" name="status">
+                        <option value="" @selected($status === '')>Select status</option>
+                        <option value="all" @selected($status === 'all')>All members</option>
+                        <option value="present" @selected($status === 'present')>Present</option>
+                        <option value="absent" @selected($status === 'absent')>Absent</option>
+                        <option value="paid" @selected($status === 'paid')>Payment done</option>
+                        <option value="assigned" @selected($status === 'assigned')>Assigned</option>
+                    </select>
+                </div>
+                <div class="bns-crm-filters__actions">
+                    <button type="submit"><i class="fas fa-filter" aria-hidden="true"></i> Apply</button>
                     @if($search !== '' || $status !== '' || $sessionFilter > 0)
                         <a href="{{ route('crm.dashboard') }}" class="bns-crm-search__reset">Clear</a>
                     @endif

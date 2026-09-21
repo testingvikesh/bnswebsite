@@ -18,7 +18,8 @@
                 <th>Program</th>
                 <th>City</th>
                 <th>Status</th>
-                <th>Assign employee</th>
+                <th>Calling team</th>
+                <th>Remarks</th>
             </tr>
         </thead>
         <tbody>
@@ -67,10 +68,33 @@
                             <div class="is-muted">Now: {{ $assignment->employee->name ?? '—' }}</div>
                         @endif
                     </td>
+                    <td>
+                        @if($assignment)
+                            <div class="bns-crm-remark-dots">
+                                @for($n = 1; $n <= 3; $n++)
+                                    @php($fu = $assignment->followup($n))
+                                    <button
+                                        type="button"
+                                        class="bns-crm-dot {{ $fu && $fu->isDone() ? 'is-done' : '' }} js-crm-remark"
+                                        title="Follow-up {{ $n }} remark"
+                                        data-name="{{ $item->full_name ?? 'Member' }}"
+                                        data-followup="{{ $n }}"
+                                        data-status="{{ $fu ? $fu->statusLabel() : 'Not saved yet' }}"
+                                        data-status-value="{{ $fu?->status ?? 'pending' }}"
+                                        data-when="{{ $fu && $fu->called_at ? $fu->called_at->timezone('Asia/Kolkata')->format('d M Y, h:i A') : '' }}"
+                                        data-note="{{ $fu && filled($fu->note) ? $fu->note : '' }}"
+                                        data-save-url="{{ route('crm.desk.followup', ['assignment' => $assignment->id, 'followup' => $n]) }}"
+                                    >{{ $n }}</button>
+                                @endfor
+                            </div>
+                        @else
+                            <span class="is-muted">Assign first</span>
+                        @endif
+                    </td>
                 </tr>
             @empty
                 <tr>
-                    <td colspan="8" class="bns-crm-empty">No records found.</td>
+                    <td colspan="9" class="bns-crm-empty">No records found.</td>
                 </tr>
             @endforelse
         </tbody>

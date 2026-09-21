@@ -299,7 +299,7 @@ class CrmController extends Controller
 
         $assignments = Schema::hasTable('crm_assignments')
             ? CrmAssignment::query()
-                ->with('employee')
+                ->with(['employee', 'followups'])
                 ->where('session_number', $session)
                 ->get()
                 ->keyBy('contact_inquiry_id')
@@ -371,6 +371,7 @@ class CrmController extends Controller
             'assignments' => $assignments,
             'teamCounts' => $teamCounts,
             'unassignedCount' => $unassignedCount,
+            'followupStatusOptions' => \App\Models\CrmFollowup::statusOptions(),
             'isAdmin' => true,
         ]);
     }

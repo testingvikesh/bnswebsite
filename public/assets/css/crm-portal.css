@@ -209,6 +209,56 @@
     color: #64748b;
 }
 
+.bns-crm-filters {
+    display: grid;
+    grid-template-columns: repeat(auto-fit, minmax(180px, 1fr));
+    gap: 12px;
+    margin: 0 0 18px;
+    align-items: end;
+}
+
+.bns-crm-filters label {
+    display: block;
+    margin-bottom: 6px;
+    color: #64748b;
+    font-size: 0.78rem;
+    font-weight: 700;
+    letter-spacing: 0.03em;
+    text-transform: uppercase;
+}
+
+.bns-crm-filters input,
+.bns-crm-filters select {
+    width: 100%;
+    padding: 10px 12px;
+    border-radius: 12px;
+    border: 1px solid rgba(15, 23, 42, 0.12);
+    background: #fff;
+}
+
+.bns-crm-filters__actions {
+    display: flex;
+    flex-wrap: wrap;
+    gap: 8px;
+    align-items: center;
+}
+
+.bns-crm-filters__actions button {
+    padding: 10px 16px;
+    border: 0;
+    border-radius: 12px;
+    background: #0a1d37;
+    color: #fff;
+    font-weight: 700;
+    cursor: pointer;
+}
+
+.bns-crm-remark-dots {
+    display: flex;
+    gap: 6px;
+    flex-wrap: wrap;
+}
+
 .bns-crm-pills {
     display: flex;
     flex-wrap: wrap;

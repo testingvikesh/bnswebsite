@@ -75,28 +75,33 @@
                     @endforeach
                 </div>
 
-                <div class="bns-crm-pills">
-                    <a href="{{ route('crm.assign.board', $boardQuery(['session' => 0])) }}" class="{{ $sessionNo === 0 ? 'is-active' : '' }}">All sessions</a>
-                    @foreach($allowedSessions as $no)
-                        <a href="{{ route('crm.assign.board', $boardQuery(['session' => $no])) }}" class="{{ $sessionNo === (int) $no ? 'is-active' : '' }}">S{{ $no }}</a>
-                    @endforeach
-                </div>
-                <div class="bns-crm-pills">
-                    <a href="{{ route('crm.assign.board', $boardQuery(['scope' => 'unassigned'])) }}" class="{{ $scope === 'unassigned' ? 'is-active' : '' }}">Unassigned</a>
-                    <a href="{{ route('crm.assign.board', $boardQuery(['scope' => 'mine'])) }}" class="{{ $scope === 'mine' ? 'is-active' : '' }}">Assigned to {{ $selectedEmployee->name ?? 'employee' }}</a>
-                    <a href="{{ route('crm.assign.board', $boardQuery(['scope' => 'all'])) }}" class="{{ $scope === 'all' ? 'is-active' : '' }}">All members</a>
-                </div>
-
-                <form method="GET" action="{{ route('crm.assign.board') }}" class="bns-crm-search">
+                <form method="GET" action="{{ route('crm.assign.board') }}" class="bns-crm-filters">
                     <input type="hidden" name="employee" value="{{ $employeeId }}">
-                    <input type="hidden" name="session" value="{{ $sessionNo }}">
-                    <input type="hidden" name="scope" value="{{ $scope }}">
-                    <label for="crmAssignSearch">Search members</label>
-                    <div class="bns-crm-search__row">
+                    <div>
+                        <label for="crmAssignSearch">Search</label>
                         <input id="crmAssignSearch" type="search" name="q" value="{{ $search }}" placeholder="Name, mobile, email, registration number">
-                        <button type="submit"><i class="fas fa-search" aria-hidden="true"></i> Search</button>
-                        @if($search !== '')
-                            <a href="{{ route('crm.assign.board', $boardQuery(['q' => ''])) }}" class="bns-crm-search__reset">Clear</a>
+                    </div>
+                    <div>
+                        <label for="crmAssignSession">Session</label>
+                        <select id="crmAssignSession" name="session">
+                            <option value="">All sessions</option>
+                            @foreach($allowedSessions as $no)
+                                <option value="{{ $no }}" @selected($sessionNo === (int) $no)>S{{ $no }}</option>
+                            @endforeach
+                        </select>
+                    </div>
+                    <div>
+                        <label for="crmAssignScope">List</label>
+                        <select id="crmAssignScope" name="scope">
+                            <option value="unassigned" @selected($scope === 'unassigned')>Unassigned</option>
+                            <option value="mine" @selected($scope === 'mine')>Assigned to {{ $selectedEmployee->name ?? 'employee' }}</option>
+                            <option value="all" @selected($scope === 'all')>All members</option>
+                        </select>
+                    </div>
+                    <div class="bns-crm-filters__actions">
+                        <button type="submit"><i class="fas fa-filter" aria-hidden="true"></i> Apply</button>
+                        @if($search !== '' || $sessionNo > 0 || $scope !== 'unassigned')
+                            <a href="{{ route('crm.assign.board', $boardQuery(['q' => '', 'session' => 0, 'scope' => 'unassigned'])) }}" class="bns-crm-search__reset">Clear</a>
                         @endif
                     </div>
                 </form>

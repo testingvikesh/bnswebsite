@@ -71,25 +71,11 @@
                     <strong>{{ number_format($paid ?? 0) }}</strong>
                 </a>
             </div>
-            <p class="bns-crm-section-copy">Total = Present + Absent + Payment done. Use calling-team filters to see who is assigned in this session.</p>
+            <p class="bns-crm-section-copy">Total = Present + Absent + Payment done. Filter by calling team and status, then add remarks on assigned members.</p>
 
-            <div class="bns-crm-pills" role="tablist" aria-label="Calling team">
-                <a href="{{ route('crm.session', $sessionQuery(['team' => ''])) }}" class="{{ $team === '' ? 'is-active' : '' }}">All calling team</a>
-                <a href="{{ route('crm.session', $sessionQuery(['team' => 'unassigned'])) }}" class="{{ $team === 'unassigned' ? 'is-active' : '' }}">Unassigned ({{ number_format($unassignedCount ?? 0) }})</a>
-                @foreach($employees as $employee)
-                    <a href="{{ route('crm.session', $sessionQuery(['team' => (string) $employee->id])) }}" class="{{ $team === (string) $employee->id ? 'is-active' : '' }}">
-                        {{ $employee->name }} ({{ number_format($teamCounts[$employee->id] ?? 0) }})
-                    </a>
-                @endforeach
-            </div>
-
-            <form method="GET" action="{{ route('crm.session', $sessionNo) }}" class="bns-crm-search">
-                <input type="hidden" name="status" value="{{ $status }}">
-                @if($team !== '')
-                    <input type="hidden" name="team" value="{{ $team }}">
-                @endif
-                <label for="crmSessionSearch">Search this session</label>
-                <div class="bns-crm-search__row">
+            <form method="GET" action="{{ route('crm.session', $sessionNo) }}" class="bns-crm-filters">
+                <div>
+                    <label for="crmSessionSearch">Search</label>
                     <input
                         id="crmSessionSearch"
                         type="search"
@@ -97,19 +83,35 @@
                         value="{{ $search }}"
                         placeholder="Name, mobile, email, registration number"
                     >
-                    <button type="submit"><i class="fas fa-search" aria-hidden="true"></i> Search</button>
+                </div>
+                <div>
+                    <label for="crmSessionStatus">Status</label>
+                    <select id="crmSessionStatus" name="status">
+                        <option value="all" @selected($status === 'all')>All ({{ $presentRows->count() + $absentRows->count() + $paidRows->count() }})</option>
+                        <option value="present" @selected($status === 'present')>Present ({{ $presentRows->count() }})</option>
+                        <option value="absent" @selected($status === 'absent')>Absent ({{ $absentRows->count() }})</option>
+                        <option value="paid" @selected($status === 'paid')>Payment done ({{ $paidRows->count() }})</option>
+                    </select>
+                </div>
+                <div>
+                    <label for="crmSessionTeam">Calling team</label>
+                    <select id="crmSessionTeam" name="team">
+                        <option value="">All calling team</option>
+                        <option value="unassigned" @selected($team === 'unassigned')>Unassigned ({{ number_format($unassignedCount ?? 0) }})</option>
+                        @foreach($employees as $employee)
+                            <option value="{{ $employee->id }}" @selected($team === (string) $employee->id)>
+                                {{ $employee->name }} ({{ number_format($teamCounts[$employee->id] ?? 0) }})
+                            </option>
+                        @endforeach
+                    </select>
+                </div>
+                <div class="bns-crm-filters__actions">
+                    <button type="submit"><i class="fas fa-filter" aria-hidden="true"></i> Apply</button>
                     @if($search !== '' || $status !== 'all' || $team !== '')
                         <a href="{{ route('crm.session', $sessionNo) }}" class="bns-crm-search__reset">Clear</a>
                     @endif
                 </div>
             </form>
-
-            <div class="bns-crm-pills" role="tablist">
-                <a href="{{ route('crm.session', $sessionQuery(['status' => 'all'])) }}" class="{{ $status === 'all' ? 'is-active' : '' }}">All ({{ $presentRows->count() + $absentRows->count() + $paidRows->count() }})</a>
-                <a href="{{ route('crm.session', $sessionQuery(['status' => 'present'])) }}" class="{{ $status === 'present' ? 'is-active' : '' }}">Present ({{ $presentRows->count() }})</a>
-                <a href="{{ route('crm.session', $sessionQuery(['status' => 'absent'])) }}" class="{{ $status === 'absent' ? 'is-active' : '' }}">Absent ({{ $absentRows->count() }})</a>
-                <a href="{{ route('crm.session', $sessionQuery(['status' => 'paid'])) }}" class="{{ $status === 'paid' ? 'is-active' : '' }}">Payment done ({{ $paidRows->count() }})</a>
-            </div>
 
             @if($status === 'all')
                 <section class="bns-crm-list-card">
@@ -145,4 +147,9 @@
         </div>
     </section>
 </div>
+@include('crm.partials.remark-modal')
 @endsection
+
+@push('scripts')
+@include('crm.partials.remark-scripts')
+@endpush
