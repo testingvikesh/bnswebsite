@@ -42,8 +42,8 @@ class IntroSessionRegisterController extends Controller
         $event = $state['session'] > 0 ? bns_introduction_session($state['session']) : null;
         $stats = $this->stats($state);
         $xlsx = new ColoredXlsx();
-        $colCount = $isPaid ? 11 : 12;
-        $lastCol = $isPaid ? 'K' : 'L';
+        $colCount = $isPaid ? 11 : 9;
+        $lastCol = $isPaid ? 'K' : 'I';
         $c = fn (string $value, int $style = 0) => $xlsx->cell($value, $style);
 
         $pad = function (array $cells) use ($c, $colCount): array {
@@ -66,33 +66,48 @@ class IntroSessionRegisterController extends Controller
             $pad([$c('Business Navachar School (BNS)', ColoredXlsx::S_BRAND)]),
             $pad([$c($title.' · '.$sessionTitle, ColoredXlsx::S_SUBTITLE)]),
             $pad([$c($meta, ColoredXlsx::S_META)]),
-            $pad([
-                $c('Registered', ColoredXlsx::S_STAT_LABEL),
-                $c('Payment Done', ColoredXlsx::S_STAT_LABEL),
-                $c('Showing', ColoredXlsx::S_STAT_LABEL),
-                $c('Report', ColoredXlsx::S_STAT_LABEL),
-            ]),
-            $pad([
-                $c((string) number_format($stats['registered'] ?? 0), ColoredXlsx::S_STAT_VALUE),
-                $c((string) number_format($stats['paid'] ?? 0), ColoredXlsx::S_STAT_VALUE),
-                $c((string) number_format($stats['filtered'] ?? 0), ColoredXlsx::S_STAT_VALUE),
-                $c($isPaid ? 'Successful payment list' : 'Unique registered members with payment status', ColoredXlsx::S_META),
-            ]),
+            $pad($isPaid
+                ? [
+                    $c('Registered', ColoredXlsx::S_STAT_LABEL),
+                    $c('Payment Done', ColoredXlsx::S_STAT_LABEL),
+                    $c('Showing', ColoredXlsx::S_STAT_LABEL),
+                    $c('Report', ColoredXlsx::S_STAT_LABEL),
+                ]
+                : [
+                    $c('Registered', ColoredXlsx::S_STAT_LABEL),
+                    $c('Showing', ColoredXlsx::S_STAT_LABEL),
+                    $c('Report', ColoredXlsx::S_STAT_LABEL),
+                ]),
+            $pad($isPaid
+                ? [
+                    $c((string) number_format($stats['registered'] ?? 0), ColoredXlsx::S_STAT_VALUE),
+                    $c((string) number_format($stats['paid'] ?? 0), ColoredXlsx::S_STAT_VALUE),
+                    $c((string) number_format($stats['filtered'] ?? 0), ColoredXlsx::S_STAT_VALUE),
+                    $c('Successful payment list', ColoredXlsx::S_META),
+                ]
+                : [
+                    $c((string) number_format($stats['registered'] ?? 0), ColoredXlsx::S_STAT_VALUE),
+                    $c((string) number_format($stats['filtered'] ?? 0), ColoredXlsx::S_STAT_VALUE),
+                    $c('Unique registered members', ColoredXlsx::S_META),
+                ]),
         ];
 
         $headers = $isPaid
             ? ['Sr. No.', 'Session', 'Paid Date', 'Name', 'Mobile', 'Email', 'Reg. No.', 'Amount', 'Payment Mode', 'Txn No.', 'Program']
-            : ['Sr. No.', 'Session', 'Registered At', 'Name', 'Mobile', 'Email', 'Reg. No.', 'Form Source', 'Program', 'Payment', 'Amount', 'Paid Date'];
+            : ['Sr. No.', 'Session', 'Registered At', 'Name', 'Mobile', 'Email', 'Reg. No.', 'Form Source', 'Program'];
         $sheet[] = array_map(fn (string $label) => $c($label, ColoredXlsx::S_HEAD), $headers);
 
         foreach ($rows as $index => $row) {
             $inquiry = $row['inquiry'] ?? null;
             $payment = $row['payment'] ?? null;
             $sessionNo = (int) ($row['session'] ?? 0);
-            $paid = (bool) $payment;
-            $rowStyle = $paid ? ColoredXlsx::S_ROW_PAID : ColoredXlsx::S_ROW_UNPAID;
-            $textStyle = $paid ? ColoredXlsx::S_TEXT_PAID : ColoredXlsx::S_TEXT_UNPAID;
-            $amountStyle = $paid ? ColoredXlsx::S_AMOUNT : $rowStyle;
+            $rowStyle = ColoredXlsx::S_ROW_PAID;
+            $textStyle = ColoredXlsx::S_TEXT_PAID;
+            $amountStyle = ColoredXlsx::S_AMOUNT;
+            if (! $isPaid) {
+                $rowStyle = $index % 2 === 0 ? ColoredXlsx::S_ROW_UNPAID : ColoredXlsx::S_META;
+                $textStyle = ColoredXlsx::S_TEXT_UNPAID;
+            }
 
             if ($isPaid) {
                 $sheet[] = [
@@ -121,9 +136,6 @@ class IntroSessionRegisterController extends Controller
                 $c((string) ($inquiry->registration_number ?? '—'), $textStyle),
                 $c((string) ($inquiry?->formSourceLabel() ?? '—'), $rowStyle),
                 $c((string) ($inquiry->interested_program ?? '—'), $rowStyle),
-                $c($paid ? 'Payment done' : 'Not paid', $paid ? ColoredXlsx::S_PAID : ColoredXlsx::S_UNPAID),
-                $c($paid ? number_format((float) $payment->amount, 2) : '', $amountStyle),
-                $c($payment?->paid_at?->timezone('Asia/Kolkata')->format('d M Y, h:i A') ?: '', $rowStyle),
             ];
         }
 
@@ -134,10 +146,12 @@ class IntroSessionRegisterController extends Controller
         $binary = $xlsx->build(
             $isPaid ? 'Payment Done' : 'Registered Users',
             $sheet,
-            ['A1:'.$lastCol.'1', 'A2:'.$lastCol.'2', 'A3:'.$lastCol.'3', 'D4:'.$lastCol.'4', 'D5:'.$lastCol.'5'],
+            $isPaid
+                ? ['A1:'.$lastCol.'1', 'A2:'.$lastCol.'2', 'A3:'.$lastCol.'3', 'D4:'.$lastCol.'4', 'D5:'.$lastCol.'5']
+                : ['A1:'.$lastCol.'1', 'A2:'.$lastCol.'2', 'A3:'.$lastCol.'3', 'C4:'.$lastCol.'4', 'C5:'.$lastCol.'5'],
             $isPaid
                 ? [1 => 8, 2 => 22, 3 => 22, 4 => 28, 5 => 16, 6 => 28, 7 => 20, 8 => 12, 9 => 16, 10 => 22, 11 => 28]
-                : [1 => 8, 2 => 22, 3 => 22, 4 => 28, 5 => 16, 6 => 28, 7 => 20, 8 => 22, 9 => 28, 10 => 14, 11 => 12, 12 => 22]
+                : [1 => 8, 2 => 22, 3 => 22, 4 => 28, 5 => 16, 6 => 28, 7 => 20, 8 => 22, 9 => 28]
         );
 
         return response($binary, 200, [

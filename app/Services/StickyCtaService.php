@@ -107,24 +107,21 @@ class StickyCtaService
                 'action' => 'link',
                 'url' => route('pay-now'),
             ],
-            ...$this->attendanceButton(),
+            $this->pwaInstallButton(),
         ];
     }
 
-    /** @return array<int, array<string, mixed>> */
-    private function attendanceButton(): array
+    /** @return array<string, mixed> */
+    private function pwaInstallButton(): array
     {
-        if (! bns_attendance_enabled()) {
-            return [];
-        }
-
-        return [[
-            'label' => (string) config('attendance.button_label', 'Attendance'),
-            'short_label' => 'Attendance',
-            'style' => 'attendance',
+        return [
+            'label' => 'Install BNS Application',
+            'short_label' => 'Install App',
+            'style' => 'install',
             'action' => 'link',
-            'url' => route('attendance'),
-        ]];
+            'url' => 'https://erp.businessnavacharschool.com/login',
+            'target' => '_blank',
+        ];
     }
 
     /** @param array<string, mixed> $card */

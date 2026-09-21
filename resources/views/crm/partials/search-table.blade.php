@@ -20,7 +20,7 @@
                 @endphp
                 <tr>
                     <td>
-                        <a href="{{ route('crm.session', ['session' => $hit->session_number, 'q' => $search ?? '']) }}">Session {{ $hit->session_number }}</a>
+                        <a href="{{ route('crm.session', ['session' => $hit->session_number, 'q' => $search ?? '']) }}">{{ bns_intro_session_label((int) $hit->session_number) }}</a>
                     </td>
                     <td><strong>{{ $item->full_name ?: '—' }}</strong></td>
                     <td>

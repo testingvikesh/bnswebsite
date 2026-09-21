@@ -32,6 +32,10 @@
                 <a
                     href="{{ $button['url'] ?? route('register') }}"
                     class="bns-sticky-cta__btn bns-sticky-cta__btn--{{ $button['style'] ?? 'outline' }}"
+                    @if(!empty($button['target']))
+                        target="{{ $button['target'] }}"
+                        rel="noopener noreferrer"
+                    @endif
                 >
                     <span class="bns-sticky-cta__label bns-sticky-cta__label--full">{{ $fullLabel }}</span>
                     <span class="bns-sticky-cta__label bns-sticky-cta__label--short">{{ $shortLabel }}</span>

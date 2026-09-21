@@ -165,27 +165,60 @@ class CrmController extends Controller
     public function dashboard(Request $request): View
     {
         $search = trim((string) $request->query('q', ''));
+        $status = strtolower(trim((string) $request->query('status', '')));
+        if (! in_array($status, ['all', 'present', 'absent', 'paid', 'assigned'], true)) {
+            $status = '';
+        }
+
+        $allowed = bns_intro_session_allowed_numbers();
+        $sessionFilter = (int) $request->query('session', 0);
+        if (! in_array($sessionFilter, $allowed, true)) {
+            $sessionFilter = 0;
+        }
+
         $sessions = $this->sessionCards();
-        $results = $search === '' ? collect() : $this->searchAcrossSessions($search, $sessions);
+        $scopedSessions = $sessionFilter > 0
+            ? array_values(array_filter($sessions, fn (array $item) => (int) $item['number'] === $sessionFilter))
+            : $sessions;
+
+        $showList = $search !== '' || $status !== '' || $sessionFilter > 0;
+        $results = collect();
+        if ($showList) {
+            $results = $status === 'assigned'
+                ? $this->assignedHits($sessionFilter, $search)
+                : $this->searchAcrossSessions($search, $scopedSessions);
+
+            if (in_array($status, ['present', 'absent', 'paid'], true)) {
+                $results = $results->where('status', $status)->values();
+            }
+        }
+
+        $totalsSource = collect($scopedSessions);
 
         return view('crm.dashboard', [
             'heroImage' => $this->heroImage(),
             'page' => config('crm.page', []),
             'sessions' => $sessions,
             'search' => $search,
+            'status' => $status,
+            'sessionFilter' => $sessionFilter,
+            'allowed' => $allowed,
             'results' => $results,
+            'showList' => $showList,
             'isAdmin' => true,
             'totals' => [
                 'sessions' => count($sessions),
-                'registered' => collect($sessions)->sum('registered'),
-                'present' => collect($sessions)->sum('present'),
-                'absent' => collect($sessions)->sum('absent'),
-                'paid' => collect($sessions)->sum('paid'),
+                'registered' => $totalsSource->sum('registered'),
+                'present' => $totalsSource->sum('present'),
+                'absent' => $totalsSource->sum('absent'),
+                'paid' => $totalsSource->sum('paid'),
                 'employees' => Schema::hasTable('crm_employees')
                     ? CrmEmployee::query()->where('is_active', true)->count()
                     : 0,
                 'assigned' => Schema::hasTable('crm_assignments')
-                    ? CrmAssignment::query()->count()
+                    ? CrmAssignment::query()
+                        ->when($sessionFilter > 0, fn ($query) => $query->where('session_number', $sessionFilter))
+                        ->count()
                     : 0,
                 'today_attendance' => $this->todayAttendanceCount(),
             ],
@@ -540,7 +573,7 @@ class CrmController extends Controller
 
             $cards[] = [
                 'number' => $sessionNo,
-                'title' => (string) ($event['title'] ?? ('Session '.$sessionNo)),
+                'title' => bns_intro_session_label($sessionNo, is_array($event) ? $event : null),
                 'date' => (string) ($event['date'] ?? ''),
                 'time' => (string) ($event['time'] ?? ''),
                 'registered' => $registered,
@@ -585,6 +618,58 @@ class CrmController extends Controller
         }
 
         return $hits->values();
+    }
+
+    /**
+     * @return Collection<int, object>
+     */
+    private function assignedHits(int $sessionFilter, string $search): Collection
+    {
+        if (! Schema::hasTable('crm_assignments')) {
+            return collect();
+        }
+
+        $query = CrmAssignment::query()
+            ->with('inquiry')
+            ->orderByDesc('id');
+
+        if ($sessionFilter > 0) {
+            $query->where('session_number', $sessionFilter);
+        }
+
+        $hits = collect();
+        foreach ($query->get() as $assignment) {
+            $inquiry = $assignment->inquiry;
+            if (! $inquiry instanceof ContactInquiry) {
+                continue;
+            }
+
+            $hits->push((object) [
+                'session_number' => (int) $assignment->session_number,
+                'status' => $assignment->attendance_status === 'present' ? 'present' : 'absent',
+                'inquiry' => $inquiry,
+            ]);
+        }
+
+        if ($search === '') {
+            return $hits->values();
+        }
+
+        $needle = mb_strtolower($search);
+
+        return $hits
+            ->filter(function (object $hit) use ($needle) {
+                $row = $hit->inquiry;
+                $hay = mb_strtolower(implode(' ', array_filter([
+                    (string) $row->full_name,
+                    (string) $row->email,
+                    (string) $row->mobile,
+                    (string) $row->registration_number,
+                ])));
+
+                return str_contains($hay, $needle);
+            })
+            ->values();
     }
 
     /**

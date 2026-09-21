@@ -24,40 +24,83 @@
         <div class="container">
             @include('crm.partials.toolbar', ['active' => 'dashboard', 'isAdmin' => true])
 
+            @php
+                $status = $status ?? '';
+                $sessionFilter = (int) ($sessionFilter ?? 0);
+                $showList = $showList ?? false;
+                $filterKeep = array_filter([
+                    'q' => $search !== '' ? $search : null,
+                    'session' => $sessionFilter > 0 ? $sessionFilter : null,
+                ]);
+                $statusUrl = function (string $value) use ($filterKeep) {
+                    return route('crm.dashboard', array_filter($filterKeep + ['status' => $value]));
+                };
+                $sessionUrl = function (int $sessionNo) use ($search, $status) {
+                    return route('crm.dashboard', array_filter([
+                        'q' => $search !== '' ? $search : null,
+                        'status' => $status !== '' ? $status : null,
+                        'session' => $sessionNo > 0 ? $sessionNo : null,
+                    ]));
+                };
+                $statusHeading = match ($status) {
+                    'present' => 'Present',
+                    'absent' => 'Absent',
+                    'paid' => 'Payment done',
+                    'assigned' => 'Assigned',
+                    'all' => 'All members',
+                    default => 'Search results',
+                };
+            @endphp
+
             <div class="bns-crm-stats">
-                <div class="bns-crm-stat">
+                <a href="{{ route('crm.dashboard') }}" class="bns-crm-stat{{ $status === '' && $sessionFilter === 0 && $search === '' ? ' is-active' : '' }}">
                     <span>Sessions</span>
                     <strong>{{ number_format($totals['sessions']) }}</strong>
-                </div>
-                <div class="bns-crm-stat">
+                </a>
+                <a href="{{ $statusUrl('all') }}" class="bns-crm-stat{{ $status === 'all' ? ' is-active' : '' }}">
                     <span>Total</span>
                     <strong>{{ number_format($totals['registered']) }}</strong>
-                </div>
-                <div class="bns-crm-stat bns-crm-stat--present">
+                </a>
+                <a href="{{ $statusUrl('present') }}" class="bns-crm-stat bns-crm-stat--present{{ $status === 'present' ? ' is-active' : '' }}">
                     <span>Present</span>
                     <strong>{{ number_format($totals['present']) }}</strong>
-                </div>
-                <div class="bns-crm-stat bns-crm-stat--absent">
+                </a>
+                <a href="{{ $statusUrl('absent') }}" class="bns-crm-stat bns-crm-stat--absent{{ $status === 'absent' ? ' is-active' : '' }}">
                     <span>Absent</span>
                     <strong>{{ number_format($totals['absent']) }}</strong>
-                </div>
-                <a href="{{ route('crm.payments') }}" class="bns-crm-stat bns-crm-stat--present">
+                </a>
+                <a href="{{ $statusUrl('paid') }}" class="bns-crm-stat bns-crm-stat--present{{ $status === 'paid' ? ' is-active' : '' }}">
                     <span>Payment done</span>
                     <strong>{{ number_format($totals['paid'] ?? 0) }}</strong>
                 </a>
-                <div class="bns-crm-stat">
+                <a href="{{ $statusUrl('assigned') }}" class="bns-crm-stat{{ $status === 'assigned' ? ' is-active' : '' }}">
                     <span>Assigned</span>
                     <strong>{{ number_format($totals['assigned'] ?? 0) }}</strong>
-                </div>
+                </a>
                 <a href="{{ route('crm.today-attendance') }}" class="bns-crm-stat bns-crm-stat--present">
                     <span>Today attendance</span>
                     <strong>{{ number_format($totals['today_attendance'] ?? 0) }}</strong>
                 </a>
             </div>
-            <p class="bns-crm-section-copy">Total = Present + Absent + Payment done.</p>
+            <p class="bns-crm-section-copy">Click a box to filter the list. Total = Present + Absent + Payment done.</p>
+
+            <div class="bns-crm-pills" role="tablist" aria-label="Filter by session">
+                <a href="{{ $sessionUrl(0) }}" class="{{ $sessionFilter === 0 ? 'is-active' : '' }}">All sessions</a>
+                @foreach($allowed ?? bns_intro_session_allowed_numbers() as $no)
+                    <a href="{{ $sessionUrl((int) $no) }}" class="{{ $sessionFilter === (int) $no ? 'is-active' : '' }}">
+                        S{{ $no }}
+                    </a>
+                @endforeach
+            </div>
 
             <form method="GET" action="{{ route('crm.dashboard') }}" class="bns-crm-search">
-                <label for="crmSearch">Search all sessions</label>
+                @if($status !== '')
+                    <input type="hidden" name="status" value="{{ $status }}">
+                @endif
+                @if($sessionFilter > 0)
+                    <input type="hidden" name="session" value="{{ $sessionFilter }}">
+                @endif
+                <label for="crmSearch">Search{{ $sessionFilter > 0 ? ' this session' : ' all sessions' }}</label>
                 <div class="bns-crm-search__row">
                     <input
                         id="crmSearch"
@@ -67,17 +110,25 @@
                         placeholder="Name, mobile, email, registration number"
                     >
                     <button type="submit"><i class="fas fa-search" aria-hidden="true"></i> Search</button>
-                    @if($search !== '')
+                    @if($search !== '' || $status !== '' || $sessionFilter > 0)
                         <a href="{{ route('crm.dashboard') }}" class="bns-crm-search__reset">Clear</a>
                     @endif
                 </div>
             </form>
 
-            @if($search !== '')
+            @if($showList)
                 <section class="bns-crm-list-card">
                     <div class="bns-crm-list-card__head">
-                        <h3>Search results</h3>
-                        <span>{{ number_format($results->count()) }} {{ Str::plural('match', $results->count()) }} for “{{ $search }}”</span>
+                        <h3>{{ $statusHeading }}</h3>
+                        <span>
+                            {{ number_format($results->count()) }} {{ Str::plural('person', $results->count()) }}
+                            @if($sessionFilter > 0)
+                                · {{ bns_intro_session_label($sessionFilter) }}
+                            @endif
+                            @if($search !== '')
+                                matching “{{ $search }}”
+                            @endif
+                        </span>
                     </div>
                     @include('crm.partials.search-table', ['rows' => $results])
                 </section>
