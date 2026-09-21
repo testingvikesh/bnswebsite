@@ -47,4 +47,29 @@ class CrmAssignment extends Model
             ->filter(fn (CrmFollowup $row) => $row->status !== CrmFollowup::STATUS_PENDING)
             ->count();
     }
+
+    public function lastCalledFollowup(): ?CrmFollowup
+    {
+        return $this->followups
+            ->filter(fn (CrmFollowup $row) => $row->isDone())
+            ->sortByDesc('followup_no')
+            ->first();
+    }
+
+    public function hasCallDone(): bool
+    {
+        return $this->lastCalledFollowup() !== null;
+    }
+
+    public function lastCallStatus(): string
+    {
+        return $this->lastCalledFollowup()?->status ?? CrmFollowup::STATUS_PENDING;
+    }
+
+    public function lastCallStatusLabel(): string
+    {
+        $status = $this->lastCallStatus();
+
+        return CrmFollowup::statusOptions()[$status] ?? 'Pending';
+    }
 }

@@ -24,27 +24,45 @@
         <div class="container">
             @include('crm.partials.toolbar', ['active' => 'desk', 'isAdmin' => false, 'employee' => $employee])
 
+            @php
+                $call = $call ?? '';
+                $callStatus = $callStatus ?? '';
+                $deskQuery = function (array $extra = []) use ($search, $status, $sessionFilter, $call, $callStatus) {
+                    return array_filter([
+                        'q' => array_key_exists('q', $extra) ? $extra['q'] : ($search !== '' ? $search : null),
+                        'status' => array_key_exists('status', $extra) ? $extra['status'] : $status,
+                        'session' => array_key_exists('session', $extra) ? $extra['session'] : (($sessionFilter ?? 0) ?: null),
+                        'call' => array_key_exists('call', $extra) ? $extra['call'] : ($call !== '' ? $call : null),
+                        'call_status' => array_key_exists('call_status', $extra) ? $extra['call_status'] : ($callStatus !== '' ? $callStatus : null),
+                    ], fn ($value) => $value !== '' && $value !== null && $value !== 'all');
+                };
+            @endphp
+
             <div class="bns-crm-stats">
-                <div class="bns-crm-stat">
+                <a href="{{ route('crm.desk', $deskQuery(['call' => '', 'call_status' => '', 'status' => 'all'])) }}" class="bns-crm-stat{{ $status === 'all' && $call === '' && $callStatus === '' ? ' is-active' : '' }}">
                     <span>Assigned</span>
                     <strong>{{ number_format($totals['assigned']) }}</strong>
-                </div>
-                <div class="bns-crm-stat bns-crm-stat--present">
+                </a>
+                <a href="{{ route('crm.desk', $deskQuery(['status' => 'present'])) }}" class="bns-crm-stat bns-crm-stat--present{{ $status === 'present' ? ' is-active' : '' }}">
                     <span>Present</span>
                     <strong>{{ number_format($totals['present']) }}</strong>
-                </div>
-                <div class="bns-crm-stat bns-crm-stat--absent">
+                </a>
+                <a href="{{ route('crm.desk', $deskQuery(['status' => 'absent'])) }}" class="bns-crm-stat bns-crm-stat--absent{{ $status === 'absent' ? ' is-active' : '' }}">
                     <span>Absent</span>
                     <strong>{{ number_format($totals['absent']) }}</strong>
-                </div>
+                </a>
                 <a href="{{ route('crm.payments') }}" class="bns-crm-stat bns-crm-stat--present">
                     <span>Payment done</span>
                     <strong>{{ number_format($totals['paid'] ?? 0) }}</strong>
                 </a>
-                <div class="bns-crm-stat">
-                    <span>Follow-ups done</span>
-                    <strong>{{ number_format($totals['followups_done']) }}</strong>
-                </div>
+                <a href="{{ route('crm.desk', $deskQuery(['call' => 'done'])) }}" class="bns-crm-stat bns-crm-stat--present{{ $call === 'done' ? ' is-active' : '' }}">
+                    <span>Call done</span>
+                    <strong>{{ number_format($totals['call_done'] ?? 0) }}</strong>
+                </a>
+                <a href="{{ route('crm.desk', $deskQuery(['call' => 'remain'])) }}" class="bns-crm-stat bns-crm-stat--spot{{ $call === 'remain' ? ' is-active' : '' }}">
+                    <span>Remain</span>
+                    <strong>{{ number_format($totals['remain'] ?? 0) }}</strong>
+                </a>
             </div>
 
             <form method="GET" action="{{ route('crm.desk') }}" class="bns-crm-filters">
@@ -69,9 +87,28 @@
                         <option value="absent" @selected($status === 'absent')>Absent</option>
                     </select>
                 </div>
+                <div>
+                    <label for="crmDeskCall">Calling</label>
+                    <select id="crmDeskCall" name="call">
+                        <option value="">All calling</option>
+                        <option value="done" @selected($call === 'done')>Call done ({{ number_format($totals['call_done'] ?? 0) }})</option>
+                        <option value="remain" @selected($call === 'remain')>Remain ({{ number_format($totals['remain'] ?? 0) }})</option>
+                    </select>
+                </div>
+                <div>
+                    <label for="crmDeskCallStatus">Call result</label>
+                    <select id="crmDeskCallStatus" name="call_status">
+                        <option value="">All call results</option>
+                        @foreach(($followupStatusOptions ?? []) as $value => $label)
+                            <option value="{{ $value }}" @selected($callStatus === $value)>
+                                {{ $label }} ({{ number_format($callStatusCounts[$value] ?? 0) }})
+                            </option>
+                        @endforeach
+                    </select>
+                </div>
                 <div class="bns-crm-filters__actions">
                     <button type="submit"><i class="fas fa-filter" aria-hidden="true"></i> Apply</button>
-                    @if($search !== '' || $status !== 'all' || (int) ($sessionFilter ?? 0) > 0)
+                    @if($search !== '' || $status !== 'all' || (int) ($sessionFilter ?? 0) > 0 || $call !== '' || $callStatus !== '')
                         <a href="{{ route('crm.desk') }}" class="bns-crm-search__reset">Clear</a>
                     @endif
                 </div>
@@ -125,6 +162,7 @@
                                                 data-save-url="{{ route('crm.desk.followup', ['assignment' => $assignment->id, 'followup' => $n]) }}"
                                             >{{ $n }}</button>
                                         @endfor
+                                        <div class="is-muted">{{ $assignment->lastCallStatusLabel() }}</div>
                                     </td>
                                     <td>
                                         <a href="{{ route('crm.desk.show', $assignment) }}" class="bns-crm-mini-btn bns-crm-mini-btn--primary">Call / Follow-up</a>

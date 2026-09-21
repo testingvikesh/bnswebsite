@@ -33,6 +33,15 @@ class CrmDeskController extends Controller
         if (! in_array($status, ['all', 'present', 'absent'], true)) {
             $status = 'all';
         }
+        $call = strtolower(trim((string) $request->query('call', '')));
+        if (! in_array($call, ['done', 'remain'], true)) {
+            $call = '';
+        }
+        $callStatusOptions = CrmFollowup::statusOptions();
+        $callStatus = trim((string) $request->query('call_status', ''));
+        if ($callStatus !== '' && ! array_key_exists($callStatus, $callStatusOptions)) {
+            $callStatus = '';
+        }
         $allowed = bns_intro_session_allowed_numbers();
         $sessionFilter = (int) $request->query('session', 0);
         if (! in_array($sessionFilter, $allowed, true)) {
@@ -64,8 +73,16 @@ class CrmDeskController extends Controller
             'present' => $allAssigned->where('attendance_status', 'present')->count(),
             'absent' => $allAssigned->where('attendance_status', 'absent')->count(),
             'followups_done' => $allAssigned->sum(fn (CrmAssignment $row) => $row->completedFollowups()),
+            'call_done' => $allAssigned->filter(fn (CrmAssignment $row) => $row->hasCallDone())->count(),
+            'remain' => $allAssigned->filter(fn (CrmAssignment $row) => ! $row->hasCallDone())->count(),
             'paid' => $paidCount,
         ];
+        $callStatusCounts = [];
+        foreach (array_keys($callStatusOptions) as $key) {
+            $callStatusCounts[$key] = $allAssigned
+                ->filter(fn (CrmAssignment $row) => $row->lastCallStatus() === $key)
+                ->count();
+        }
 
         if ($status !== 'all') {
             $query->where('attendance_status', $status);
@@ -91,6 +108,17 @@ class CrmDeskController extends Controller
             })->values();
         }
 
+        if ($call === 'done') {
+            $assignments = $assignments->filter(fn (CrmAssignment $row) => $row->hasCallDone())->values();
+        } elseif ($call === 'remain') {
+            $assignments = $assignments->filter(fn (CrmAssignment $row) => ! $row->hasCallDone())->values();
+        }
+        if ($callStatus !== '') {
+            $assignments = $assignments
+                ->filter(fn (CrmAssignment $row) => $row->lastCallStatus() === $callStatus)
+                ->values();
+        }
+
         return view('crm.desk', [
             'heroImage' => $this->homeImages->url('about_bg'),
             'page' => config('crm.page', []),
@@ -98,6 +126,10 @@ class CrmDeskController extends Controller
             'assignments' => $assignments,
             'search' => $search,
             'status' => $status,
+            'call' => $call,
+            'callStatus' => $callStatus,
+            'callStatusCounts' => $callStatusCounts,
+            'followupStatusOptions' => $callStatusOptions,
             'sessionFilter' => $sessionFilter,
             'allowedSessions' => $allowed,
             'isAdmin' => false,

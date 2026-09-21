@@ -87,6 +87,7 @@
                                     >{{ $n }}</button>
                                 @endfor
                             </div>
+                            <div class="is-muted">{{ $assignment->lastCallStatusLabel() }}</div>
                         @else
                             <span class="is-muted">Assign first</span>
                         @endif

@@ -29,12 +29,16 @@
 
             @php
                 $team = $team ?? '';
-                $sessionQuery = function (array $extra = []) use ($sessionNo, $search, $status, $team) {
+                $call = $call ?? '';
+                $callStatus = $callStatus ?? '';
+                $sessionQuery = function (array $extra = []) use ($sessionNo, $search, $status, $team, $call, $callStatus) {
                     return array_filter([
                         'session' => $sessionNo,
                         'status' => $extra['status'] ?? $status,
                         'q' => array_key_exists('q', $extra) ? $extra['q'] : $search,
                         'team' => array_key_exists('team', $extra) ? $extra['team'] : $team,
+                        'call' => array_key_exists('call', $extra) ? $extra['call'] : $call,
+                        'call_status' => array_key_exists('call_status', $extra) ? $extra['call_status'] : $callStatus,
                     ], fn ($value) => $value !== '' && $value !== null);
                 };
             @endphp
@@ -70,8 +74,16 @@
                     <span>Payment done</span>
                     <strong>{{ number_format($paid ?? 0) }}</strong>
                 </a>
+                <a href="{{ route('crm.session', $sessionQuery(['call' => 'done'])) }}" class="bns-crm-stat bns-crm-stat--present{{ $call === 'done' ? ' is-active' : '' }}">
+                    <span>Call done</span>
+                    <strong>{{ number_format($callDoneCount ?? 0) }}</strong>
+                </a>
+                <a href="{{ route('crm.session', $sessionQuery(['call' => 'remain'])) }}" class="bns-crm-stat bns-crm-stat--spot{{ $call === 'remain' ? ' is-active' : '' }}">
+                    <span>Remain</span>
+                    <strong>{{ number_format($remainCount ?? 0) }}</strong>
+                </a>
             </div>
-            <p class="bns-crm-section-copy">Total = Present + Absent + Payment done. Filter by calling team and status, then add remarks on assigned members.</p>
+            <p class="bns-crm-section-copy">Total = Present + Absent + Payment done. Call done + Remain = assigned calling list. Filter by team, calling, and call result together.</p>
 
             <form method="GET" action="{{ route('crm.session', $sessionNo) }}" class="bns-crm-filters">
                 <div>
@@ -105,9 +117,28 @@
                         @endforeach
                     </select>
                 </div>
+                <div>
+                    <label for="crmSessionCall">Calling</label>
+                    <select id="crmSessionCall" name="call">
+                        <option value="">All calling</option>
+                        <option value="done" @selected($call === 'done')>Call done ({{ number_format($callDoneCount ?? 0) }})</option>
+                        <option value="remain" @selected($call === 'remain')>Remain ({{ number_format($remainCount ?? 0) }})</option>
+                    </select>
+                </div>
+                <div>
+                    <label for="crmSessionCallStatus">Call result</label>
+                    <select id="crmSessionCallStatus" name="call_status">
+                        <option value="">All call results</option>
+                        @foreach(($followupStatusOptions ?? []) as $value => $label)
+                            <option value="{{ $value }}" @selected($callStatus === $value)>
+                                {{ $label }} ({{ number_format($callStatusCounts[$value] ?? 0) }})
+                            </option>
+                        @endforeach
+                    </select>
+                </div>
                 <div class="bns-crm-filters__actions">
                     <button type="submit"><i class="fas fa-filter" aria-hidden="true"></i> Apply</button>
-                    @if($search !== '' || $status !== 'all' || $team !== '')
+                    @if($search !== '' || $status !== 'all' || $team !== '' || $call !== '' || $callStatus !== '')
                         <a href="{{ route('crm.session', $sessionNo) }}" class="bns-crm-search__reset">Clear</a>
                     @endif
                 </div>

@@ -5,6 +5,7 @@ namespace App\Http\Controllers;
 use App\Models\ContactInquiry;
 use App\Models\CrmAssignment;
 use App\Models\CrmEmployee;
+use App\Models\CrmFollowup;
 use App\Models\CrmSpotAdmission;
 use App\Models\SessionAttendance;
 use App\Services\CrmAllocationService;
@@ -286,6 +287,15 @@ class CrmController extends Controller
             $status = 'all';
         }
         $team = trim((string) $request->query('team', ''));
+        $call = strtolower(trim((string) $request->query('call', '')));
+        if (! in_array($call, ['done', 'remain'], true)) {
+            $call = '';
+        }
+        $callStatusOptions = CrmFollowup::statusOptions();
+        $callStatus = trim((string) $request->query('call_status', ''));
+        if ($callStatus !== '' && ! array_key_exists($callStatus, $callStatusOptions)) {
+            $callStatus = '';
+        }
 
         $event = bns_introduction_session($session) ?? [
             'title' => 'Introduction Session '.$session,
@@ -343,6 +353,50 @@ class CrmController extends Controller
         $absentRows = $filterByTeam($absentRows);
         $paidRows = $filterByTeam($paidRows);
 
+        $assignedForCall = $assignments;
+        if ($team === 'unassigned') {
+            $assignedForCall = collect();
+        } elseif ($team !== '') {
+            $assignedForCall = $assignments->where('crm_employee_id', (int) $team);
+        }
+
+        $callDoneCount = $assignedForCall->filter(fn (CrmAssignment $row) => $row->hasCallDone())->count();
+        $remainCount = $assignedForCall->filter(fn (CrmAssignment $row) => ! $row->hasCallDone())->count();
+        $callStatusCounts = [];
+        foreach (array_keys($callStatusOptions) as $key) {
+            $callStatusCounts[$key] = $assignedForCall
+                ->filter(fn (CrmAssignment $row) => $row->lastCallStatus() === $key)
+                ->count();
+        }
+
+        $filterByCall = function ($rows) use ($assignments, $call, $callStatus) {
+            if ($call === '' && $callStatus === '') {
+                return $rows->values();
+            }
+
+            return $rows->filter(function ($row) use ($assignments, $call, $callStatus) {
+                $assignment = $assignments->get($row->id);
+                $done = $assignment ? $assignment->hasCallDone() : false;
+                $lastStatus = $assignment ? $assignment->lastCallStatus() : CrmFollowup::STATUS_PENDING;
+
+                if ($call === 'done' && ! $done) {
+                    return false;
+                }
+                if ($call === 'remain' && (! $assignment || $done)) {
+                    return false;
+                }
+                if ($callStatus !== '' && $lastStatus !== $callStatus) {
+                    return false;
+                }
+
+                return true;
+            })->values();
+        };
+
+        $presentRows = $filterByCall($presentRows);
+        $absentRows = $filterByCall($absentRows);
+        $paidRows = $filterByCall($paidRows);
+
         $listRows = match ($status) {
             'present' => $presentRows,
             'absent' => $absentRows,
@@ -358,6 +412,11 @@ class CrmController extends Controller
             'search' => $search,
             'status' => $status,
             'team' => $team,
+            'call' => $call,
+            'callStatus' => $callStatus,
+            'callDoneCount' => $callDoneCount,
+            'remainCount' => $remainCount,
+            'callStatusCounts' => $callStatusCounts,
             'registered' => (int) $buckets['registered'],
             'present' => (int) $buckets['present'],
             'absent' => (int) $buckets['absent'],
@@ -371,7 +430,7 @@ class CrmController extends Controller
             'assignments' => $assignments,
             'teamCounts' => $teamCounts,
             'unassignedCount' => $unassignedCount,
-            'followupStatusOptions' => \App\Models\CrmFollowup::statusOptions(),
+            'followupStatusOptions' => $callStatusOptions,
             'isAdmin' => true,
         ]);
     }
