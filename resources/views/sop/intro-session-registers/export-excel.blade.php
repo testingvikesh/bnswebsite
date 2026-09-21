@@ -1,25 +1,6 @@
-<html xmlns:o="urn:schemas-microsoft-com:office:office"
-      xmlns:x="urn:schemas-microsoft-com:office:excel"
-      xmlns="http://www.w3.org/TR/REC-html40">
+<html>
 <head>
     <meta http-equiv="Content-Type" content="text/html; charset=UTF-8">
-    <!--[if gte mso 9]>
-    <xml>
-        <x:ExcelWorkbook>
-            <x:ExcelWorksheets>
-                <x:ExcelWorksheet>
-                    <x:Name>{{ $isPaid ? 'Payment Done' : 'Registered Users' }}</x:Name>
-                    <x:WorksheetOptions>
-                        <x:FreezePanes/>
-                        <x:FrozenNoSplit/>
-                        <x:SplitHorizontal>6</x:SplitHorizontal>
-                        <x:TopRowBottomPane>6</x:TopRowBottomPane>
-                    </x:WorksheetOptions>
-                </x:ExcelWorksheet>
-            </x:ExcelWorksheets>
-        </x:ExcelWorkbook>
-    </xml>
-    <![endif]-->
     <style>
         body, table, td, th {
             font-family: Calibri, Arial, Helvetica, sans-serif;
