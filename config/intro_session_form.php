@@ -76,7 +76,7 @@ return [
     'unique_mobile_capacity' => 166,
     'default_session_number' => 5,
     'overflow_session_number' => 6,
-    'allowed_session_numbers' => [1, 2, 3, 4, 5, 6],
+    'allowed_session_numbers' => [1, 2, 3, 4, 5, 6, 7],
     'forced_session_number' => 5,
 
 ];

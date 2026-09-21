@@ -366,7 +366,7 @@ if (! function_exists('bns_introduction_sessions')) {
                     'cta' => ['label' => 'Register Now', 'route' => 'register'],
                 ];
                 $event['session_number'] = $number;
-                $event['title'] = (string) ($override['title'] ?? ('Introduction Session '.$number));
+                $event['title'] = (string) ($override['title'] ?? 'Introduction Session');
                 $event = $scheduler->applyToEvent($event);
 
                 if ($upcomingOnly && bns_event_has_passed($event)) {
@@ -414,6 +414,40 @@ if (! function_exists('bns_introduction_session_public_title')) {
         $category = is_array($event) ? trim((string) ($event['category'] ?? '')) : '';
 
         return $category !== '' ? $category : 'Introduction Session';
+    }
+}
+
+if (! function_exists('bns_intro_session_label')) {
+    /**
+     * List/admin label for an introduction session.
+     * Uses a custom title when set (e.g. Session 7 → "Introduction Session").
+     *
+     * @param  array<string, mixed>|null  $event
+     */
+    function bns_intro_session_label(int $number, ?array $event = null): string
+    {
+        if ($number <= 0) {
+            return 'Introduction Session';
+        }
+
+        if (! is_array($event)) {
+            try {
+                $event = bns_introduction_session($number);
+            } catch (\Throwable) {
+                $event = null;
+            }
+        }
+
+        $title = is_array($event) ? trim((string) ($event['title'] ?? '')) : '';
+        if (
+            $title !== ''
+            && ! preg_match('/^Introduction Session\s+\d+$/i', $title)
+            && strcasecmp($title, 'Session '.$number) !== 0
+        ) {
+            return $title;
+        }
+
+        return 'Session '.$number;
     }
 }
 
@@ -1161,7 +1195,7 @@ if (! function_exists('bns_intro_session_display_formats')) {
 
         return [
             'number' => $number,
-            'label' => $number > 0 ? 'Session '.$number : 'Introduction Session',
+            'label' => bns_intro_session_label($number, is_array($session) ? $session : null),
             'date' => $dateLabel,
             'date_long' => $dateLong,
             'date_medium' => $dateMedium,

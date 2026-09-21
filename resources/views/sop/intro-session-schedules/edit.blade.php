@@ -82,7 +82,10 @@
                 <div class="sop-card p-4 h-100 {{ $session['is_past'] ? 'border-secondary' : '' }}">
                     <div class="d-flex justify-content-between align-items-start gap-2 mb-3">
                         <div>
-                            <h5 class="fw-bold mb-1">Session {{ $session['session_number'] }}</h5>
+                            <h5 class="fw-bold mb-1">{{ bns_intro_session_label((int) $session['session_number'], $session) }}</h5>
+                            @if((int) $session['session_number'] === 7 && ($session['title'] ?? '') === 'Introduction Session')
+                                <div class="small text-muted mb-1">Internal: Session 7</div>
+                            @endif
                             <div class="small text-muted">
                                 Live label:
                                 <strong>{{ $session['date_label'] ?: '—' }}</strong>

@@ -25,6 +25,8 @@ class IntroSessionScheduleService
         }
 
         if (IntroSessionSchedule::query()->exists()) {
+            $this->renameSessionSevenTitle();
+
             return;
         }
 
@@ -40,7 +42,7 @@ class IntroSessionScheduleService
 
             IntroSessionSchedule::query()->create([
                 'session_number' => $number,
-                'title' => (string) ($event['title'] ?? ('Introduction Session '.$number)),
+                'title' => (string) ($event['title'] ?? 'Introduction Session'),
                 'date_label' => (string) ($event['date'] ?? ''),
                 'time_label' => (string) ($event['time'] ?? ''),
                 'starts_at' => $event['starts_at'] ?? null,
@@ -139,7 +141,7 @@ class IntroSessionScheduleService
 
         $row = IntroSessionSchedule::query()->firstOrNew(['session_number' => $sessionNumber]);
         $row->fill([
-            'title' => trim((string) ($input['title'] ?? '')) ?: ('Introduction Session '.$sessionNumber),
+            'title' => trim((string) ($input['title'] ?? '')) ?: 'Introduction Session',
             'date_label' => $this->formatDateLabel($startsAt),
             'time_label' => $this->formatTimeLabel($startsAt, $endsAt),
             'starts_at' => $startsAt,
@@ -191,7 +193,7 @@ class IntroSessionScheduleService
         }
 
         return $this->updateSession($next, [
-            'title' => 'Introduction Session '.$next,
+            'title' => 'Introduction Session',
             'session_date' => $startsAt->toDateString(),
             'start_time' => $startsAt->format('H:i'),
             'end_time' => $endsAt->format('H:i'),
@@ -256,6 +258,23 @@ class IntroSessionScheduleService
     public function formatTimeLabel(Carbon $startsAt, Carbon $endsAt): string
     {
         return $startsAt->format('g:i A').' – '.$endsAt->format('g:i A');
+    }
+
+    private function renameSessionSevenTitle(): void
+    {
+        $row = IntroSessionSchedule::query()->where('session_number', 7)->first();
+        if ($row === null) {
+            return;
+        }
+
+        $title = trim((string) $row->title);
+        if ($title !== '' && $title !== 'Introduction Session 7' && strcasecmp($title, 'Session 7') !== 0) {
+            return;
+        }
+
+        $row->title = 'Introduction Session';
+        $row->save();
+        self::$overrideCache = null;
     }
 
     private function ready(): bool

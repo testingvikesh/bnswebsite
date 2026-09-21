@@ -145,7 +145,7 @@
                             <div class="text-muted">{{ $payment->customer_email ?? ($inquiry->email ?? '—') }}</div>
                         </td>
                         <td class="small fw-semibold">{{ $payment->registration_number ?? ($inquiry->registration_number ?? '—') }}</td>
-                        <td>{{ $sessionNo > 0 ? 'Session '.$sessionNo : '—' }}</td>
+                        <td>{{ $sessionNo > 0 ? bns_intro_session_label($sessionNo) : '—' }}</td>
                         @if($view === 'paid')
                             <td class="fw-semibold text-success">₹{{ $payment ? number_format((float) $payment->amount, 2) : '—' }}</td>
                             <td class="small text-muted">{{ $payment?->paid_at?->timezone('Asia/Kolkata')->format('d M Y, h:i A') ?: '—' }}</td>
