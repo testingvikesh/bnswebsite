@@ -154,6 +154,51 @@ class IntroSessionScheduleService
         return $row;
     }
 
+    public function nextSessionNumber(): int
+    {
+        $this->ensureSeeded();
+
+        $max = 0;
+        if ($this->ready()) {
+            $max = (int) IntroSessionSchedule::query()->max('session_number');
+        }
+
+        foreach (config('intro_session_form.allowed_session_numbers', []) as $number) {
+            $max = max($max, (int) $number);
+        }
+
+        return $max + 1;
+    }
+
+    public function createNextSession(): IntroSessionSchedule
+    {
+        $this->ensureSeeded();
+
+        $next = $this->nextSessionNumber();
+        $last = $this->ready()
+            ? IntroSessionSchedule::query()->orderByDesc('session_number')->first()
+            : null;
+
+        $timezone = 'Asia/Kolkata';
+        if ($last?->starts_at) {
+            $startsAt = Carbon::parse($last->starts_at, $timezone)->addWeeks(2);
+            $endsAt = $last->ends_at
+                ? Carbon::parse($last->ends_at, $timezone)->addWeeks(2)
+                : $startsAt->copy()->addMinutes(90);
+        } else {
+            $startsAt = Carbon::now($timezone)->addWeek()->setTime(19, 0);
+            $endsAt = $startsAt->copy()->addMinutes(90);
+        }
+
+        return $this->updateSession($next, [
+            'title' => 'Introduction Session '.$next,
+            'session_date' => $startsAt->toDateString(),
+            'start_time' => $startsAt->format('H:i'),
+            'end_time' => $endsAt->format('H:i'),
+            'is_active' => true,
+        ]);
+    }
+
     public function forcedSessionNumber(): ?int
     {
         $settings = app(SiteSettingsService::class);

@@ -115,6 +115,7 @@ Route::prefix('controlpanel')->name('controlpanel.')->group(function () {
             Route::post('intro-session-emails/send', [IntroSessionEmailController::class, 'send'])->name('intro-session-emails.send');
 
             Route::get('intro-session-schedules', [IntroSessionScheduleController::class, 'edit'])->name('intro-session-schedules.edit');
+            Route::post('intro-session-schedules', [IntroSessionScheduleController::class, 'store'])->name('intro-session-schedules.store');
             Route::put('intro-session-schedules', [IntroSessionScheduleController::class, 'update'])->name('intro-session-schedules.update');
 
             Route::get('attendance', [AttendanceModuleController::class, 'index'])->name('attendance.index');

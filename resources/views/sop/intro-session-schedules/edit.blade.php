@@ -4,10 +4,16 @@
 @section('page-title', 'Introduction Session Dates & Times')
 
 @section('content')
-<div class="mb-4">
+<div class="mb-4 d-flex flex-wrap justify-content-between align-items-start gap-3">
     <p class="text-muted mb-0">
         Set the date and time for each Introduction Session. Changes apply to the admission popup, Events page, emails, attendance, and reporting.
     </p>
+    <form method="POST" action="{{ route('controlpanel.intro-session-schedules.store') }}">
+        @csrf
+        <button type="submit" class="btn btn-outline-danger">
+            <i class="bi bi-plus-lg me-1"></i> Add new session
+        </button>
+    </form>
 </div>
 
 @if(session('status'))

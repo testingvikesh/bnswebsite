@@ -95,4 +95,14 @@ class IntroSessionScheduleController extends Controller
             ->route('controlpanel.intro-session-schedules.edit')
             ->with('status', 'Introduction Session dates & times updated. Changes apply across the website.');
     }
+
+    public function store(): RedirectResponse
+    {
+        $row = $this->schedules->createNextSession();
+        $number = (int) $row->session_number;
+
+        return redirect()
+            ->route('controlpanel.intro-session-schedules.edit')
+            ->with('status', 'Session '.$number.' added. Set the date and time, then Save. You can also choose it as the active session for new admissions.');
+    }
 }

@@ -222,10 +222,22 @@ if (! function_exists('bns_intro_session_allowed_numbers')) {
     {
         $configured = config('intro_session_form.allowed_session_numbers', [1, 2, 3]);
         if (! is_array($configured) || $configured === []) {
-            return [1, 2, 3];
+            $configured = [1, 2, 3];
         }
 
-        return array_values(array_unique(array_map('intval', $configured)));
+        $numbers = array_map('intval', $configured);
+
+        try {
+            $fromDb = array_keys(app(\App\Services\IntroSessionScheduleService::class)->overridesBySession());
+            $numbers = array_merge($numbers, array_map('intval', $fromDb));
+        } catch (\Throwable) {
+            // keep config numbers
+        }
+
+        $numbers = array_values(array_unique(array_filter($numbers, fn (int $n) => $n > 0)));
+        sort($numbers);
+
+        return $numbers !== [] ? $numbers : [1, 2, 3];
     }
 }
 
@@ -312,6 +324,7 @@ if (! function_exists('bns_introduction_sessions')) {
             $scheduler = null;
         }
 
+        $template = null;
         foreach (config('events.events', []) as $event) {
             if (! is_array($event)) {
                 continue;
@@ -320,6 +333,8 @@ if (! function_exists('bns_introduction_sessions')) {
             if (($event['type'] ?? '') !== 'introduction') {
                 continue;
             }
+
+            $template = $event;
 
             if ($scheduler) {
                 $event = $scheduler->applyToEvent($event);
@@ -331,6 +346,33 @@ if (! function_exists('bns_introduction_sessions')) {
 
             $number = (int) ($event['session_number'] ?? 0);
             if ($number > 0) {
+                $sessions[$number] = $event;
+            }
+        }
+
+        if ($scheduler) {
+            foreach ($scheduler->overridesBySession() as $number => $override) {
+                $number = (int) $number;
+                if ($number <= 0 || isset($sessions[$number])) {
+                    continue;
+                }
+
+                $event = is_array($template) ? $template : [
+                    'type' => 'introduction',
+                    'spotlight' => true,
+                    'timezone' => 'Asia/Kolkata',
+                    'venue' => 'Santacruz, Mumbai',
+                    'category' => 'Introduction Session',
+                    'cta' => ['label' => 'Register Now', 'route' => 'register'],
+                ];
+                $event['session_number'] = $number;
+                $event['title'] = (string) ($override['title'] ?? ('Introduction Session '.$number));
+                $event = $scheduler->applyToEvent($event);
+
+                if ($upcomingOnly && bns_event_has_passed($event)) {
+                    continue;
+                }
+
                 $sessions[$number] = $event;
             }
         }
