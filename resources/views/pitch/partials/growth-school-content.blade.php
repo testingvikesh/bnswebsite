@@ -91,6 +91,31 @@
             </div>
         @endforeach
 
+        @php($schoolTypes = config('business_school_types', []))
+        @if(!empty($schoolTypes['rows']))
+            <div class="bns-pitch-detail__section wow fadeInUp" data-wow-duration="0.85s" id="fees-structure">
+                @include('pitch.partials.section-head', [
+                    'number' => 28,
+                    'title' => 'Fees Structure',
+                    'icon' => 'fa-gem',
+                ])
+                @include('pitch.partials.school-types-table', [
+                    'schoolTypes' => $schoolTypes,
+                    'wrapperClass' => 'bns-pitch-detail__school-types',
+                    'showTitle' => false,
+                ])
+            </div>
+        @endif
+
+        <div class="bns-pitch-detail__section bns-pitch-detail__section--closing wow fadeInUp" data-wow-duration="0.85s" id="join-bns">
+            @include('pitch.partials.section-head', [
+                'number' => 29,
+                'title' => "Join India's First Weekly Business School",
+                'icon' => 'fa-graduation-cap',
+            ])
+            <p class="bns-pitch-detail__closing-text">{!! bns_rich_text('Business Navachar School (BNS) is not just a course—it is a <strong>Business Learning, Mentoring, Networking, and Growth Ecosystem</strong> designed to help individuals transform ideas into successful businesses and <strong>lifelong prosperity</strong>.') !!}</p>
+        </div>
+
         @if(!empty($pitch['cta']))
             @php($cta = $pitch['cta'])
             <div class="bns-pitch-detail__website wow fadeInUp" data-wow-duration="0.85s">

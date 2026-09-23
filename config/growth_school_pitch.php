@@ -54,6 +54,8 @@ return [
         ['id' => 'community-power', 'label' => 'Power of Community'],
         ['id' => 'invitation', 'label' => 'Final Invitation'],
         ['id' => 'welcome', 'label' => 'Welcome to BNS'],
+        ['id' => 'fees-structure', 'label' => 'Fees Structure'],
+        ['id' => 'join-bns', 'label' => "Join India's First Weekly Business School"],
     ],
 
     'sections' => [
