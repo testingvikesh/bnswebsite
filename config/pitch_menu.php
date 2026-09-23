@@ -13,6 +13,10 @@ return [
             'label' => 'BNS Member Pitch',
             'route' => 'pitch.bns-member',
         ],
+        [
+            'label' => 'Growth School (Business Owners And Job Professional)',
+            'route' => 'pitch.growth-school',
+        ],
     ],
 
 ];

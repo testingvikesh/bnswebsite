@@ -39,6 +39,15 @@ class PitchController extends Controller
         ]);
     }
 
+    public function growthSchool(): View
+    {
+        return view('pitch.growth-school', [
+            'page' => config('growth_school_pitch.page', []),
+            'pitch' => config('growth_school_pitch', []),
+            'heroImage' => $this->heroImage(),
+        ]);
+    }
+
     private function heroImage(): string
     {
         return $this->aboutPage->get()->heroImageUrl(

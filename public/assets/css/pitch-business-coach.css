@@ -738,6 +738,58 @@
     color: #334155;
 }
 
+.bns-pitch-detail__table--icon-first td:first-child {
+    width: 3rem;
+    text-align: center;
+    font-size: 1.15rem;
+    white-space: nowrap;
+}
+
+.bns-pitch-detail__chips {
+    display: flex;
+    flex-wrap: wrap;
+    gap: 10px;
+    justify-content: center;
+    margin: 18px 0 4px;
+}
+
+.bns-pitch-detail__chip {
+    display: inline-flex;
+    padding: 10px 16px;
+    border-radius: 999px;
+    background: #0a1d37;
+    color: #fff;
+    font-size: 0.82rem;
+    font-weight: 800;
+    letter-spacing: 0.03em;
+}
+
+.bns-pitch-detail__cta-row {
+    display: flex;
+    flex-wrap: wrap;
+    gap: 12px;
+    justify-content: center;
+    margin-top: 8px;
+}
+
+.bns-pitch-detail__cta-btn {
+    display: inline-flex;
+    align-items: center;
+    justify-content: center;
+    padding: 12px 20px;
+    border-radius: 12px;
+    background: #0a1d37;
+    color: #fff;
+    font-weight: 800;
+    text-decoration: none;
+}
+
+.bns-pitch-detail__cta-btn:hover,
+.bns-pitch-detail__cta-btn:focus {
+    color: #fff;
+    background: var(--eduvers-base, #ff5544);
+}
+
 .bns-pitch-detail__cell-star {
     margin-right: 8px;
     color: #f59e0b;

@@ -50,6 +50,7 @@ Route::get('/book-your-spot', function () {
 Route::get('/pitch', [PitchController::class, 'index'])->name('pitch');
 Route::get('/pitch/business-coach', [PitchController::class, 'businessCoach'])->name('pitch.business-coach');
 Route::get('/pitch/bns-member', [PitchController::class, 'bnsMember'])->name('pitch.bns-member');
+Route::get('/pitch/growth-school', [PitchController::class, 'growthSchool'])->name('pitch.growth-school');
 Route::get('/expert/mehul', [ExpertController::class, 'mehul'])->name('expert.mehul');
 Route::get('/about', [AboutController::class, 'index'])->name('about');
 Route::get('/about/mission', [AboutController::class, 'mission'])->name('about.mission');
