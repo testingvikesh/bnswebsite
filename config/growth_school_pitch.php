@@ -5,14 +5,14 @@ return [
     'page' => [
         'title' => 'Pitch',
         'page_title' => 'Growth School (Business Owners And Job Professional)',
-        'page_subtitle' => 'A business community • A business understanding & learning journey • A growth ecosystem',
-        'page_intro' => 'Growth Batch is a one-year BNS community journey for <strong>Business Owners, Entrepreneurs, Job Professionals, Young People & Experienced Professionals</strong> — understand, learn, connect, collaborate, and grow together.',
+        'page_subtitle' => 'A business community • A business understanding + learning journey • A business growth ecosystem',
+        'page_intro' => 'Growth Batch is a one-year <strong>physical</strong> BNS community journey for <strong>Business Owners, Entrepreneurs, Job Professionals, Young People & Experienced Professionals</strong> — English + Hindi, 100 learners, 100 sessions, Paper Pe Vyapar, and a partner–partner business ecosystem.',
     ],
 
     'hero' => [
         'eyebrow' => 'Growth Batch',
         'brand' => 'BUSINESS NAVACHAR SCHOOL',
-        'subtitle' => 'A Business Community • A Business Understanding & Learning Journey • A Growth Ecosystem',
+        'subtitle' => 'A Business Community • A Business Understanding + Learning Journey • A Business Growth Ecosystem',
         'tagline_en' => 'UNDERSTAND TO LEARN • LEARN TO IMPLEMENT • IMPLEMENT TO GROW',
         'welcome' => 'We invite you to become a Member of the BNS Community.',
     ],
@@ -20,18 +20,28 @@ return [
     'hero_highlights' => [
         ['icon' => 'fa-calendar-alt', 'value' => '1 Year', 'label' => 'Duration'],
         ['icon' => 'fa-chalkboard-teacher', 'value' => '100', 'label' => 'Business Sessions'],
-        ['icon' => 'fa-clock', 'value' => '200 Hours', 'label' => 'Learning'],
+        ['icon' => 'fa-users', 'value' => '100', 'label' => 'Learners / Batch'],
         ['icon' => 'fa-rupee-sign', 'value' => '₹10,000', 'label' => 'Per Year'],
     ],
 
     'summary' => [
         ['id' => 'what-is-bns', 'label' => 'What is BNS?'],
-        ['id' => 'three-pillars', 'label' => '3 Pillars of BNS'],
-        ['id' => 'pillar-1', 'label' => 'Understanding + Learning'],
+        ['id' => 'our-vision', 'label' => 'Our Vision'],
+        ['id' => 'our-mission', 'label' => 'Our Mission'],
+        ['id' => 'three-pillars', 'label' => 'Three Pillars of BNS'],
+        ['id' => 'seven-milestones', 'label' => '7 Milestones of BNS'],
+        ['id' => 'understanding-learning', 'label' => 'Understanding + Learning'],
         ['id' => 'learning-model', 'label' => 'BNS Learning Model'],
+        ['id' => 'physical-learning', 'label' => 'Physical Learning Philosophy'],
+        ['id' => 'medium', 'label' => 'Medium of Instruction'],
+        ['id' => 'batch-size', 'label' => 'Batch Size'],
         ['id' => '100-sessions', 'label' => '100 Business Sessions'],
-        ['id' => 'pillar-2', 'label' => 'Partnership'],
-        ['id' => 'pillar-3', 'label' => 'Business Ecosystem'],
+        ['id' => 'master-sessions', 'label' => 'Master Sessions'],
+        ['id' => 'partner-model', 'label' => 'Partner–Partner Model'],
+        ['id' => 'ecosystem', 'label' => 'Business Ecosystem'],
+        ['id' => 'incubation', 'label' => 'Incubation + Grant Support'],
+        ['id' => 'paper-pe-vyapar', 'label' => 'Paper Pe Vyapar'],
+        ['id' => 'inter-business-network', 'label' => 'Inter-Business Network'],
         ['id' => 'funding', 'label' => 'Grants & Funding'],
         ['id' => 'india-wide', 'label' => 'India-Wide Community'],
         ['id' => 'what-we-learn', 'label' => 'What We Understand & Learn'],
@@ -52,7 +62,6 @@ return [
             'id' => 'what-is-bns',
             'icon' => 'fa-school',
             'title' => 'What is BNS?',
-            'intro' => 'BNS is not just a School — BNS is a Business Community.',
             'table' => [
                 'icon_first' => true,
                 'headers' => ['', 'WHAT IS BNS?'],
@@ -60,7 +69,45 @@ return [
                     ['🏢', '<strong>BNS is not just a School — BNS is a Business Community.</strong>'],
                     ['👥', 'A community for <strong>Business Owners, Entrepreneurs, Job Professionals, Young People & Experienced Professionals</strong>'],
                     ['🎯', 'A platform to <strong>Understand • Learn • Share • Connect • Collaborate • Grow</strong>'],
+                    ['🌐', '<strong>Medium of Instruction:</strong> English + Hindi'],
+                    ['👥', '<strong>Batch Size:</strong> 100 Learners Per Batch'],
                     ['📢', '<strong>We invite you to become a Member of the BNS Community.</strong>'],
+                ],
+            ],
+        ],
+
+        [
+            'id' => 'our-vision',
+            'number' => 1,
+            'icon' => 'fa-eye',
+            'title' => 'Our Vision',
+            'table' => [
+                'icon_first' => true,
+                'headers' => ['', 'VISION'],
+                'rows' => [
+                    ['📚', '<strong>Learn Business.</strong>'],
+                    ['🏢', '<strong>Build Business.</strong>'],
+                    ['👥', '<strong>Create Employment.</strong>'],
+                    ['🇮🇳', '<strong>Build India.</strong>'],
+                ],
+            ],
+        ],
+
+        [
+            'id' => 'our-mission',
+            'icon' => 'fa-bullseye',
+            'number' => 2,
+            'title' => 'Our Mission',
+            'table' => [
+                'icon_first' => true,
+                'headers' => ['', 'MISSION'],
+                'rows' => [
+                    ['📈', '<strong>Income Double</strong>'],
+                    ['📊', '<strong>Balance Sheet Double</strong>'],
+                    ['🚀', '<strong>Business Growth</strong>'],
+                    ['💼', '<strong>Wealth Creation</strong>'],
+                    ['🤝', '<strong>Employment Generation</strong>'],
+                    ['🇮🇳', '<strong>Viksit Bharat 2047</strong>'],
                 ],
             ],
         ],
@@ -68,22 +115,45 @@ return [
         [
             'id' => 'three-pillars',
             'icon' => 'fa-columns',
-            'title' => 'The 3 Pillars of BNS',
+            'number' => 3,
+            'title' => 'The Three Pillars of BNS',
             'table' => [
-                'headers' => ['PILLAR', 'WHAT IT MEANS', 'PURPOSE'],
+                'headers' => ['📚 GYAAN', '💡 NAVACHAR', '🌱 SAMRUDDHI'],
                 'rows' => [
-                    ['📚 <strong>1. BUSINESS UNDERSTANDING + LEARNING</strong>', '100 Business Sessions / Meetings', 'Understand how business works and learn practical business concepts'],
-                    ['🤝 <strong>2. PARTNERSHIP</strong>', 'Member-to-Member Learning & Collaboration', 'Learn from each other and create meaningful collaborations'],
-                    ['🌐 <strong>3. BUSINESS ECOSYSTEM</strong>', 'Vendors, Experts, Agencies & Service Providers', 'Build a strong business support ecosystem'],
+                    ['Knowledge', 'Innovation', 'Prosperity'],
+                    ['Business Understanding', 'Business Innovation', 'Business Growth'],
+                    ['Learning', 'New Ideas', 'Wealth Creation'],
+                    ['Experience Sharing', 'New-Age Solutions', 'Employment Generation'],
                 ],
             ],
-            'callout' => 'UNDERSTAND → LEARN → CONNECT → COLLABORATE → GROW',
+            'callout' => 'GYAAN → NAVACHAR → SAMRUDDHI',
         ],
 
         [
-            'id' => 'pillar-1',
+            'id' => 'seven-milestones',
+            'icon' => 'fa-flag-checkered',
+            'number' => 4,
+            'title' => 'The 7 Milestones of BNS',
+            'table' => [
+                'headers' => ['No.', 'MILESTONE', 'WHAT IT MEANS'],
+                'rows' => [
+                    ['1️⃣', '<strong>BNS is a Community</strong>', 'A community of Business Owners, Entrepreneurs, Professionals, Youth & Experienced People'],
+                    ['2️⃣', '<strong>Learning + Understanding Model</strong>', 'Business is not only taught — it is understood, discussed, experienced and implemented'],
+                    ['3️⃣', '<strong>Partner–Partner Model</strong>', 'Students & Teachers નહીં — Learner–Mentor / Partner–Partner relationship'],
+                    ['4️⃣', '<strong>Business Ecosystem Support</strong>', 'Vendors, Agencies, Experts & Service Providers support the business community'],
+                    ['5️⃣', '<strong>Incubation + Government Grant Support</strong>', 'Business ideas can be understood, developed and guided towards relevant incubation, schemes and grant opportunities'],
+                    ['6️⃣', '<strong>Paper Pe Vyapar</strong>', 'Practical Business Learning — business concepts converted into practical business work'],
+                    ['7️⃣', '<strong>Inter-Business Network</strong>', 'Build connections across businesses through a Global School Atmosphere'],
+                ],
+            ],
+            'callout' => 'COMMUNITY → UNDERSTANDING → PARTNERSHIP → ECOSYSTEM → INCUBATION → PRACTICAL BUSINESS → NETWORK',
+        ],
+
+        [
+            'id' => 'understanding-learning',
             'icon' => 'fa-book-open',
-            'title' => 'Pillar 1 — Business Understanding + Learning',
+            'number' => 5,
+            'title' => 'Business Understanding + Learning',
             'before_table' => 'WHY BUSINESS UNDERSTANDING?',
             'table' => [
                 'headers' => ['FOR YOUNG PEOPLE', 'FOR EXPERIENCED PEOPLE'],
@@ -105,6 +175,7 @@ return [
         [
             'id' => 'learning-model',
             'icon' => 'fa-graduation-cap',
+            'number' => 6,
             'title' => 'The BNS Learning Model',
             'table' => [
                 'headers' => ['STEP', 'BNS APPROACH'],
@@ -113,17 +184,85 @@ return [
                     ['02', '📚 <strong>LEARN</strong> — Learn the knowledge'],
                     ['03', '💬 <strong>DISCUSS</strong> — Share views & experiences'],
                     ['04', '🛠️ <strong>PRACTICE</strong> — Apply the concept'],
-                    ['05', '🚀 <strong>IMPLEMENT</strong> — Use it in business'],
-                    ['06', '📊 <strong>MEASURE</strong> — Review the outcome'],
-                    ['07', '🔄 <strong>IMPROVE</strong> — Continuously improve'],
+                    ['05', '📄 <strong>PAPER PE VYAPAR</strong> — Convert learning into practical business work'],
+                    ['06', '🚀 <strong>IMPLEMENT</strong> — Use the concept in business'],
+                    ['07', '📊 <strong>MEASURE</strong> — Review the outcome'],
+                    ['08', '🔄 <strong>IMPROVE</strong> — Continuously improve'],
                 ],
             ],
-            'callout' => 'UNDERSTAND → LEARN → IMPLEMENT → GROW',
+            'callout' => 'UNDERSTAND → LEARN → PRACTICE → IMPLEMENT → GROW',
+        ],
+
+        [
+            'id' => 'physical-learning',
+            'icon' => 'fa-university',
+            'number' => 7,
+            'title' => 'Physical Learning Philosophy',
+            'table' => [
+                'headers' => ['TRADITIONAL APPROACH ❌', 'BNS APPROACH ✓'],
+                'rows' => [
+                    ['More Theory', 'Less Theory'],
+                    ['Classroom-only Learning', 'Physical Business Learning'],
+                    ['Just Listening', 'Understanding + Discussion'],
+                    ['Notes & Lectures', 'Practical Business Work'],
+                    ['Learn for Knowledge', 'Learn for Application'],
+                    ['Teacher → Student', 'Partner → Partner'],
+                    ['Theory on Paper', 'Paper Pe Vyapar'],
+                ],
+            ],
+            'block_label' => 'BNS PHYSICAL LEARNING PHILOSOPHY',
+            'table_2' => [
+                'icon_first' => true,
+                'headers' => ['', 'BNS APPROACH'],
+                'rows' => [
+                    ['📚', '<strong>Less Theory</strong>'],
+                    ['💼', '<strong>More Practical Learning</strong>'],
+                    ['📄', '<strong>Paper Pe Vyapar</strong>'],
+                    ['🧠', '<strong>Business Understanding</strong>'],
+                    ['🤝', '<strong>Discussion & Experience Sharing</strong>'],
+                    ['🚀', '<strong>Implementation-Oriented Learning</strong>'],
+                ],
+            ],
+        ],
+
+        [
+            'id' => 'medium',
+            'icon' => 'fa-language',
+            'number' => 8,
+            'title' => 'Medium of Instruction',
+            'table' => [
+                'headers' => ['MEDIUM', 'APPROACH'],
+                'rows' => [
+                    ['🇬🇧 English', 'Business terminology, concepts, professional communication'],
+                    ['🇮🇳 Hindi', 'Easy understanding, discussion & practical explanation'],
+                    ['🔄 English + Hindi', '<strong>Bilingual Business Understanding & Learning</strong>'],
+                ],
+            ],
+            'callout' => 'UNDERSTAND EASILY → LEARN PRACTICALLY → IMPLEMENT CONFIDENTLY',
+        ],
+
+        [
+            'id' => 'batch-size',
+            'icon' => 'fa-users',
+            'number' => 9,
+            'title' => 'Batch Size',
+            'table' => [
+                'headers' => ['PARTICULAR', 'GROWTH BATCH'],
+                'rows' => [
+                    ['👥 Learners Per Batch', '<strong>100 Learners</strong>'],
+                    ['🏫 Learning Format', 'Physical Learning'],
+                    ['💬 Learning Style', 'Interactive + Practical'],
+                    ['🤝 Community Model', 'Partner–Partner'],
+                    ['🎯 Focus', '<strong>Business Understanding + Learning</strong>'],
+                ],
+            ],
+            'callout' => '100 LEARNERS → ONE COMMUNITY → ONE BUSINESS LEARNING JOURNEY',
         ],
 
         [
             'id' => '100-sessions',
             'icon' => 'fa-calendar-check',
+            'number' => 10,
             'title' => '100 Business Sessions',
             'table' => [
                 'headers' => ['PARTICULAR', 'GROWTH BATCH'],
@@ -131,8 +270,9 @@ return [
                     ['🗓️ Duration', '<strong>1 Year</strong>'],
                     ['🎓 Total Sessions', '<strong>100 Sessions</strong>'],
                     ['⏱️ Total Learning', '<strong>200 Hours</strong>'],
-                    ['💼 Format', 'Business Meetings + Workshops + Case Studies + Practical Activities'],
-                    ['🎯 Focus', '<strong>Business Understanding + Practical Learning</strong>'],
+                    ['👥 Batch Size', '<strong>100 Learners Per Batch</strong>'],
+                    ['🏫 Format', 'Physical Business Meetings + Workshops + Case Studies + Practical Activities'],
+                    ['🧠 Focus', '<strong>Business Understanding + Practical Learning</strong>'],
                     ['🚀 Outcome', 'Better Business Understanding & Implementation'],
                 ],
             ],
@@ -140,17 +280,38 @@ return [
         ],
 
         [
-            'id' => 'pillar-2',
+            'id' => 'master-sessions',
+            'icon' => 'fa-star',
+            'number' => 11,
+            'title' => 'Master Sessions',
+            'intro' => 'Exclusive Master Sessions by:',
+            'table' => [
+                'headers' => ['MASTER SESSION EXPERTS', 'MASTER SESSION EXPERTS'],
+                'rows' => [
+                    ['🎓 Faculties of IIM', '🎓 Faculties of IITs'],
+                    ['👨‍🏫 BNS Trained Business Coaches', '💼 Business Leaders'],
+                    ['🚀 Startup Founders', '🌎 Successful Entrepreneurs'],
+                    ['🏭 Industry Experts', '📈 Business Growth Mentors'],
+                    ['🤖 AI & Digital Business Experts', ''],
+                ],
+            ],
+            'callout' => 'MASTER SESSIONS = REAL EXPERIENCE + EXPERT KNOWLEDGE + PRACTICAL BUSINESS UNDERSTANDING',
+        ],
+
+        [
+            'id' => 'partner-model',
             'icon' => 'fa-handshake',
-            'title' => 'Pillar 2 — Partnership',
+            'number' => 12,
+            'title' => 'Partner–Partner Model',
             'intro' => 'No traditional teacher–student model.',
             'table' => [
-                'headers' => ['TRADITIONAL MODEL ❌', 'BNS COMMUNITY MODEL 🚀'],
+                'headers' => ['TRADITIONAL MODEL ❌', 'BNS COMMUNITY MODEL ✓'],
                 'rows' => [
                     ['Teacher → Student', '<strong>Partner → Partner</strong>'],
                     ['One-way Teaching', '<strong>Two-way Understanding & Learning</strong>'],
                     ['Only Lectures', '<strong>Discussion + Experience + Action</strong>'],
                     ['Individual Growth', '<strong>Collective Growth</strong>'],
+                    ['Teacher Gives Knowledge', '<strong>Everyone Learns & Contributes</strong>'],
                 ],
             ],
             'block_label' => 'Every BNS Member can be:',
@@ -158,10 +319,11 @@ return [
                 'headers' => ['ROLE', 'WHAT THEY BRING'],
                 'rows' => [
                     ['📚 <strong>Learner</strong>', 'Willingness to understand & learn'],
-                    ['💡 <strong>Contributor</strong>', 'Knowledge & ideas'],
-                    ['👨‍💼 <strong>Experienced Member</strong>', 'Business experience'],
+                    ['💡 <strong>Contributor</strong>', 'Knowledge & Ideas'],
+                    ['👨‍💼 <strong>Experienced Member</strong>', 'Business Experience'],
                     ['🤝 <strong>Partner</strong>', 'Collaboration'],
-                    ['🌐 <strong>Connector</strong>', 'Network & opportunities'],
+                    ['🌐 <strong>Connector</strong>', 'Network & Opportunities'],
+                    ['🚀 <strong>Mentor</strong>', 'Practical Experience'],
                 ],
             ],
             'banners' => [
@@ -172,30 +334,108 @@ return [
         ],
 
         [
-            'id' => 'pillar-3',
+            'id' => 'ecosystem',
             'icon' => 'fa-globe',
-            'title' => 'Pillar 3 — Business Ecosystem',
+            'number' => 13,
+            'title' => 'Business Ecosystem',
             'intro' => 'From business community to business ecosystem.',
             'table' => [
-                'headers' => ['BUSINESS NEED', 'POSSIBLE ECOSYSTEM CONNECTION'],
+                'headers' => ['BUSINESS NEED', 'ECOSYSTEM SUPPORT'],
                 'rows' => [
-                    ['🌐 Website', 'Technology Partner'],
-                    ['📱 Digital Marketing', 'Marketing Agency'],
-                    ['📊 Accounting', 'Finance Professional'],
-                    ['⚖️ Legal', 'Legal Professional'],
-                    ['🤖 AI & Technology', 'Technology Expert'],
-                    ['👨‍💼 Business Guidance', 'Business Consultant'],
-                    ['📢 Branding', 'Branding Expert'],
-                    ['💰 Finance', 'Finance / Funding Professional'],
+                    ['🌐 Website', 'Technology Partners'],
+                    ['📱 Digital Marketing', 'Marketing Agencies'],
+                    ['📊 Accounting', 'Finance Professionals'],
+                    ['⚖️ Legal', 'Legal Professionals'],
+                    ['🤖 AI & Technology', 'Technology Experts'],
+                    ['👨‍💼 Business Guidance', 'Business Consultants'],
+                    ['📢 Branding', 'Branding Experts'],
+                    ['💰 Finance', 'Finance / Funding Professionals'],
+                    ['🏭 Operations', 'Vendors & Service Providers'],
                 ],
             ],
             'callout' => 'NEED → CONNECT → COLLABORATE → GROW',
-            'note' => 'BNS aims to create a platform where members can discover relevant ecosystem partners.',
+        ],
+
+        [
+            'id' => 'incubation',
+            'icon' => 'fa-seedling',
+            'number' => 14,
+            'title' => 'Incubation + Government Grant Support',
+            'intro' => 'Business idea → Incubation → Funding opportunity.',
+            'table' => [
+                'headers' => ['AREA', 'BNS SUPPORT / LEARNING'],
+                'rows' => [
+                    ['💡 Business Idea', 'Understand & develop the idea'],
+                    ['🚀 Startup', 'Understand startup development'],
+                    ['🏢 Incubation', 'Connect with relevant incubation ecosystem'],
+                    ['🏛️ Government Schemes', 'Understand applicable schemes'],
+                    ['💰 Grants', 'Understand relevant grant opportunities'],
+                    ['🏦 Loans', 'Understand funding options'],
+                    ['📄 Documentation', 'Application-readiness understanding'],
+                    ['📋 Business Plan', 'Develop business documentation'],
+                    ['👨‍💼 Expert Guidance', 'Relevant expert / mentor sessions'],
+                ],
+            ],
+            'callout' => 'UNDERSTAND → PREPARE → CONNECT → APPLY',
+            'note' => 'Funding, grants or approvals remain subject to applicable eligibility criteria and the relevant authority.',
+        ],
+
+        [
+            'id' => 'paper-pe-vyapar',
+            'icon' => 'fa-file-alt',
+            'number' => 15,
+            'title' => 'Paper Pe Vyapar',
+            'intro' => 'Less theory → More practical business.',
+            'table' => [
+                'headers' => ['LEARNING', 'PAPER PE VYAPAR'],
+                'rows' => [
+                    ['💡 Business Idea', 'Write the Business Idea'],
+                    ['🎯 Target Customer', 'Define Customer'],
+                    ['🏷️ Product / Service', 'Create the Offer'],
+                    ['💰 Pricing', 'Prepare Pricing'],
+                    ['📢 Marketing', 'Create Marketing Plan'],
+                    ['💼 Sales', 'Prepare Sales Process'],
+                    ['📊 Finance', 'Prepare Cost & Revenue'],
+                    ['👥 Team', 'Define Roles'],
+                    ['⚙️ System', 'Create SOP / Process'],
+                    ['📈 Growth', 'Prepare Growth Plan'],
+                ],
+            ],
+            'callout' => 'LEARN ON PAPER → THINK LIKE A BUSINESS OWNER → IMPLEMENT IN BUSINESS',
+        ],
+
+        [
+            'id' => 'inter-business-network',
+            'icon' => 'fa-network-wired',
+            'number' => 16,
+            'title' => 'Inter-Business Network',
+            'intro' => 'Global school atmosphere.',
+            'table' => [
+                'headers' => ['LOCAL BUSINESS', 'BNS NETWORK'],
+                'rows' => [
+                    ['One Business', 'Multiple Businesses'],
+                    ['Local Connection', 'Inter-Business Connection'],
+                    ['Local Learning', 'Cross-Business Learning'],
+                    ['Individual Network', 'Community Network'],
+                    ['One City', 'Multi-City / Global Exposure'],
+                    ['Business-to-Business', 'Inter-Business Collaboration'],
+                ],
+            ],
+            'block_label' => 'Members can understand and explore:',
+            'points' => [
+                'Business → Business Connections',
+                'Business → Vendor Connections',
+                'Business → Agency Connections',
+                'Business → Expert Connections',
+                'Business → Partnership Opportunities',
+            ],
+            'callout' => 'ONE COMMUNITY → MANY BUSINESSES → ONE BUSINESS NETWORK',
         ],
 
         [
             'id' => 'funding',
             'icon' => 'fa-landmark',
+            'number' => 17,
             'title' => 'Government Grants & Funding',
             'intro' => 'Understanding funding opportunities.',
             'table' => [
@@ -210,12 +450,12 @@ return [
                 ],
             ],
             'callout' => 'UNDERSTAND → PREPARE → APPLY',
-            'note' => 'Funding or approval depends on applicable eligibility criteria and the relevant authority.',
         ],
 
         [
             'id' => 'india-wide',
             'icon' => 'fa-map-marked-alt',
+            'number' => 18,
             'title' => 'BNS India-Wide Community',
             'intro' => 'One community • Many cities.',
             'table' => [
@@ -238,6 +478,7 @@ return [
         [
             'id' => 'what-we-learn',
             'icon' => 'fa-lightbulb',
+            'number' => 19,
             'title' => 'What Will We Understand & Learn?',
             'table' => [
                 'headers' => ['BUSINESS AREA', 'UNDERSTANDING + LEARNING FOCUS'],
@@ -261,6 +502,7 @@ return [
         [
             'id' => 'complete-journey',
             'icon' => 'fa-route',
+            'number' => 20,
             'title' => 'Complete Business Journey',
             'table' => [
                 'headers' => ['STAGE', 'BUSINESS UNDERSTANDING JOURNEY'],
@@ -290,6 +532,7 @@ return [
         [
             'id' => 'who-is-bns-for',
             'icon' => 'fa-users',
+            'number' => 21,
             'title' => 'Who is BNS For?',
             'table' => [
                 'headers' => ['MEMBER', 'WHY BNS?'],
@@ -306,6 +549,7 @@ return [
         [
             'id' => 'not-only-learning',
             'icon' => 'fa-fire',
+            'number' => 22,
             'title' => 'BNS is Not Only About Learning',
             'intro' => 'It is about business understanding.',
             'table' => [
@@ -316,6 +560,8 @@ return [
                     ['Theory', '<strong>Understanding + Practical Application</strong>'],
                     ['Individual Knowledge', '<strong>Community Knowledge</strong>'],
                     ['Learning Alone', '<strong>Learning Together</strong>'],
+                    ['Classroom Learning', '<strong>Physical Business Learning</strong>'],
+                    ['Theory on Paper', '<strong>Paper Pe Vyapar</strong>'],
                 ],
             ],
             'banners' => [
@@ -328,20 +574,24 @@ return [
         [
             'id' => 'member-benefits',
             'icon' => 'fa-trophy',
+            'number' => 23,
             'title' => 'Member Benefits',
             'table' => [
                 'headers' => ['BNS COMMUNITY BENEFIT', 'VALUE'],
                 'rows' => [
                     ['🧠 Business Understanding', '<strong>100 Business Sessions</strong>'],
                     ['📚 Practical Learning', '<strong>200 Hours</strong>'],
+                    ['🏫 Physical Learning', '<strong>Less Theory + More Practical Learning</strong>'],
+                    ['📄 Paper Pe Vyapar', '<strong>Business on Paper → Business Thinking</strong>'],
+                    ['⭐ Master Sessions', '<strong>IIM + IIT Faculties + Business Leaders + Experts</strong>'],
                     ['🤝 Community', '<strong>Business Networking</strong>'],
                     ['💼 Partnership', '<strong>Member-to-Member Collaboration</strong>'],
-                    ['🌐 Ecosystem', '<strong>Experts + Vendors + Service Providers</strong>'],
+                    ['🌐 Ecosystem', '<strong>Experts + Vendors + Service Providers + Agencies</strong>'],
+                    ['🚀 Incubation', '<strong>Incubation & Relevant Grant-Support Ecosystem</strong>'],
                     ['🤖 Technology', '<strong>AI & Digital Business Understanding</strong>'],
                     ['💰 Funding Awareness', '<strong>Grants + Schemes + Loans</strong>'],
                     ['🇮🇳 Network', '<strong>Future BNS Communities Across India</strong>'],
                     ['📋 Business Tools', '<strong>Templates + Checklists + Practical Formats</strong>'],
-                    ['🏆 Certification', '<strong>Applicable Program Certification</strong>'],
                 ],
             ],
         ],
@@ -349,6 +599,7 @@ return [
         [
             'id' => 'at-a-glance',
             'icon' => 'fa-gem',
+            'number' => 24,
             'title' => 'Growth Batch — At a Glance',
             'table' => [
                 'headers' => ['KEY PARTICULAR', 'DETAIL'],
@@ -358,8 +609,15 @@ return [
                     ['🗓️ Duration', '<strong>1 Year</strong>'],
                     ['📚 Total Sessions', '<strong>100</strong>'],
                     ['⏱️ Total Learning', '<strong>200 Hours</strong>'],
+                    ['👥 Batch Size', '<strong>100 Learners Per Batch</strong>'],
+                    ['🏫 Learning Mode', '<strong>Physical Learning</strong>'],
+                    ['🌐 Medium', '<strong>English + Hindi</strong>'],
                     ['🧠 Core Focus', '<strong>Business Understanding + Learning</strong>'],
-                    ['👥 Community', '<strong>Business Owners + Professionals + Young People + Experienced Professionals</strong>'],
+                    ['📄 Philosophy', '<strong>Less Theory • Paper Pe Vyapar • Practical Learning</strong>'],
+                    ['⭐ Master Sessions', '<strong>IIM • IIT • Business Leaders • Industry Experts • Entrepreneurs • AI Experts</strong>'],
+                    ['🤝 Community', '<strong>Business Community</strong>'],
+                    ['🌐 Vision', '<strong>Business Ecosystem</strong>'],
+                    ['🇮🇳 Reach', '<strong>India-Wide Community Vision</strong>'],
                     ['💰 Membership Contribution', '<strong>₹10,000 / Year</strong>'],
                 ],
             ],
@@ -369,14 +627,19 @@ return [
         [
             'id' => 'why-become-member',
             'icon' => 'fa-star',
+            'number' => 25,
             'title' => 'Why Become a BNS Member?',
             'table' => [
                 'headers' => ['BNS COMMUNITY', 'MEMBER JOURNEY'],
                 'rows' => [
+                    ['🏢 Community', '<strong>Become Part of a Business Community</strong>'],
                     ['🧠 Business Understanding', '<strong>Understand Business Better</strong>'],
                     ['📚 Learning', '<strong>Learn Practical Concepts</strong>'],
-                    ['🤝 Community', '<strong>Build Relationships</strong>'],
+                    ['🏫 Physical Learning', '<strong>Learn Through Interaction & Practice</strong>'],
+                    ['📄 Paper Pe Vyapar', '<strong>Convert Learning into Business Thinking</strong>'],
+                    ['🤝 Partnership', '<strong>Build Relationships</strong>'],
                     ['🌐 Ecosystem', '<strong>Discover Business Connections</strong>'],
+                    ['🚀 Incubation', '<strong>Explore Incubation & Funding Ecosystem</strong>'],
                     ['💡 Ideas', '<strong>Exchange Ideas</strong>'],
                     ['🚀 Collaboration', '<strong>Explore Partnerships</strong>'],
                     ['🤖 Technology', '<strong>Understand AI & New-Age Business</strong>'],
@@ -389,6 +652,7 @@ return [
         [
             'id' => 'community-power',
             'icon' => 'fa-bolt',
+            'number' => 26,
             'title' => 'The Power of BNS Community',
             'table' => [
                 'headers' => ['ONE MEMBER BRINGS', 'THE COMMUNITY CAN CREATE'],
@@ -399,6 +663,7 @@ return [
                     ['🤝 Relationships', 'Collaboration'],
                     ['🚀 Opportunities', 'New Possibilities'],
                     ['🛠️ Skills', 'Solutions'],
+                    ['🏢 Business', 'Inter-Business Network'],
                 ],
             ],
             'banners' => [
@@ -410,6 +675,7 @@ return [
         [
             'id' => 'invitation',
             'icon' => 'fa-rocket',
+            'number' => 27,
             'title' => 'Final Invitation',
             'table' => [
                 'headers' => ["DON'T JOIN BNS ONLY TO…", 'JOIN BNS TO…'],
@@ -419,33 +685,43 @@ return [
                     ['❌ Just Network', '✅ <strong>Build Relationships</strong>'],
                     ['❌ Just Meet People', '✅ <strong>Create Partnerships</strong>'],
                     ['❌ Just Learn', '✅ <strong>Understand & Implement</strong>'],
+                    ['❌ Learn Only Theory', '✅ <strong>Practice Paper Pe Vyapar</strong>'],
                     ['❌ Grow Alone', '✅ <strong>Grow Together</strong>'],
+                    ['❌ Stay Within One Business', '✅ <strong>Build an Inter-Business Network</strong>'],
                 ],
             ],
-            'callout' => 'UNDERSTAND • LEARN • CONNECT • PARTNER • IMPLEMENT • GROW',
+            'callout' => 'UNDERSTAND • LEARN • CONNECT • PARTNER • PRACTICE • IMPLEMENT • GROW',
         ],
 
         [
             'id' => 'welcome',
             'icon' => 'fa-flag',
             'title' => 'Welcome to the BNS Community',
-            'intro' => 'Growth Batch — Business Navachar School.',
+            'intro' => 'Business Navachar School — Growth Batch.',
             'table' => [
                 'headers' => ['BNS GROWTH BATCH', 'KEY NUMBERS'],
                 'rows' => [
                     ['📅 Duration', '<strong>1 Year</strong>'],
                     ['📚 Sessions', '<strong>100</strong>'],
                     ['⏱️ Learning', '<strong>200 Hours</strong>'],
+                    ['👥 Batch Size', '<strong>100 Learners Per Batch</strong>'],
+                    ['🌐 Medium', '<strong>English + Hindi</strong>'],
+                    ['🏫 Mode', '<strong>Physical Learning</strong>'],
+                    ['📄 Philosophy', '<strong>Less Theory • Paper Pe Vyapar • Practical Learning</strong>'],
                     ['🧠 Core Focus', '<strong>Business Understanding + Learning</strong>'],
+                    ['⭐ Master Sessions', '<strong>IIM • IIT • Business Leaders • Experts</strong>'],
                     ['🤝 Community', '<strong>Business Community</strong>'],
-                    ['🌐 Vision', '<strong>Business Ecosystem</strong>'],
-                    ['🇮🇳 Reach', '<strong>India-Wide Community Vision</strong>'],
+                    ['🌐 Ecosystem', '<strong>Vendors • Agencies • Experts • Service Providers</strong>'],
+                    ['🚀 Incubation', '<strong>Government Grant Support Ecosystem</strong>'],
+                    ['🌎 Network', '<strong>Inter-Business Network</strong>'],
+                    ['🇮🇳 Vision', '<strong>India-Wide Business Community</strong>'],
                     ['💰 Membership Contribution', '<strong>₹10,000 / Year</strong>'],
                 ],
             ],
             'banners' => [
                 'A BUSINESS COMMUNITY',
-                'A BUSINESS UNDERSTANDING & LEARNING JOURNEY',
+                'A BUSINESS UNDERSTANDING + LEARNING JOURNEY',
+                'A PRACTICAL BUSINESS LEARNING MODEL',
                 'A BUSINESS GROWTH ECOSYSTEM',
             ],
             'callout' => 'IDEA → BUSINESS → BRAND → SYSTEM → SCALE → IPO',
@@ -457,7 +733,7 @@ return [
     'cta' => [
         'label' => 'Next step',
         'title' => 'Join the BNS Growth Batch',
-        'text' => 'Become a member of the BNS community — understand business, learn with partners, and grow together.',
+        'text' => 'Become a member of the BNS community — understand business, practise Paper Pe Vyapar, and grow together.',
         'buttons' => [
             [
                 'label' => 'Book Introduction Session',

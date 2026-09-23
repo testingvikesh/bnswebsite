@@ -34,7 +34,7 @@
         @foreach($pitch['sections'] ?? [] as $section)
             <div class="bns-pitch-detail__section wow fadeInUp" data-wow-duration="0.85s" id="{{ $section['id'] ?? '' }}">
                 @include('pitch.partials.section-head', [
-                    'number' => $loop->iteration,
+                    'number' => $section['number'] ?? null,
                     'title' => $section['title'] ?? '',
                     'icon' => $section['icon'] ?? 'fa-star',
                 ])
@@ -55,6 +55,13 @@
 
                 @if(!empty($section['table_2']))
                     @include('pitch.partials.growth-table', ['table' => $section['table_2']])
+                @endif
+
+                @if(!empty($section['points']))
+                    @include('pitch.partials.star-points', [
+                        'items' => $section['points'],
+                        'class' => 'bns-pitch-detail__points--grid',
+                    ])
                 @endif
 
                 @if(!empty($section['chips']))
