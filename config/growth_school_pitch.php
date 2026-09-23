@@ -21,7 +21,8 @@ return [
         ['icon' => 'fa-calendar-alt', 'value' => '1 Year', 'label' => 'Duration'],
         ['icon' => 'fa-chalkboard-teacher', 'value' => '100', 'label' => 'Business Sessions'],
         ['icon' => 'fa-users', 'value' => '100', 'label' => 'Learners / Batch'],
-        ['icon' => 'fa-rupee-sign', 'value' => '₹10,000', 'label' => 'Per Year'],
+        ['icon' => 'fa-rupee-sign', 'value' => '₹10,000', 'label' => 'Today'],
+        ['icon' => 'fa-chart-line', 'value' => '₹80,000', 'label' => 'In Future'],
     ],
 
     'summary' => [
@@ -64,6 +65,40 @@ return [
             'id' => 'what-is-bns',
             'icon' => 'fa-school',
             'title' => 'What is BNS?',
+            'lead' => 'BUSINESS NAVACHAR SCHOOL',
+            'tagline' => 'Where Business Meets New Ideas, Action & Opportunity',
+            'tables' => [
+                [
+                    'headers' => ['WORD', 'MEANING', 'BNS PHILOSOPHY'],
+                    'rows' => [
+                        ['💼 <strong>BUSINESS</strong>', 'Biz Next', 'Taking business to the next level'],
+                        ['💡 <strong>NAVACHAR</strong>', 'Naya Vichar + Naya Aachar', 'New Ideas + New Action / Implementation'],
+                        ['🏫 <strong>SCHOOL</strong>', 'E-School', 'A next-generation school built around practical business learning'],
+                    ],
+                ],
+                [
+                    'label' => 'E-SCHOOL = 7 E’s',
+                    'headers' => ['E', 'MEANING', 'BNS APPROACH'],
+                    'rows' => [
+                        ['💰 E – Earning', 'Create Income', 'Learn to create income & business value'],
+                        ['🌐 E – Internet', 'Go Digital', 'Use internet, digital platforms & technology'],
+                        ['🤝 E – Ecosystem', 'Build Connections', 'Connect with experts, vendors, agencies & businesses'],
+                        ['⚡ E – Energy', 'Create Action', 'Build entrepreneurial energy, passion & execution'],
+                        ['🌱 E – Environment', 'Think Sustainably', 'Build responsible & sustainable businesses'],
+                        ['🎬 E – Entertainment', 'Enjoy Learning', 'Make learning engaging, interactive & enjoyable'],
+                        ['🚀 E – Empowerment', 'Enable People', 'Empower individuals to become confident, capable & growth-oriented'],
+                    ],
+                ],
+            ],
+            'idea' => [
+                'title' => 'THE BNS IDEA',
+                'points' => [
+                    '<strong>Business</strong> = Biz Next',
+                    '<strong>Navachar</strong> = Naya Vichar + Naya Aachar',
+                    '<strong>School</strong> = E-School',
+                ],
+                'text' => '<strong>BNS is not just a Business School.</strong> BNS is a Biz Next + Naya Vichar + Naya Aachar + 7E E-School ecosystem — where people understand business, learn new ideas, convert ideas into action, connect with the ecosystem and empower themselves to grow.',
+            ],
             'table' => [
                 'icon_first' => true,
                 'headers' => ['', 'WHAT IS BNS?'],
@@ -620,10 +655,10 @@ return [
                     ['🤝 Community', '<strong>Business Community</strong>'],
                     ['🌐 Vision', '<strong>Business Ecosystem</strong>'],
                     ['🇮🇳 Reach', '<strong>India-Wide Community Vision</strong>'],
-                    ['💰 Membership Contribution', '<strong>₹10,000 / Year</strong>'],
+                    ['💰 Membership Contribution', '<strong>₹10,000 Today And ₹80,000 In Future</strong>'],
                 ],
             ],
-            'chips' => ['₹10,000 / YEAR'],
+            'chips' => ['₹10,000 Today And ₹80,000 In Future'],
         ],
 
         [
@@ -717,7 +752,7 @@ return [
                     ['🚀 Incubation', '<strong>Government Grant Support Ecosystem</strong>'],
                     ['🌎 Network', '<strong>Inter-Business Network</strong>'],
                     ['🇮🇳 Vision', '<strong>India-Wide Business Community</strong>'],
-                    ['💰 Membership Contribution', '<strong>₹10,000 / Year</strong>'],
+                    ['💰 Membership Contribution', '<strong>₹10,000 Today And ₹80,000 In Future</strong>'],
                 ],
             ],
             'banners' => [

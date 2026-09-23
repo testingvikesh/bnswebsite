@@ -43,8 +43,43 @@
                     <p class="bns-pitch-detail__section-intro">{!! bns_rich_text($section['intro']) !!}</p>
                 @endif
 
+                @if(!empty($section['lead']))
+                    <p class="bns-pitch-detail__section-lead">{!! bns_rich_text($section['lead']) !!}</p>
+                @endif
+
+                @if(!empty($section['tagline']))
+                    <p class="bns-pitch-detail__journey-banner">{!! bns_rich_text($section['tagline']) !!}</p>
+                @endif
+
                 @if(!empty($section['before_table']))
                     <p class="bns-pitch-detail__block-label">{!! bns_rich_text($section['before_table']) !!}</p>
+                @endif
+
+                @foreach($section['tables'] ?? [] as $extraTable)
+                    @if(!empty($extraTable['label']))
+                        <p class="bns-pitch-detail__block-label">{!! bns_rich_text($extraTable['label']) !!}</p>
+                    @endif
+                    @include('pitch.partials.growth-table', ['table' => $extraTable])
+                @endforeach
+
+                @if(!empty($section['idea']))
+                    <div class="bns-pitch-detail__idea">
+                        @if(!empty($section['idea']['title']))
+                            <p class="bns-pitch-detail__block-label">{!! bns_rich_text($section['idea']['title']) !!}</p>
+                        @endif
+                        @if(!empty($section['idea']['points']))
+                            @include('pitch.partials.star-points', [
+                                'items' => $section['idea']['points'],
+                                'class' => 'bns-pitch-detail__points--grid',
+                            ])
+                        @endif
+                        @if(!empty($section['idea']['text']))
+                            <p class="bns-pitch-detail__note bns-pitch-detail__note--boxed">
+                                <i class="fas fa-star" aria-hidden="true"></i>
+                                {!! bns_rich_text($section['idea']['text']) !!}
+                            </p>
+                        @endif
+                    </div>
                 @endif
 
                 @include('pitch.partials.growth-table', ['table' => $section['table'] ?? []])

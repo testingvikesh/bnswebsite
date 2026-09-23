@@ -227,6 +227,23 @@
     color: #0a1d37;
 }
 
+.bns-pitch-detail__section-lead {
+    margin: 0 0 10px;
+    text-align: center;
+    font-size: clamp(1.2rem, 2.4vw, 1.65rem);
+    font-weight: 800;
+    color: #0a1d37;
+}
+
+.bns-pitch-detail__idea {
+    margin: 8px 0 22px;
+}
+
+.bns-pitch-detail__section .bns-pitch-detail__table-wrap + .bns-pitch-detail__block-label,
+.bns-pitch-detail__section .bns-pitch-detail__table-wrap + .bns-pitch-detail__idea {
+    margin-top: 22px;
+}
+
 .bns-pitch-detail__block-label:first-of-type {
     margin-top: 0;
 }
