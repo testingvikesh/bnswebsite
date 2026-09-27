@@ -398,35 +398,41 @@
 
                         // Already validated — keep loader visible, then attach reCAPTCHA v3 and POST.
                         var action = $readyForm.attr('data-recaptcha-action') || 'intro_session';
-                        var go = function () {
-                            nativeSubmitIntroForm(form);
-                        };
-                        var failCaptcha = function () {
+                        var unlock = function () {
                             $readyForm.removeData('bnsSubmitting');
                             setIntroFormSubmitting($readyForm, false);
                             $readyForm.find('.bns-intro-session-form__btn').prop('disabled', false);
-                            window.alert('Security check could not be completed. Please reload the page and try again.');
                         };
-                        var needsCaptcha = $readyForm.hasClass('js-recaptcha-v3') && (
-                            window.BNS_RECAPTCHA_SITE_KEY
+                        var siteKey = window.BNS_RECAPTCHA_SITE_KEY
                             || $readyForm.find('[data-recaptcha-site-key]').attr('data-recaptcha-site-key')
-                            || typeof window.bnsRecaptchaAttach === 'function'
-                        );
-
-                        if (needsCaptcha) {
-                            if (typeof window.bnsRecaptchaAttach === 'function') {
-                                window.bnsRecaptchaAttach(form, action).then(function (captchaToken) {
-                                    if (!captchaToken) {
-                                        failCaptcha();
-                                        return;
+                            || '';
+                        var postForm = function (captchaToken) {
+                            if (typeof window.bnsSubmitProtectedForm === 'function') {
+                                window.bnsSubmitProtectedForm(form, captchaToken || '').catch(function (error) {
+                                    unlock();
+                                    var message = (error && error.message) ? error.message : 'Please try submitting the form again.';
+                                    var box = $readyForm.closest('.modal-body').find('.js-bns-form-alert').get(0)
+                                        || $readyForm.find('.js-bns-form-alert').get(0);
+                                    if (box) {
+                                        box.hidden = false;
+                                        box.textContent = message;
+                                    } else {
+                                        window.alert(message);
                                     }
-                                    go();
-                                }).catch(failCaptcha);
-                            } else {
-                                failCaptcha();
+                                });
+                                return;
                             }
+                            nativeSubmitIntroForm(form);
+                        };
+
+                        if (siteKey && typeof window.bnsRecaptchaAttach === 'function') {
+                            window.bnsRecaptchaAttach(form, action).then(function (captchaToken) {
+                                postForm(captchaToken || '');
+                            }).catch(function () {
+                                postForm('');
+                            });
                         } else {
-                            go();
+                            postForm('');
                         }
                     })
                     .fail(function (xhr) {

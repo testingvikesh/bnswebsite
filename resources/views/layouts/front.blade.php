@@ -594,9 +594,7 @@
     <script src="{{ bns_vasset('assets/js/jquery.magnific-popup.min.js') }}"></script>
     <script src="{{ bns_vasset('assets/js/jquery.validate.min.js') }}"></script>
     <script src="{{ bns_vasset('assets/js/bns-intro-session-form.js') }}"></script>
-    @if(filled(config('services.recaptcha.site_key')))
-        <script src="{{ bns_vasset('assets/js/bns-recaptcha-v3.js') }}"></script>
-    @endif
+    <script src="{{ bns_vasset('assets/js/bns-recaptcha-v3.js') }}"></script>
     <script src="{{ bns_vasset('assets/js/odometer.min.js') }}"></script>
     <script src="{{ bns_vasset('assets/js/wow.js') }}"></script>
     <script src="{{ bns_vasset('assets/js/owl.carousel.min.js') }}"></script>

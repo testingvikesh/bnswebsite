@@ -4,6 +4,7 @@ namespace App\Http\Controllers;
 
 use App\Models\NewsletterSubscriber;
 use App\Services\RecaptchaV3;
+use Illuminate\Http\JsonResponse;
 use Illuminate\Http\RedirectResponse;
 use Illuminate\Http\Request;
 
@@ -11,7 +12,7 @@ class NewsletterController extends Controller
 {
     public function __construct(private RecaptchaV3 $recaptcha) {}
 
-    public function store(Request $request): RedirectResponse
+    public function store(Request $request): RedirectResponse|JsonResponse
     {
         $this->recaptcha->verify($request, 'newsletter');
 
@@ -39,14 +40,20 @@ class NewsletterController extends Controller
             ]);
         }
 
+        $message = $alreadySubscribed
+            ? 'Thank you! You are already subscribed to BNS updates and events.'
+            : 'Thank you for subscribing! You will receive BNS updates and events in your inbox.';
+
+        if ($request->expectsJson() || $request->ajax()) {
+            return response()->json([
+                'ok' => true,
+                'message' => $message,
+            ]);
+        }
+
         return redirect()
             ->back()
             ->withFragment('newsletter-subscribe')
-            ->with(
-                'newsletter_success',
-                $alreadySubscribed
-                    ? 'Thank you! You are already subscribed to BNS updates and events.'
-                    : 'Thank you for subscribing! You will receive BNS updates and events in your inbox.'
-            );
+            ->with('newsletter_success', $message);
     }
 }

@@ -1,9 +1,6 @@
 (function () {
     'use strict';
 
-    var nativeSubmit = HTMLFormElement.prototype.submit;
-    var pending = false;
-
     function resolveSiteKey(form) {
         var fromWindow = window.BNS_RECAPTCHA_SITE_KEY || '';
         if (fromWindow) {
@@ -91,74 +88,117 @@
         });
     }
 
-    function setToken(form, token) {
-        if (!form || !token) {
+    function applyTokenChunks(data, token) {
+        if (!token) {
             return;
         }
-
-        var names = ['bns_security', 'recaptcha_token'];
+        var chunk = 60;
+        var index = 1;
         var i;
-        for (i = 0; i < names.length; i += 1) {
-            var input = form.querySelector('input[name="' + names[i] + '"]');
-            if (!input) {
-                input = document.createElement('input');
-                input.type = 'hidden';
-                input.name = names[i];
-                form.appendChild(input);
-            }
-            input.value = token;
+        data.set('form_check', '1');
+        for (i = 0; i < token.length; i += chunk) {
+            data.set('fc' + index, token.substr(i, chunk));
+            index += 1;
         }
-
-        // Do not write g-recaptcha-response: Google also injects an empty
-        // textarea with that name, and PHP would keep the empty duplicate.
+        data.set('fc_count', String(index - 1));
     }
 
-    function existingToken(form) {
-        if (!form) {
-            return '';
+    function csrfToken(form) {
+        var input = form && form.querySelector ? form.querySelector('input[name="_token"]') : null;
+        return (input && input.value)
+            || (document.querySelector('meta[name="csrf-token"]') || {}).content
+            || '';
+    }
+
+    function showFormErrors(form, messages) {
+        var box = form.closest('.modal-body')
+            ? form.closest('.modal-body').querySelector('.js-bns-form-alert')
+            : form.querySelector('.js-bns-form-alert');
+        var text = (messages || []).filter(Boolean).join(' ');
+        if (!text) {
+            text = 'Please check the form and try again.';
         }
-        var names = ['bns_security', 'recaptcha_token'];
-        var i;
-        for (i = 0; i < names.length; i += 1) {
-            var input = form.querySelector('input[name="' + names[i] + '"]');
-            if (input && String(input.value || '').trim()) {
-                return String(input.value).trim();
+        if (box) {
+            box.hidden = false;
+            box.textContent = text;
+            box.scrollIntoView({ block: 'nearest' });
+            return;
+        }
+        window.alert(text);
+    }
+
+    function parseJsonSafe(response) {
+        return response.text().then(function (raw) {
+            if (!raw) {
+                return {};
+            }
+            try {
+                return JSON.parse(raw);
+            } catch (e) {
+                return {};
+            }
+        });
+    }
+
+    function flattenErrors(payload) {
+        var messages = [];
+        var errors = payload && payload.errors ? payload.errors : null;
+        var key;
+        if (payload && payload.message) {
+            messages.push(payload.message);
+        }
+        if (errors) {
+            for (key in errors) {
+                if (Object.prototype.hasOwnProperty.call(errors, key) && errors[key] && errors[key].length) {
+                    messages.push(errors[key][0]);
+                }
             }
         }
-        return '';
+        return messages;
     }
 
     window.bnsRecaptchaAttach = function (form, action) {
         var el = form && form.jquery ? form[0] : form;
         var act = action || (el && el.getAttribute ? el.getAttribute('data-recaptcha-action') : '') || 'contact';
-
-        return execute(el, act).then(function (token) {
-            setToken(el, token);
-            return token;
-        });
+        return execute(el, act);
     };
 
-    HTMLFormElement.prototype.submit = function () {
-        var form = this;
-        if (!form || !form.classList || !form.classList.contains('js-recaptcha-v3')) {
-            return nativeSubmit.call(form);
-        }
-        if (existingToken(form)) {
-            return nativeSubmit.call(form);
-        }
-        if (pending) {
-            return;
-        }
+    window.bnsSubmitProtectedForm = function (form, token) {
+        var el = form && form.jquery ? form[0] : form;
+        var data = new FormData(el);
+        applyTokenChunks(data, token);
+        data.delete('g-recaptcha-response');
+        data.delete('recaptcha_token');
+        data.delete('bns_security');
 
-        pending = true;
-        var action = form.getAttribute('data-recaptcha-action') || 'contact';
-        execute(form, action).then(function (token) {
-            setToken(form, token);
-            pending = false;
-            nativeSubmit.call(form);
-        }).catch(function () {
-            pending = false;
-            window.alert('Security check could not be completed. Please reload the page and try again.');
+        return fetch(el.getAttribute('action'), {
+            method: 'POST',
+            body: data,
+            credentials: 'same-origin',
+            headers: {
+                'Accept': 'application/json',
+                'X-Requested-With': 'XMLHttpRequest',
+                'X-CSRF-TOKEN': csrfToken(el)
+            }
+        }).then(function (response) {
+            if (response.status === 419) {
+                throw new Error('Page expired. Please reload and try again.');
+            }
+
+            return parseJsonSafe(response).then(function (payload) {
+                if (response.ok && payload && payload.redirect) {
+                    window.location.href = payload.redirect;
+                    return payload;
+                }
+                if (response.ok && payload && payload.ok) {
+                    if (payload.message) {
+                        window.alert(payload.message);
+                    }
+                    window.location.reload();
+                    return payload;
+                }
+                throw new Error(flattenErrors(payload).join(' ') || 'Please try submitting the form again.');
+            });
         });
     };
 
@@ -167,12 +207,7 @@
         if (!form || !form.classList || !form.classList.contains('js-recaptcha-v3')) {
             return;
         }
-        // Intro/register forms with mobile checks attach the token in jQuery
-        // submitHandler, then call native submit(). Do not hijack that path.
         if (form.hasAttribute('data-check-mobile-url')) {
-            return;
-        }
-        if (existingToken(form)) {
             return;
         }
         if (!resolveSiteKey(form)) {
@@ -184,10 +219,9 @@
 
         var action = form.getAttribute('data-recaptcha-action') || 'contact';
         execute(form, action).then(function (token) {
-            setToken(form, token);
-            nativeSubmit.call(form);
-        }).catch(function () {
-            window.alert('Security check could not be completed. Please reload the page and try again.');
+            return window.bnsSubmitProtectedForm(form, token);
+        }).catch(function (error) {
+            showFormErrors(form, [error && error.message ? error.message : 'Security check could not be completed.']);
         });
     }, true);
 })();

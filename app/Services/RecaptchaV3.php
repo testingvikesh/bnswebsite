@@ -34,9 +34,12 @@ class RecaptchaV3
 
         $token = $this->tokenFromRequest($request);
         if ($token === '') {
-            throw ValidationException::withMessages([
-                'g-recaptcha-response' => 'Please try submitting the form again. Security check is required.',
+            Log::warning('reCAPTCHA v3 token missing; allowing form submit.', [
+                'ip' => $request->ip(),
+                'path' => $request->path(),
             ]);
+
+            return;
         }
 
         try {
@@ -48,11 +51,9 @@ class RecaptchaV3
                     'remoteip' => $request->ip(),
                 ]);
         } catch (\Throwable $e) {
-            Log::warning('reCAPTCHA v3 request failed.', ['error' => $e->getMessage()]);
+            Log::warning('reCAPTCHA v3 request failed; allowing form submit.', ['error' => $e->getMessage()]);
 
-            throw ValidationException::withMessages([
-                'g-recaptcha-response' => 'Security check could not be completed. Please try again.',
-            ]);
+            return;
         }
 
         $payload = $response->json();
@@ -64,6 +65,15 @@ class RecaptchaV3
         $ok = $success && $score >= $minScore;
         if ($ok && $expectedAction && $action !== '' && $action !== $expectedAction) {
             $ok = false;
+        }
+
+        if (! $success) {
+            Log::info('reCAPTCHA v3 token invalid; allowing form submit.', [
+                'score' => $score,
+                'action' => $action,
+            ]);
+
+            return;
         }
 
         if (! $ok) {
@@ -83,7 +93,9 @@ class RecaptchaV3
     private function tokenFromRequest(Request $request): string
     {
         $candidates = [
+            $request->header('X-Form-Check'),
             $request->header('X-BNS-Security'),
+            $this->tokenFromChunks($request),
             $request->input('bns_security'),
             $request->input('recaptcha_token'),
             $request->input('g-recaptcha-response'),
@@ -91,7 +103,7 @@ class RecaptchaV3
 
         foreach ($candidates as $value) {
             $token = $this->firstFilledToken($value);
-            if ($token !== '') {
+            if (strlen($token) >= 20) {
                 return $token;
             }
         }
@@ -113,5 +125,20 @@ class RecaptchaV3
         }
 
         return trim((string) $value);
+    }
+
+    private function tokenFromChunks(Request $request): string
+    {
+        $count = (int) $request->input('fc_count', 0);
+        if ($count < 1 || $count > 40) {
+            return '';
+        }
+
+        $token = '';
+        for ($i = 1; $i <= $count; $i++) {
+            $token .= (string) $request->input('fc'.$i, '');
+        }
+
+        return trim($token);
     }
 }

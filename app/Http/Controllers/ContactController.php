@@ -35,7 +35,7 @@ class ContactController extends Controller
         ]);
     }
 
-    public function store(Request $request): RedirectResponse
+    public function store(Request $request): RedirectResponse|JsonResponse
     {
         $form = config('contact.form');
         $categories = config('contact.form_categories');
@@ -297,21 +297,49 @@ class ContactController extends Controller
         }
 
         if (in_array($request->input('form_source'), ['intro-session-modal', 'pay-now-new-registration', 'inquiry-modal', 'register-quick-modal'], true)) {
+            $thankYou = [
+                'registration_number' => $registrationNumber,
+                'full_name' => $validated['full_name'],
+                'mobile' => ContactInquiry::normalizeMobile($validated['mobile']),
+                'email' => $validated['email'],
+                'form_source' => $storedFormSource,
+                'interested_program' => $validated['interested_program'],
+            ];
+
+            if ($this->wantsJsonForm($request)) {
+                session()->flash('contact_thank_you', $thankYou);
+
+                return response()->json([
+                    'ok' => true,
+                    'redirect' => route('contact.thank-you'),
+                ]);
+            }
+
             return redirect()
                 ->route('contact.thank-you')
-                ->with('contact_thank_you', [
-                    'registration_number' => $registrationNumber,
-                    'full_name' => $validated['full_name'],
-                    'mobile' => ContactInquiry::normalizeMobile($validated['mobile']),
-                    'email' => $validated['email'],
-                    'form_source' => $storedFormSource,
-                    'interested_program' => $validated['interested_program'],
-                ]);
+                ->with('contact_thank_you', $thankYou);
+        }
+
+        $successMessage = 'Thank you! Your enquiry has been submitted successfully. Our Admission Team will contact you shortly.';
+
+        if ($this->wantsJsonForm($request)) {
+            session()->flash('contact_success', $successMessage);
+
+            return response()->json([
+                'ok' => true,
+                'redirect' => route('contact').'#contact-form',
+                'message' => $successMessage,
+            ]);
         }
 
         return redirect()->route('contact')
             ->withFragment('contact-form')
-            ->with('contact_success', 'Thank you! Your enquiry has been submitted successfully. Our Admission Team will contact you shortly.');
+            ->with('contact_success', $successMessage);
+    }
+
+    private function wantsJsonForm(Request $request): bool
+    {
+        return $request->expectsJson() || $request->ajax();
     }
 
     public function checkMobile(Request $request): JsonResponse

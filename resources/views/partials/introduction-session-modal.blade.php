@@ -40,20 +40,13 @@
             <div class="modal-body">
                 <p class="bns-intro-session-modal__intro">{!! bns_rich_text($introSessionPage['intro'] ?? 'Attend a free introduction session to understand our programs, faculty, learning methodology, and outcomes.') !!}</p>
 
-                @if(($errors->any() && old('form_source') === 'intro-session-modal') || (session('error') && old('form_source') === 'intro-session-modal'))
-                    <div class="alert alert-danger bns-intro-session-modal__alert" role="alert">
-                        @if(session('error'))
-                            <p class="mb-0">{{ session('error') }}</p>
-                        @endif
-                        @if($errors->any() && old('form_source') === 'intro-session-modal')
-                            <ul class="mb-0 ps-3">
-                                @foreach($errors->all() as $error)
-                                    <li>{{ $error }}</li>
-                                @endforeach
-                            </ul>
-                        @endif
-                    </div>
-                @endif
+                <div class="alert alert-danger bns-intro-session-modal__alert js-bns-form-alert" role="alert" @if(!($errors->any() && old('form_source') === 'intro-session-modal') && !(session('error') && old('form_source') === 'intro-session-modal')) hidden @endif>
+                    @if(session('error') && old('form_source') === 'intro-session-modal')
+                        {{ session('error') }}
+                    @elseif($errors->any() && old('form_source') === 'intro-session-modal')
+                        {{ $errors->first() }}
+                    @endif
+                </div>
 
                 @include('partials.introduction-session-form', [
                     'intro' => $intro,
