@@ -95,6 +95,23 @@
             margin-left: 0;
             margin-top: 0;
         }
+        .bns-recaptcha-note {
+            margin: 10px 0 0;
+            font-size: 0.72rem;
+            line-height: 1.45;
+            color: #64748b;
+        }
+        .bns-recaptcha-note a {
+            color: inherit;
+            text-decoration: underline;
+        }
+        .grecaptcha-badge {
+            z-index: 1040 !important;
+            bottom: 88px !important;
+        }
+        body.has-bns-sticky-cta .grecaptcha-badge {
+            bottom: 120px !important;
+        }
         .site-footer__top-inner {
             padding: 54px 0 50px;
         }
@@ -573,6 +590,11 @@
     <script src="{{ bns_vasset('assets/js/jquery.magnific-popup.min.js') }}"></script>
     <script src="{{ bns_vasset('assets/js/jquery.validate.min.js') }}"></script>
     <script src="{{ bns_vasset('assets/js/bns-intro-session-form.js') }}"></script>
+    @if(filled(config('services.recaptcha.site_key')))
+        <script>window.BNS_RECAPTCHA_SITE_KEY = @json(config('services.recaptcha.site_key'));</script>
+        <script src="https://www.google.com/recaptcha/api.js?render={{ config('services.recaptcha.site_key') }}"></script>
+        <script src="{{ bns_vasset('assets/js/bns-recaptcha-v3.js') }}"></script>
+    @endif
     <script src="{{ bns_vasset('assets/js/odometer.min.js') }}"></script>
     <script src="{{ bns_vasset('assets/js/wow.js') }}"></script>
     <script src="{{ bns_vasset('assets/js/owl.carousel.min.js') }}"></script>

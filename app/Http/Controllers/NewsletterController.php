@@ -3,13 +3,18 @@
 namespace App\Http\Controllers;
 
 use App\Models\NewsletterSubscriber;
+use App\Services\RecaptchaV3;
 use Illuminate\Http\RedirectResponse;
 use Illuminate\Http\Request;
 
 class NewsletterController extends Controller
 {
+    public function __construct(private RecaptchaV3 $recaptcha) {}
+
     public function store(Request $request): RedirectResponse
     {
+        $this->recaptcha->verify($request, 'newsletter');
+
         $validated = $request->validate([
             'email' => ['required', 'email', 'max:255'],
             'agree' => ['accepted'],

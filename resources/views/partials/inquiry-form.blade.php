@@ -9,8 +9,9 @@
 <form
     method="POST"
     action="{{ route('contact.store', [], false) }}"
-    class="bns-intro-session-form bns-audience-intro-form bns-inquiry-form"
+    class="bns-intro-session-form bns-audience-intro-form bns-inquiry-form js-recaptcha-v3"
     id="{{ $formId }}"
+    data-recaptcha-action="inquiry"
 >
     @csrf
     <input type="hidden" name="form_source" value="inquiry-modal">
@@ -59,4 +60,6 @@
     <button type="submit" class="thm-btn bns-intro-session-form__btn">
         Submit Inquiry <span class="fas fa-paper-plane"></span>
     </button>
+
+    @include('partials.recaptcha-v3')
 </form>

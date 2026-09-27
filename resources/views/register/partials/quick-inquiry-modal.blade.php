@@ -32,8 +32,9 @@
                 <form
                     method="POST"
                     action="{{ route('contact.store') }}"
-                    class="bns-register-quick-form"
+                    class="bns-register-quick-form js-recaptcha-v3"
                     id="bnsRegisterQuickForm"
+                    data-recaptcha-action="book_spot"
                 >
                     @csrf
                     <input type="hidden" name="form_source" value="register-quick-modal">
@@ -88,6 +89,8 @@
                             Complete full admission form
                         </button>
                     </div>
+
+                    @include('partials.recaptcha-v3')
 
                     <div class="bns-register-quick-form__combo" id="bnsRegisterQuickCombo" hidden>
                         <p class="bns-register-quick-form__combo-label">Or jump straight to the detailed application:</p>

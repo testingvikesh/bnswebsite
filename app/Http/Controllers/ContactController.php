@@ -6,6 +6,7 @@ use App\Models\ContactInquiry;
 use App\Services\ContactPageService;
 use App\Services\ContactThankYouService;
 use App\Services\IntroSessionConfirmationMailer;
+use App\Services\RecaptchaV3;
 use App\Services\TestRegistrationPurgeService;
 use Illuminate\Http\JsonResponse;
 use Illuminate\Http\RedirectResponse;
@@ -20,6 +21,7 @@ class ContactController extends Controller
         private ContactThankYouService $contactThankYou,
         private IntroSessionConfirmationMailer $introSessionMailer,
         private TestRegistrationPurgeService $testPurge,
+        private RecaptchaV3 $recaptcha,
     ) {}
 
     public function index(Request $request): View
@@ -45,6 +47,8 @@ class ContactController extends Controller
         }
 
         $isIntroSessionSource = in_array($formSource, ['intro-session-modal', 'pay-now-new-registration'], true);
+
+        $this->recaptcha->verify($request, $this->recaptcha->actionForFormSource($formSource));
 
         $mobileRules = [
             'required',

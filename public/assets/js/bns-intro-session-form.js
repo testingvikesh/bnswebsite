@@ -396,8 +396,23 @@
                             return;
                         }
 
-                        // Already validated — keep loader visible, then POST.
-                        nativeSubmitIntroForm(form);
+                        // Already validated — keep loader visible, then attach reCAPTCHA v3 and POST.
+                        var action = $readyForm.attr('data-recaptcha-action') || 'intro_session';
+                        var go = function () {
+                            nativeSubmitIntroForm(form);
+                        };
+                        var failCaptcha = function () {
+                            $readyForm.removeData('bnsSubmitting');
+                            setIntroFormSubmitting($readyForm, false);
+                            $readyForm.find('.bns-intro-session-form__btn').prop('disabled', false);
+                            window.alert('Security check could not be completed. Please reload the page and try again.');
+                        };
+
+                        if (window.bnsRecaptchaAttach && typeof window.bnsRecaptchaAttach === 'function') {
+                            window.bnsRecaptchaAttach(form, action).then(go).catch(failCaptcha);
+                        } else {
+                            go();
+                        }
                     })
                     .fail(function (xhr) {
                         $readyForm.removeData('bnsSubmitting');

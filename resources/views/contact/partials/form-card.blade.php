@@ -17,7 +17,7 @@
         @if(!empty($fc['intro']))<p class="bns-contact-form__intro">{!! bns_rich_text($fc['intro']) !!}</p>@endif
     </div>
 
-    <form method="POST" action="{{ route('contact.store') }}" class="bns-contact-form bns-contact-form--compact">
+    <form method="POST" action="{{ route('contact.store') }}" class="bns-contact-form bns-contact-form--compact js-recaptcha-v3" data-recaptcha-action="contact">
         @csrf
         <input type="hidden" name="form_source" value="contact-page">
         <input type="hidden" name="interested_program" class="js-audience-interested-program" value="{{ old('interested_program', $defaultProgram) }}">
@@ -63,6 +63,7 @@
 
         <div class="bns-contact-form__actions">
             <button type="submit" class="bns-contact-btn bns-contact-btn--primary">Submit Enquiry</button>
+            @include('partials.recaptcha-v3')
         </div>
     </form>
 </div>

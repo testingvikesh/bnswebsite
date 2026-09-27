@@ -12,8 +12,9 @@
 <form
     method="POST"
     action="{{ route('contact.store', [], false) }}"
-    class="bns-intro-session-form bns-audience-intro-form"
+    class="bns-intro-session-form bns-audience-intro-form js-recaptcha-v3"
     id="{{ $formId }}"
+    data-recaptcha-action="intro_session"
     data-check-mobile-url="{{ route('contact.check-mobile', [], false) }}"
     data-check-email-url="{{ route('contact.check-email', [], false) }}"
     data-csrf-url="{{ route('csrf-token', [], false) }}"
@@ -95,6 +96,8 @@
             <span>Submitting...</span>
         </span>
     </button>
+
+    @include('partials.recaptcha-v3')
 </form>
 
 <style>

@@ -15,8 +15,9 @@
 <form
     method="POST"
     action="{{ $formAction }}"
-    class="bns-intro-session-form bns-audience-intro-form bns-quick-register-form"
+    class="bns-intro-session-form bns-audience-intro-form bns-quick-register-form js-recaptcha-v3"
     id="{{ $formId }}"
+    data-recaptcha-action="book_spot"
 >
     @csrf
     <input type="hidden" name="form_source" value="{{ $formSource }}">
@@ -88,4 +89,6 @@
     <button type="submit" class="thm-btn bns-intro-session-form__btn">
         {{ $submitLabel }} <span class="fas fa-arrow-right"></span>
     </button>
+
+    @include('partials.recaptcha-v3')
 </form>

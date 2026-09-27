@@ -73,7 +73,7 @@
                                 </div>
                             @endif
 
-                            <form class="site-footer__newsletter-form" action="{{ route('newsletter.subscribe') }}" method="post">
+                            <form class="site-footer__newsletter-form js-recaptcha-v3" action="{{ route('newsletter.subscribe') }}" method="post" data-recaptcha-action="newsletter">
                                 @csrf
                                 <div class="site-footer__newsletter-input">
                                     <input
@@ -96,6 +96,7 @@
                                         <span class="fas fa-paper-plane"></span>
                                     </button>
                                 </div>
+                                @include('partials.recaptcha-v3')
                             </form>
                         </div>
                     </div>
