@@ -14,6 +14,13 @@ jobs:
     runs-on: ubuntu-latest
 
     steps:
+      - name: Checkout deploy scripts
+        uses: actions/checkout@v4
+        with:
+          fetch-depth: 1
+          sparse-checkout: scripts
+          sparse-checkout-cone-mode: false
+
       - name: Pull main on live server
         id: ssh_deploy
         continue-on-error: true
@@ -27,24 +34,7 @@ jobs:
           timeout: 60s
           command_timeout: 10m
           envs: GH_TOKEN
-          script: |
-            set -e
-            APP_USER="businessnavachar"
-            APP_DIR="/home/${APP_USER}/bnswebsite"
-            echo "SSH user=$(whoami)"
-
-            git config --global --add safe.directory "$APP_DIR" || true
-
-            PULL_CMD="cd '$APP_DIR' && git fetch --depth=1 https://x-access-token:${GH_TOKEN}@github.com/testingvikesh/bnswebsite.git main && git reset --hard FETCH_HEAD && php artisan optimize:clear && git log -1 --oneline"
-
-            if [ "$(id -u)" = "0" ]; then
-              sudo -u "$APP_USER" -H env GH_TOKEN="$GH_TOKEN" bash -lc "$PULL_CMD"
-              chown -R "${APP_USER}:${APP_USER}" "$APP_DIR" || true
-            else
-              bash -lc "$PULL_CMD"
-            fi
-
-            echo "Deploy finished"
+          script_path: scripts/remote-pull.sh
 
       - name: Retry pull if first SSH attempt failed
         if: steps.ssh_deploy.outcome == 'failure'
@@ -58,21 +48,4 @@ jobs:
           timeout: 120s
           command_timeout: 10m
           envs: GH_TOKEN
-          script: |
-            set -e
-            APP_USER="businessnavachar"
-            APP_DIR="/home/${APP_USER}/bnswebsite"
-            echo "SSH user=$(whoami)"
-
-            git config --global --add safe.directory "$APP_DIR" || true
-
-            PULL_CMD="cd '$APP_DIR' && git fetch --depth=1 https://x-access-token:${GH_TOKEN}@github.com/testingvikesh/bnswebsite.git main && git reset --hard FETCH_HEAD && php artisan optimize:clear && git log -1 --oneline"
-
-            if [ "$(id -u)" = "0" ]; then
-              sudo -u "$APP_USER" -H env GH_TOKEN="$GH_TOKEN" bash -lc "$PULL_CMD"
-              chown -R "${APP_USER}:${APP_USER}" "$APP_DIR" || true
-            else
-              bash -lc "$PULL_CMD"
-            fi
-
-            echo "Deploy finished"
+          script_path: scripts/remote-pull.sh
