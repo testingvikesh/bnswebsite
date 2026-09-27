@@ -32,7 +32,11 @@ class RecaptchaV3
             return;
         }
 
-        $token = trim((string) $request->input('g-recaptcha-response', ''));
+        $token = trim((string) (
+            $request->input('g-recaptcha-response')
+            ?: $request->input('recaptcha_token')
+            ?: ''
+        ));
         if ($token === '') {
             throw ValidationException::withMessages([
                 'g-recaptcha-response' => 'Please try submitting the form again. Security check is required.',

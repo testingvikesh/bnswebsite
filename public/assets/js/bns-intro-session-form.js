@@ -408,8 +408,18 @@
                             window.alert('Security check could not be completed. Please reload the page and try again.');
                         };
 
-                        if (window.bnsRecaptchaAttach && typeof window.bnsRecaptchaAttach === 'function') {
-                            window.bnsRecaptchaAttach(form, action).then(go).catch(failCaptcha);
+                        if (window.BNS_RECAPTCHA_SITE_KEY) {
+                            if (window.bnsRecaptchaAttach && typeof window.bnsRecaptchaAttach === 'function') {
+                                window.bnsRecaptchaAttach(form, action).then(function (captchaToken) {
+                                    if (!captchaToken) {
+                                        failCaptcha();
+                                        return;
+                                    }
+                                    go();
+                                }).catch(failCaptcha);
+                            } else {
+                                failCaptcha();
+                            }
                         } else {
                             go();
                         }

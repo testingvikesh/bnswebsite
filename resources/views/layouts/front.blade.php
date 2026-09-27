@@ -53,6 +53,10 @@
     <link rel="stylesheet" href="{{ bns_vasset('assets/css/page-header-bns.css') }}" />
     @stack('head')
     @stack('styles')
+    @if(filled(config('services.recaptcha.site_key')))
+        <script>window.BNS_RECAPTCHA_SITE_KEY = @json(config('services.recaptcha.site_key'));</script>
+        <script src="https://www.google.com/recaptcha/api.js?render={{ config('services.recaptcha.site_key') }}"></script>
+    @endif
     <style>
         body[data-bns-open-intro-session="1"] .js-preloader,
         body[data-bns-open-quick-register="1"] .js-preloader {
@@ -591,8 +595,6 @@
     <script src="{{ bns_vasset('assets/js/jquery.validate.min.js') }}"></script>
     <script src="{{ bns_vasset('assets/js/bns-intro-session-form.js') }}"></script>
     @if(filled(config('services.recaptcha.site_key')))
-        <script>window.BNS_RECAPTCHA_SITE_KEY = @json(config('services.recaptcha.site_key'));</script>
-        <script src="https://www.google.com/recaptcha/api.js?render={{ config('services.recaptcha.site_key') }}"></script>
         <script src="{{ bns_vasset('assets/js/bns-recaptcha-v3.js') }}"></script>
     @endif
     <script src="{{ bns_vasset('assets/js/odometer.min.js') }}"></script>
