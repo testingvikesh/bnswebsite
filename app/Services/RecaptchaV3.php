@@ -32,11 +32,7 @@ class RecaptchaV3
             return;
         }
 
-        $token = trim((string) (
-            $request->input('g-recaptcha-response')
-            ?: $request->input('recaptcha_token')
-            ?: ''
-        ));
+        $token = $this->tokenFromRequest($request);
         if ($token === '') {
             throw ValidationException::withMessages([
                 'g-recaptcha-response' => 'Please try submitting the form again. Security check is required.',
@@ -82,5 +78,40 @@ class RecaptchaV3
                 'g-recaptcha-response' => 'Security check failed. Please reload the page and try again.',
             ]);
         }
+    }
+
+    private function tokenFromRequest(Request $request): string
+    {
+        $candidates = [
+            $request->header('X-BNS-Security'),
+            $request->input('bns_security'),
+            $request->input('recaptcha_token'),
+            $request->input('g-recaptcha-response'),
+        ];
+
+        foreach ($candidates as $value) {
+            $token = $this->firstFilledToken($value);
+            if ($token !== '') {
+                return $token;
+            }
+        }
+
+        return '';
+    }
+
+    private function firstFilledToken(mixed $value): string
+    {
+        if (is_array($value)) {
+            foreach ($value as $item) {
+                $token = $this->firstFilledToken($item);
+                if ($token !== '') {
+                    return $token;
+                }
+            }
+
+            return '';
+        }
+
+        return trim((string) $value);
     }
 }

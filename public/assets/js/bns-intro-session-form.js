@@ -407,9 +407,14 @@
                             $readyForm.find('.bns-intro-session-form__btn').prop('disabled', false);
                             window.alert('Security check could not be completed. Please reload the page and try again.');
                         };
+                        var needsCaptcha = $readyForm.hasClass('js-recaptcha-v3') && (
+                            window.BNS_RECAPTCHA_SITE_KEY
+                            || $readyForm.find('[data-recaptcha-site-key]').attr('data-recaptcha-site-key')
+                            || typeof window.bnsRecaptchaAttach === 'function'
+                        );
 
-                        if (window.BNS_RECAPTCHA_SITE_KEY) {
-                            if (window.bnsRecaptchaAttach && typeof window.bnsRecaptchaAttach === 'function') {
+                        if (needsCaptcha) {
+                            if (typeof window.bnsRecaptchaAttach === 'function') {
                                 window.bnsRecaptchaAttach(form, action).then(function (captchaToken) {
                                     if (!captchaToken) {
                                         failCaptcha();
