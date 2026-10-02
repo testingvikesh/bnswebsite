@@ -889,7 +889,9 @@ body.video-open {
 
 .mentor-pitch-action {
   display: flex;
+  flex-wrap: wrap;
   justify-content: center;
+  gap: 12px;
   margin-top: 28px;
   padding-top: 8px;
 }
