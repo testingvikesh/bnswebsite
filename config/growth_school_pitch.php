@@ -21,7 +21,7 @@ return [
         ['icon' => 'fa-calendar-alt', 'value' => '1 Year', 'label' => 'Duration'],
         ['icon' => 'fa-chalkboard-teacher', 'value' => '100', 'label' => 'Business Sessions'],
         ['icon' => 'fa-users', 'value' => '100', 'label' => 'Learners / Batch'],
-        ['icon' => 'fa-rupee-sign', 'value' => '₹10,000 – ₹15,000', 'label' => 'Today'],
+        ['icon' => 'fa-rupee-sign', 'value' => '₹15,000', 'label' => 'Today'],
         ['icon' => 'fa-chart-line', 'value' => '₹80,000', 'label' => 'In Future'],
     ],
 
@@ -655,10 +655,10 @@ return [
                     ['🤝 Community', '<strong>Business Community</strong>'],
                     ['🌐 Vision', '<strong>Business Ecosystem</strong>'],
                     ['🇮🇳 Reach', '<strong>India-Wide Community Vision</strong>'],
-                    ['💰 Membership Contribution', '<strong>₹10,000 – ₹15,000 Today And ₹80,000 In Future</strong>'],
+                    ['💰 Membership Contribution', '<strong>₹15,000 Today And ₹80,000 In Future</strong>'],
                 ],
             ],
-            'chips' => ['₹10,000 – ₹15,000 Today And ₹80,000 In Future'],
+            'chips' => ['₹15,000 Today And ₹80,000 In Future'],
         ],
 
         [
@@ -752,7 +752,7 @@ return [
                     ['🚀 Incubation', '<strong>Government Grant Support Ecosystem</strong>'],
                     ['🌎 Network', '<strong>Inter-Business Network</strong>'],
                     ['🇮🇳 Vision', '<strong>India-Wide Business Community</strong>'],
-                    ['💰 Membership Contribution', '<strong>₹10,000 – ₹15,000 Today And ₹80,000 In Future</strong>'],
+                    ['💰 Membership Contribution', '<strong>₹15,000 Today And ₹80,000 In Future</strong>'],
                 ],
             ],
             'banners' => [
