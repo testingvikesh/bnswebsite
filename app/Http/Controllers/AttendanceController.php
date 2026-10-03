@@ -5,6 +5,7 @@ namespace App\Http\Controllers;
 use App\Models\ContactInquiry;
 use App\Models\SessionAttendance;
 use App\Services\AttendanceConfirmationMailer;
+use App\Services\CrmAttendanceSync;
 use App\Services\IntroSessionConfirmationMailer;
 use App\Services\RegistrationPaymentService;
 use App\Services\TestRegistrationPurgeService;
@@ -265,6 +266,8 @@ class AttendanceController extends Controller
         ]);
 
         $this->mailer->send($attendance);
+
+        app(CrmAttendanceSync::class)->markPresentForInquiry($inquiry, $sessionNumber);
 
         return response()->json([
             'ok' => true,

@@ -125,6 +125,8 @@ class AttendanceModuleService
             return $attendance;
         });
 
+        app(CrmAttendanceSync::class)->markPresentForInquiry($inquiry, (int) $invite->session_number);
+
         return [
             'ok' => true,
             'message' => 'Attendance marked present successfully.',
@@ -134,7 +136,7 @@ class AttendanceModuleService
 
     public function markPresent(ContactInquiry $inquiry, int $sessionNumber, string $via = 'admin'): SessionAttendance
     {
-        return SessionAttendance::query()->updateOrCreate(
+        $attendance = SessionAttendance::query()->updateOrCreate(
             [
                 'contact_inquiry_id' => $inquiry->id,
                 'session_number' => $sessionNumber,
@@ -152,6 +154,10 @@ class AttendanceModuleService
                 'user_agent' => substr((string) request()->userAgent(), 0, 500),
             ]
         );
+
+        app(CrmAttendanceSync::class)->markPresentForInquiry($inquiry, $sessionNumber);
+
+        return $attendance;
     }
 
     public function markAbsent(ContactInquiry $inquiry, int $sessionNumber): void
@@ -166,5 +172,7 @@ class AttendanceModuleService
             ->where('session_number', $sessionNumber)
             ->where('status', AttendanceQrInvite::STATUS_PENDING)
             ->update(['status' => AttendanceQrInvite::STATUS_REVOKED]);
+
+        app(CrmAttendanceSync::class)->markAbsentForInquiry($inquiry, $sessionNumber);
     }
 }

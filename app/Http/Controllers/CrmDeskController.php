@@ -4,6 +4,7 @@ namespace App\Http\Controllers;
 
 use App\Models\CrmAssignment;
 use App\Models\CrmFollowup;
+use App\Services\CrmAttendanceSync;
 use App\Services\HomeImageService;
 use App\Support\CrmLeadStatus;
 use App\Support\CrmPortal;
@@ -15,7 +16,10 @@ use Illuminate\View\View;
 
 class CrmDeskController extends Controller
 {
-    public function __construct(private HomeImageService $homeImages) {}
+    public function __construct(
+        private HomeImageService $homeImages,
+        private CrmAttendanceSync $attendanceSync,
+    ) {}
 
     public function index(Request $request): View|RedirectResponse
     {
@@ -124,6 +128,7 @@ class CrmDeskController extends Controller
     {
         $this->assertOwns($request, $assignment);
         $assignment->load(['inquiry', 'followups', 'employee']);
+        $this->attendanceSync->syncCollection(collect([$assignment]));
 
         if (! CrmPortal::isAdmin($request) && CrmLeadStatus::isConfirmed($assignment->inquiry)) {
             return redirect()
@@ -239,7 +244,7 @@ class CrmDeskController extends Controller
 
         CrmLeadStatus::excludeConfirmed($query);
 
-        return $query->get();
+        return $this->attendanceSync->syncCollection($query->get());
     }
 
     /**

@@ -7,6 +7,7 @@ use App\Models\ContactInquiry;
 use App\Models\SessionAttendance;
 use App\Models\User;
 use App\Services\AttendanceConfirmationMailer;
+use App\Services\CrmAttendanceSync;
 use Illuminate\Database\Eloquent\Builder;
 use Illuminate\Http\JsonResponse;
 use Illuminate\Http\Request;
@@ -122,6 +123,8 @@ class InstituteAttendanceController extends Controller
         ]);
 
         $this->mailer->send($attendance);
+
+        app(CrmAttendanceSync::class)->markPresentForInquiry($inquiry, $sessionNumber);
 
         return response()->json([
             'ok' => true,

@@ -9,6 +9,7 @@ use App\Models\CrmFollowup;
 use App\Models\CrmSpotAdmission;
 use App\Models\SessionAttendance;
 use App\Services\CrmAllocationService;
+use App\Services\CrmAttendanceSync;
 use App\Services\HomeImageService;
 use App\Support\CrmLeadStatus;
 use App\Support\CrmPortal;
@@ -24,7 +25,10 @@ use Illuminate\View\View;
 
 class CrmController extends Controller
 {
-    public function __construct(private HomeImageService $homeImages) {}
+    public function __construct(
+        private HomeImageService $homeImages,
+        private CrmAttendanceSync $attendanceSync,
+    ) {}
 
     public function loginForm(Request $request): View|RedirectResponse
     {
@@ -455,6 +459,11 @@ class CrmController extends Controller
             return back()->withErrors(['crm_employee_id' => 'Select an active employee.']);
         }
 
+        $member = ContactInquiry::query()->find($validated['contact_inquiry_id']);
+        $liveStatus = $member
+            ? $this->attendanceSync->liveStatus($member, $sessionNo)
+            : $validated['attendance_status'];
+
         CrmAssignment::query()->updateOrCreate(
             [
                 'contact_inquiry_id' => (int) $validated['contact_inquiry_id'],
@@ -462,12 +471,10 @@ class CrmController extends Controller
             ],
             [
                 'crm_employee_id' => $employee->id,
-                'attendance_status' => $validated['attendance_status'],
+                'attendance_status' => $liveStatus,
                 'assigned_at' => now(),
             ]
         );
-
-        $member = ContactInquiry::query()->find($validated['contact_inquiry_id']);
         $name = $member?->full_name ?: 'Member';
 
         return back()->with('status', $name.' assigned to '.$employee->name.'.');
@@ -581,13 +588,13 @@ class CrmController extends Controller
 
             $inquiryId = (int) $parts[0];
             $sessionNo = (int) $parts[1];
-            $status = $parts[2] === 'absent' ? 'absent' : 'present';
 
             if ($inquiryId < 1 || ! in_array($sessionNo, $allowed, true)) {
                 continue;
             }
 
-            if (! ContactInquiry::query()->whereKey($inquiryId)->exists()) {
+            $member = ContactInquiry::query()->find($inquiryId);
+            if (! $member) {
                 continue;
             }
 
@@ -598,7 +605,7 @@ class CrmController extends Controller
                 ],
                 [
                     'crm_employee_id' => $employee->id,
-                    'attendance_status' => $status,
+                    'attendance_status' => $this->attendanceSync->liveStatus($member, $sessionNo),
                     'assigned_at' => now(),
                 ]
             );
