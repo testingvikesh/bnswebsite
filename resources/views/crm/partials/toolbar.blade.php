@@ -46,9 +46,14 @@
                 <i class="fas fa-chart-line" aria-hidden="true"></i> Reporting
             </a>
         @else
-            <a href="{{ route('crm.desk') }}" class="bns-mail-toolbar__link{{ ($active ?? '') === 'desk' ? ' is-active' : '' }}">
-                <i class="fas fa-phone" aria-hidden="true"></i> Call List
+            <a href="{{ route('crm.desk') }}" class="bns-mail-toolbar__link{{ ($active ?? '') === 'desk' && (int) $sessionNo === 0 ? ' is-active' : '' }}">
+                <i class="fas fa-th-large" aria-hidden="true"></i> All Sessions
             </a>
+            @foreach(bns_intro_session_allowed_numbers() as $no)
+                <a href="{{ route('crm.desk.session', $no) }}" class="bns-mail-toolbar__link{{ ($active ?? '') === 'desk-session' && $sessionNo === $no ? ' is-active' : '' }}">
+                    S{{ $no }}
+                </a>
+            @endforeach
         @endif
         <a href="{{ route('crm.payments') }}" class="bns-mail-toolbar__link{{ ($active ?? '') === 'payments' ? ' is-active' : '' }}">
             <i class="fas fa-rupee-sign" aria-hidden="true"></i> Payment Done

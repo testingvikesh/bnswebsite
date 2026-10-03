@@ -39,6 +39,9 @@ Route::prefix('crm')->name('crm.')->group(function () {
         });
 
         Route::get('/desk', [CrmDeskController::class, 'index'])->name('desk');
+        Route::get('/desk/sessions/{session}', [CrmDeskController::class, 'session'])
+            ->whereNumber('session')
+            ->name('desk.session');
         Route::get('/desk/members/{assignment}', [CrmDeskController::class, 'show'])->name('desk.show');
         Route::post('/desk/members/{assignment}/followups/{followup}', [CrmDeskController::class, 'saveFollowup'])
             ->whereNumber('followup')

@@ -33,7 +33,7 @@
             @if(session('status'))
                 <div class="bns-mail-login__alert bns-mail-login__alert--ok">{{ session('status') }}</div>
             @endif
-            @include('crm.partials.toolbar', ['active' => $isAdmin ? 'session' : 'desk', 'isAdmin' => $isAdmin, 'employee' => $employee, 'sessionNo' => $assignment->session_number])
+            @include('crm.partials.toolbar', ['active' => $isAdmin ? 'session' : 'desk-session', 'isAdmin' => $isAdmin, 'employee' => $employee, 'sessionNo' => $assignment->session_number])
 
             <section class="bns-crm-list-card">
                 <div class="bns-crm-list-card__head">
@@ -55,7 +55,7 @@
                     @else
                         <span class="is-muted">No mobile number to call.</span>
                     @endif
-                    <a href="{{ $isAdmin ? route('crm.session', $assignment->session_number) : route('crm.desk') }}" class="bns-crm-search__reset">Back to list</a>
+                    <a href="{{ $isAdmin ? route('crm.session', $assignment->session_number) : route('crm.desk.session', $assignment->session_number) }}" class="bns-crm-search__reset">Back to list</a>
                 </div>
             </section>
 
