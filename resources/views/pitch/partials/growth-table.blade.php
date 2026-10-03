@@ -20,7 +20,14 @@
                 @foreach($rows as $row)
                     <tr>
                         @foreach($row as $cell)
-                            <td>{!! bns_rich_text($cell) !!}</td>
+                            @php($isFeeAmount = str_contains((string) $cell, '₹') || preg_match('/\bGST\b/i', (string) $cell))
+                            <td>
+                                @if($isFeeAmount)
+                                    @include('pitch.partials.fee-reveal', ['amount' => $cell])
+                                @else
+                                    {!! bns_rich_text($cell) !!}
+                                @endif
+                            </td>
                         @endforeach
                     </tr>
                 @endforeach

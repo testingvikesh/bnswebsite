@@ -779,6 +779,44 @@
     color: #0a1d37;
 }
 
+.bns-pitch-detail__highlight-card--fee .bns-fee-reveal {
+    flex-direction: column;
+    gap: 8px;
+    min-height: 2.4em;
+}
+
+.bns-pitch-detail__highlight-card--fee .bns-fee-reveal__toggle {
+    background: rgba(255, 255, 255, 0.12);
+    border-color: rgba(255, 255, 255, 0.22);
+    color: #fbbf24;
+    padding: 8px 12px;
+}
+
+.bns-pitch-detail__highlight-card--fee .bns-fee-reveal__toggle:hover,
+.bns-pitch-detail__highlight-card--fee .bns-fee-reveal__toggle:focus-visible {
+    background: rgba(255, 255, 255, 0.2);
+    border-color: rgba(251, 191, 36, 0.55);
+    color: #fde68a;
+}
+
+.bns-pitch-detail__highlight-card--fee .bns-fee-reveal__amount {
+    color: #fff;
+    font-size: clamp(1rem, 2vw, 1.28rem);
+    font-weight: 800;
+    line-height: 1.2;
+    text-align: center;
+}
+
+.bns-pitch-detail__chip--fee {
+    display: inline-flex;
+    align-items: center;
+    gap: 8px;
+}
+
+.bns-pitch-detail__chip--fee .bns-fee-reveal__amount {
+    color: inherit;
+}
+
 .bns-pitch-detail__table {
     width: 100%;
     border-collapse: collapse;

@@ -17,11 +17,19 @@
             @if(!empty($pitch['hero_highlights']))
                 <div class="bns-pitch-detail__highlights">
                     @foreach($pitch['hero_highlights'] as $highlight)
-                        <article class="bns-pitch-detail__highlight-card">
+                        @php($isFeeHighlight = str_contains((string) ($highlight['value'] ?? ''), '₹') || preg_match('/\bGST\b/i', (string) ($highlight['value'] ?? '')))
+                        <article class="bns-pitch-detail__highlight-card{{ $isFeeHighlight ? ' bns-pitch-detail__highlight-card--fee' : '' }}">
                             <span class="bns-pitch-detail__highlight-icon" aria-hidden="true">
                                 <i class="fas {{ $highlight['icon'] ?? 'fa-star' }}"></i>
                             </span>
-                            <strong>{{ $highlight['value'] ?? '' }}</strong>
+                            @if($isFeeHighlight)
+                                @include('pitch.partials.fee-reveal', [
+                                    'amount' => $highlight['value'] ?? '',
+                                    'variant' => 'highlight',
+                                ])
+                            @else
+                                <strong>{{ $highlight['value'] ?? '' }}</strong>
+                            @endif
                             <span>{{ $highlight['label'] ?? '' }}</span>
                         </article>
                     @endforeach

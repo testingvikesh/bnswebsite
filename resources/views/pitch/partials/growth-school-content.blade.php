@@ -19,11 +19,19 @@
             @if(!empty($pitch['hero_highlights']))
                 <div class="bns-pitch-detail__highlights">
                     @foreach($pitch['hero_highlights'] as $highlight)
-                        <article class="bns-pitch-detail__highlight-card">
+                        @php($isFeeHighlight = str_contains((string) ($highlight['value'] ?? ''), '₹') || preg_match('/\bGST\b/i', (string) ($highlight['value'] ?? '')))
+                        <article class="bns-pitch-detail__highlight-card{{ $isFeeHighlight ? ' bns-pitch-detail__highlight-card--fee' : '' }}">
                             <span class="bns-pitch-detail__highlight-icon" aria-hidden="true">
                                 <i class="fas {{ $highlight['icon'] ?? 'fa-star' }}"></i>
                             </span>
-                            <strong>{{ $highlight['value'] ?? '' }}</strong>
+                            @if($isFeeHighlight)
+                                @include('pitch.partials.fee-reveal', [
+                                    'amount' => $highlight['value'] ?? '',
+                                    'variant' => 'highlight',
+                                ])
+                            @else
+                                <strong>{{ $highlight['value'] ?? '' }}</strong>
+                            @endif
                             <span>{{ $highlight['label'] ?? '' }}</span>
                         </article>
                     @endforeach
@@ -102,7 +110,14 @@
                 @if(!empty($section['chips']))
                     <div class="bns-pitch-detail__chips">
                         @foreach($section['chips'] as $chip)
-                            <span class="bns-pitch-detail__chip">{{ $chip }}</span>
+                            @php($isFeeChip = str_contains((string) $chip, '₹') || preg_match('/\bGST\b/i', (string) $chip))
+                            <span class="bns-pitch-detail__chip{{ $isFeeChip ? ' bns-pitch-detail__chip--fee' : '' }}">
+                                @if($isFeeChip)
+                                    @include('pitch.partials.fee-reveal', ['amount' => $chip])
+                                @else
+                                    {{ $chip }}
+                                @endif
+                            </span>
                         @endforeach
                     </div>
                 @endif
