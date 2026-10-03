@@ -15,7 +15,7 @@
                 @foreach($section['points'] ?? $section['paragraphs'] ?? [] as $point)
                     <li class="bns-orientation-pitch__point">
                         <span class="bns-orientation-pitch__point-icon" aria-hidden="true"><i class="fas fa-circle"></i></span>
-                        <span class="bns-orientation-pitch__point-text">{!! bns_point_html($point) !!}</span>
+                        <span class="bns-orientation-pitch__point-text">{!! bns_point_html_hide_fees($point) !!}</span>
                     </li>
                 @endforeach
             </ul>
@@ -26,7 +26,7 @@
                 @foreach($section['bullets'] as $bullet)
                     <li class="bns-orientation-pitch__point">
                         <span class="bns-orientation-pitch__point-icon" aria-hidden="true"><i class="fas fa-circle"></i></span>
-                        <span class="bns-orientation-pitch__point-text">{!! bns_point_html($bullet) !!}</span>
+                        <span class="bns-orientation-pitch__point-text">{!! bns_point_html_hide_fees($bullet) !!}</span>
                     </li>
                 @endforeach
             </ul>
@@ -37,7 +37,7 @@
                 @foreach($section['footer_points'] as $point)
                     <li class="bns-orientation-pitch__point">
                         <span class="bns-orientation-pitch__point-icon" aria-hidden="true"><i class="fas fa-circle"></i></span>
-                        <span class="bns-orientation-pitch__point-text">{!! bns_point_html($point) !!}</span>
+                        <span class="bns-orientation-pitch__point-text">{!! bns_point_html_hide_fees($point) !!}</span>
                     </li>
                 @endforeach
             </ul>

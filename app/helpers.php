@@ -1022,6 +1022,62 @@ if (! function_exists('bns_point_html')) {
     }
 }
 
+if (! function_exists('bns_fee_reveal_html')) {
+    /**
+     * Build click-to-reveal markup for a fee amount.
+     */
+    function bns_fee_reveal_html(string $amount, string $variant = 'inline', bool $showHint = false): string
+    {
+        $amount = trim($amount);
+        if ($amount === '') {
+            return '';
+        }
+
+        $safeAmount = bns_rich_text($amount, false);
+        $hint = $showHint
+            ? '<span class="bns-fee-reveal__hint">Click to view</span>'
+            : '';
+
+        return '<span class="bns-fee-reveal bns-fee-reveal--'.e($variant).'" data-bns-fee-reveal>'
+            .'<button type="button" class="bns-fee-reveal__toggle" data-bns-fee-reveal-toggle aria-expanded="false" aria-label="Click to view fees">'
+            .'<i class="fas fa-eye" aria-hidden="true"></i>'
+            .$hint
+            .'</button>'
+            .'<span class="bns-fee-reveal__amount" data-bns-fee-reveal-amount hidden>'.$safeAmount.'</span>'
+            .'</span>';
+    }
+}
+
+if (! function_exists('bns_wrap_fee_reveals')) {
+    /**
+     * Hide rupee fee amounts behind the shared eye-icon reveal control.
+     */
+    function bns_wrap_fee_reveals(?string $html): string
+    {
+        if ($html === null || $html === '' || ! str_contains($html, '₹')) {
+            return (string) $html;
+        }
+
+        return preg_replace_callback(
+            '/₹\s*[\d,]+(?:\s*[\/–—-]\s*₹?\s*[\d,]+)?(?:\s*\+\s*GST)?/iu',
+            static fn (array $matches): string => bns_fee_reveal_html($matches[0]),
+            $html
+        ) ?? $html;
+    }
+}
+
+if (! function_exists('bns_point_html_hide_fees')) {
+    /**
+     * Render a list point and hide any fee amounts behind the eye icon.
+     *
+     * @param  array<string, mixed>|string|null  $item
+     */
+    function bns_point_html_hide_fees(array|string|null $item): string
+    {
+        return bns_wrap_fee_reveals(bns_point_html($item));
+    }
+}
+
 if (! function_exists('bns_youtube_thumbnail_url')) {
     function bns_youtube_thumbnail_url(?string $url): string
     {

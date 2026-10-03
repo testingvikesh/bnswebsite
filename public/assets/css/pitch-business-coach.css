@@ -817,6 +817,19 @@
     color: inherit;
 }
 
+.bns-fee-reveal--inline,
+.bns-pitch-detail__point-text .bns-fee-reveal {
+    display: inline-flex;
+    align-items: center;
+    gap: 6px;
+    vertical-align: middle;
+}
+
+.bns-pitch-detail__point-text .bns-fee-reveal__toggle {
+    padding: 4px 8px;
+    font-size: 0.8rem;
+}
+
 .bns-pitch-detail__table {
     width: 100%;
     border-collapse: collapse;

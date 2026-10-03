@@ -393,14 +393,17 @@
     font-size: 0.8rem;
 }
 
-.bns-orientation-pitch__school-types .bns-fee-reveal {
+.bns-orientation-pitch__school-types .bns-fee-reveal,
+.bns-orientation-pitch__point-text .bns-fee-reveal {
     display: inline-flex;
     align-items: center;
     gap: 8px;
     min-height: 1.5em;
+    vertical-align: middle;
 }
 
-.bns-orientation-pitch__school-types .bns-fee-reveal__toggle {
+.bns-orientation-pitch__school-types .bns-fee-reveal__toggle,
+.bns-orientation-pitch__point-text .bns-fee-reveal__toggle {
     display: inline-flex;
     align-items: center;
     gap: 6px;
@@ -415,6 +418,22 @@
     font-weight: 600;
     line-height: 1.2;
     cursor: pointer;
+}
+
+.bns-orientation-pitch__school-types .bns-fee-reveal__toggle:hover,
+.bns-orientation-pitch__school-types .bns-fee-reveal__toggle:focus-visible,
+.bns-orientation-pitch__point-text .bns-fee-reveal__toggle:hover,
+.bns-orientation-pitch__point-text .bns-fee-reveal__toggle:focus-visible {
+    background: #ffedd5;
+    border-color: rgba(194, 65, 12, 0.35);
+    color: #9a3412;
+    outline: none;
+}
+
+.bns-orientation-pitch__school-types .bns-fee-reveal__amount,
+.bns-orientation-pitch__point-text .bns-fee-reveal__amount {
+    font-weight: 700;
+    color: #0a1d37;
 }
 
 .bns-orientation-pitch__category {

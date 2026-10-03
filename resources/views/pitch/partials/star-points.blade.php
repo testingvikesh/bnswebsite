@@ -7,8 +7,9 @@
                 <span class="bns-pitch-detail__point-icon" aria-hidden="true">
                     <i class="fas fa-star"></i>
                 </span>
-                <span class="bns-pitch-detail__point-text">{!! bns_point_html($item) !!}</span>
+                <span class="bns-pitch-detail__point-text">{!! bns_point_html_hide_fees($item) !!}</span>
             </li>
         @endforeach
     </ul>
+    @include('pitch.partials.fee-reveal-script')
 @endif

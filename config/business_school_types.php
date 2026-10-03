@@ -11,7 +11,7 @@ return [
         '💎 Diamond Business School',
     ],
     'rows' => [
-        ['Yearly Fees', '₹15,000 / ₹20,000 + GST', '₹22,000 + GST', '₹37,000 + GST', '₹80,000 + GST'],
+        ['Yearly Fees', '₹10,000 / ₹15,000 + GST', '₹22,000 + GST', '₹37,000 + GST', '₹80,000 + GST'],
         ['Venue', 'Sponsor & Venue Partner Supported', 'School / College Auditorium', 'Premium Educational Auditorium', 'Luxury Hotels / Premium Auditoriums'],
         ['Learning Hours', 'Up to 100 Sessions / 200 Hours', 'Up to 100 Sessions / 200 Hours', 'Up to 100 Sessions / 200+ Hours', 'Up to 100 Sessions / 200+ Hours'],
         ['Learning Environment', 'Standard Classroom', 'Better Learning Environment', 'Premium Learning Environment', 'Executive Learning Experience'],

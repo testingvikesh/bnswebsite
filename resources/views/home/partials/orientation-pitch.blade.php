@@ -224,5 +224,6 @@
             <p class="bns-orientation-pitch__thanks">{!! bns_rich_text($pitch['footer']['thanks'] ?? 'Thank You — Business Navachar School (BNS)') !!}</p>
         </footer>
     </div>
+    @include('pitch.partials.fee-reveal-script')
 </section>
 @endif
