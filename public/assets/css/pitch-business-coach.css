@@ -729,6 +729,56 @@
     font-size: 0.8rem;
 }
 
+.bns-fee-reveal {
+    display: inline-flex;
+    align-items: center;
+    gap: 8px;
+    min-height: 1.5em;
+}
+
+.bns-fee-reveal__toggle {
+    display: inline-flex;
+    align-items: center;
+    gap: 6px;
+    margin: 0;
+    padding: 6px 10px;
+    border: 1px solid rgba(15, 23, 42, 0.12);
+    border-radius: 8px;
+    background: #fff7ed;
+    color: #c2410c;
+    font: inherit;
+    font-size: 0.85rem;
+    font-weight: 600;
+    line-height: 1.2;
+    cursor: pointer;
+    transition: background-color 0.2s ease, border-color 0.2s ease, color 0.2s ease;
+}
+
+.bns-fee-reveal__toggle:hover,
+.bns-fee-reveal__toggle:focus-visible {
+    background: #ffedd5;
+    border-color: rgba(194, 65, 12, 0.35);
+    color: #9a3412;
+    outline: none;
+}
+
+.bns-fee-reveal.is-open .bns-fee-reveal__toggle {
+    padding: 6px 8px;
+}
+
+.bns-fee-reveal__toggle i {
+    font-size: 0.95rem;
+}
+
+.bns-fee-reveal__hint {
+    white-space: nowrap;
+}
+
+.bns-fee-reveal__amount {
+    font-weight: 700;
+    color: #0a1d37;
+}
+
 .bns-pitch-detail__table {
     width: 100%;
     border-collapse: collapse;
@@ -959,9 +1009,9 @@
 
 .bns-pitch-summary {
     position: fixed;
-    right: 18px;
-    /* Sit clearly above the rotated "Go Back Top" control */
-    bottom: 175px;
+    right: 16px;
+    top: 96px;
+    bottom: auto;
     z-index: 1050;
     display: flex;
     flex-direction: column;
@@ -1077,25 +1127,37 @@
     font-weight: 800;
 }
 
+/* Keep Summary off the fees table (right-hand Diamond column) */
+@media (min-width: 992px) {
+    .bns-pitch-detail__school-types__table-wrap,
+    .bns-pitch-detail__table-wrap {
+        margin-right: 148px;
+    }
+}
+
 /* Keep Summary above Go Back Top when sticky CTA bar is present */
 body.has-bns-sticky-cta .bns-pitch-summary {
-    bottom: 185px;
+    top: 96px;
+    bottom: auto;
 }
 
 @media (min-width: 768px) {
     body.has-bns-sticky-cta .bns-pitch-summary {
-        bottom: 190px;
+        top: 96px;
+        bottom: auto;
     }
 }
 
 @media (max-width: 767px) {
     .bns-pitch-summary {
         right: 12px;
+        top: auto;
         bottom: 165px;
     }
 
     body.has-bns-sticky-cta .bns-pitch-summary {
         /* Compact 2-col sticky CTA bar on mobile */
+        top: auto;
         bottom: 250px;
     }
 

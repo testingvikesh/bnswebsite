@@ -393,6 +393,30 @@
     font-size: 0.8rem;
 }
 
+.bns-orientation-pitch__school-types .bns-fee-reveal {
+    display: inline-flex;
+    align-items: center;
+    gap: 8px;
+    min-height: 1.5em;
+}
+
+.bns-orientation-pitch__school-types .bns-fee-reveal__toggle {
+    display: inline-flex;
+    align-items: center;
+    gap: 6px;
+    margin: 0;
+    padding: 6px 10px;
+    border: 1px solid rgba(15, 23, 42, 0.12);
+    border-radius: 8px;
+    background: #fff7ed;
+    color: #c2410c;
+    font: inherit;
+    font-size: 0.85rem;
+    font-weight: 600;
+    line-height: 1.2;
+    cursor: pointer;
+}
+
 .bns-orientation-pitch__category {
     padding: 22px 18px;
     border-radius: 14px;
