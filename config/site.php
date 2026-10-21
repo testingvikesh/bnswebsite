@@ -12,7 +12,7 @@ return [
             ['label' => '+91 72086 28671', 'digits' => '917208628671'],
             ['label' => '+91 70218 39703', 'digits' => '917021839703'],
         ],
-        'address' => 'Rajkot - 360005',
+        'address' => 'Shree Shantiniketan Oroom Elive Flatno 501 Shubh Park Rajkot 360005',
         'maps_url' => 'https://maps.app.goo.gl/Ve33LZjacUg2eB9H7',
         'welcome_text' => 'Welcome to BNS School - Our Best Education Platform',
         'social_title' => 'Follow Us On:',

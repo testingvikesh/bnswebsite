@@ -27,7 +27,7 @@
                 <th>Related Details</th>
                 <th>Receipt</th>
                 @if($canManageRefunds)
-                    <th>Action</th>
+                    <th class="bns-reporting-col-sticky-end">Action</th>
                 @endif
             </tr>
         </thead>
@@ -50,6 +50,13 @@
                     <td class="text-nowrap">
                         <strong class="bns-reporting-payment-amount">₹{{ number_format((float) $payment->amount, 2) }}</strong>
                         <div><span class="badge rounded-pill text-bg-success">Paid</span></div>
+                        @if($payment->isRefunded() || (float) ($payment->refund_amount ?? 0) > 0)
+                            <div class="bns-reporting-refund-amount small mt-1">Refund ₹{{ number_format((float) ($payment->refund_amount ?? 0), 2) }}</div>
+                        @elseif($payment->refund_status === 'failed')
+                            <div class="small text-danger mt-1">Refund failed</div>
+                        @elseif($payment->refund_status === 'pending')
+                            <div class="small text-warning mt-1">Refund pending</div>
+                        @endif
                     </td>
                     <td class="small text-nowrap">
                         {{ $payment->payment_mode ?: '—' }}
@@ -84,7 +91,7 @@
                             $modalId = 'bnsPayRefundModal-'.$payment->id;
                             $membership = $membershipsByReg[trim((string) $payment->registration_number)] ?? null;
                         @endphp
-                        <td class="text-nowrap">
+                        <td class="text-nowrap bns-reporting-col-sticky-end">
                             @if($payment->isRefunded())
                                 <div class="text-success small mb-1">
                                     Refunded ₹{{ number_format((float) ($payment->refund_amount ?? 0), 2) }}
@@ -128,16 +135,6 @@
                         </td>
                     @endif
                 </tr>
-                @if($canManageRefunds && $payment->canOfferRefund())
-                    @include('reporting.partials.refund-modal', [
-                        'upload' => $membership,
-                        'payment' => $payment,
-                        'modalId' => $modalId,
-                        'otpUrl' => route('reporting.payments.refund-otp', $payment),
-                        'formAction' => route('reporting.payments.refund', $payment),
-                        'defaultRefundAmount' => min($defaultRefundAmount, (float) $payment->amount),
-                    ])
-                @endif
             @empty
                 <tr>
                     <td colspan="{{ $colspan }}" class="bns-reporting-empty">
@@ -150,6 +147,21 @@
     </table>
 </div>
 
+@if($canManageRefunds)
+    @foreach($rows as $payment)
+        @if($payment->canOfferRefund())
+            @include('reporting.partials.refund-modal', [
+                'upload' => $membershipsByReg[trim((string) $payment->registration_number)] ?? null,
+                'payment' => $payment,
+                'modalId' => 'bnsPayRefundModal-'.$payment->id,
+                'otpUrl' => route('reporting.payments.refund-otp', $payment),
+                'formAction' => route('reporting.payments.refund', $payment),
+                'defaultRefundAmount' => min($defaultRefundAmount, (float) $payment->amount),
+            ])
+        @endif
+    @endforeach
+@endif
+
 <div class="bns-reporting-mobile-cards">
     @forelse($rows as $payment)
         <article class="bns-reporting-mobile-card bns-reporting-payment-mobile-card">
@@ -160,7 +172,16 @@
                         {{ $payment->paid_at?->format('d M Y, h:i A') ?: '—' }} IST
                     </div>
                 </div>
-                <strong class="bns-reporting-payment-amount">₹{{ number_format((float) $payment->amount, 2) }}</strong>
+                <div class="text-end">
+                    <strong class="bns-reporting-payment-amount">₹{{ number_format((float) $payment->amount, 2) }}</strong>
+                    @if($payment->isRefunded() || (float) ($payment->refund_amount ?? 0) > 0)
+                        <div class="bns-reporting-refund-amount small">Refund ₹{{ number_format((float) ($payment->refund_amount ?? 0), 2) }}</div>
+                    @elseif($payment->refund_status === 'failed')
+                        <div class="small text-danger">Refund failed</div>
+                    @elseif($payment->refund_status === 'pending')
+                        <div class="small text-warning">Refund pending</div>
+                    @endif
+                </div>
             </div>
             <div class="bns-reporting-mobile-card__meta">
                 <div><strong>Status:</strong> <span class="badge rounded-pill text-bg-success">Paid</span></div>
@@ -211,16 +232,6 @@
                         </button>
                     @endif
                 </div>
-                @if($payment->canOfferRefund())
-                    @include('reporting.partials.refund-modal', [
-                        'upload' => $membership,
-                        'payment' => $payment,
-                        'modalId' => $modalId,
-                        'otpUrl' => route('reporting.payments.refund-otp', $payment),
-                        'formAction' => route('reporting.payments.refund', $payment),
-                        'defaultRefundAmount' => min($defaultRefundAmount, (float) $payment->amount),
-                    ])
-                @endif
             @endif
         </article>
     @empty
@@ -230,3 +241,18 @@
         </div>
     @endforelse
 </div>
+
+@if($canManageRefunds)
+    @foreach($rows as $payment)
+        @if($payment->canOfferRefund())
+            @include('reporting.partials.refund-modal', [
+                'upload' => $membershipsByReg[trim((string) $payment->registration_number)] ?? null,
+                'payment' => $payment,
+                'modalId' => 'bnsPayRefundModalMobile-'.$payment->id,
+                'otpUrl' => route('reporting.payments.refund-otp', $payment),
+                'formAction' => route('reporting.payments.refund', $payment),
+                'defaultRefundAmount' => min($defaultRefundAmount, (float) $payment->amount),
+            ])
+        @endif
+    @endforeach
+@endif

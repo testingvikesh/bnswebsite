@@ -40,8 +40,8 @@ return [
         'head_office' => [
             'label' => 'Admission Office',
             'brand' => 'Business Navachar School (BNS)',
-            'address' => 'Rajkot, Gujarat 360005, India',
-            'maps_url' => 'https://www.google.com/maps/search/?api=1&query=Business+Navachar+School+Rajkot+Gujarat+360005',
+            'address' => 'Shree Shantiniketan Oroom Elive Flatno 501 Shubh Park Rajkot 360005',
+            'maps_url' => 'https://www.google.com/maps/search/?api=1&query=Shree+Shantiniketan+Oroom+Elive+Flat+No+501+Shubh+Park+Rajkot+360005',
             'maps_embed_url' => null,
         ],
         'venue' => [

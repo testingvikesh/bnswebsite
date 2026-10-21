@@ -76,7 +76,7 @@
                 </article>
 
                 <div class="bns-contact-thank-you__office-note">
-                    <p><strong>Admission Office:</strong> Business Navachar School (BNS), Rajkot, Gujarat 360005</p>
+                    <p><strong>Admission Office:</strong> Business Navachar School (BNS), Shree Shantiniketan Oroom Elive Flatno 501 Shubh Park Rajkot 360005</p>
                     <p><strong>Helpline:</strong> +91 72086 28671 | <strong>WhatsApp:</strong> +91 70218 39703</p>
                 </div>
 

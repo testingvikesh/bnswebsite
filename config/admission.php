@@ -101,7 +101,7 @@ return [
         'phone' => '+91 98250 98250',
         'whatsapp' => '+91 98250 98250',
         'email' => 'admissions@businessnavacharschool.com',
-        'address' => 'Rajkot, Gujarat - 360005',
+        'address' => 'Shree Shantiniketan Oroom Elive Flatno 501 Shubh Park Rajkot 360005',
         'maps_embed_url' => 'https://www.google.com/maps/embed?pb=!1m18!1m12!1m3!1d3691.0!2d70.8022!3d22.3039!2m3!1f0!2f0!3f0!3m2!1i1024!2i768!4f13.1!3m3!1m2!1s0x0%3A0x0!2zMjLCsDE4JzE0LjAiTiA3MMKwNDgnMDguMCJF!5e0!3m2!1sen!2sin!4v1',
     ],
 

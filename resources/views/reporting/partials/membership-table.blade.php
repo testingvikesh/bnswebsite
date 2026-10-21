@@ -180,15 +180,6 @@
                         </td>
                     @endif
                 </tr>
-
-                @if($canManageBnsVerify && $payment && $upload->canOfferRefund($payment))
-                    @include('reporting.partials.refund-modal', [
-                        'upload' => $upload,
-                        'payment' => $payment,
-                        'modalId' => $modalId,
-                        'defaultRefundAmount' => min($defaultRefundAmount, (float) $payment->amount),
-                    ])
-                @endif
             @empty
                 <tr>
                     <td colspan="{{ $colspan }}" class="bns-reporting-empty">
@@ -200,6 +191,20 @@
         </tbody>
     </table>
 </div>
+
+@if($canManageBnsVerify)
+    @foreach($rows as $upload)
+        @php($payment = $paymentsByReg[trim((string) $upload->registration_number)] ?? null)
+        @if($payment && $upload->canOfferRefund($payment))
+            @include('reporting.partials.refund-modal', [
+                'upload' => $upload,
+                'payment' => $payment,
+                'modalId' => 'bnsRefundModal-'.$upload->id,
+                'defaultRefundAmount' => min($defaultRefundAmount, (float) $payment->amount),
+            ])
+        @endif
+    @endforeach
+@endif
 
 <div class="bns-reporting-mobile-cards d-lg-none">
     @forelse($rows as $upload)
@@ -289,6 +294,7 @@
                                     <i class="bi bi-cash-coin"></i> Refund
                                 </button>
                             @elseif($payment && ($upload->status === 'refunded' || $payment->isRefunded()))
+                                <div class="bns-reporting-refund-amount small mt-2">Refunded ₹{{ number_format((float) ($payment->refund_amount ?? 0), 2) }}</div>
                                 <form method="POST" action="{{ route('reporting.membership.refund-status', $upload) }}" class="mt-2">
                                     @csrf
                                     <button type="submit" class="btn btn-sm btn-outline-primary">
@@ -300,14 +306,6 @@
                     @endif
                 </div>
 
-                @if($upload->canOfferRefund($payment))
-                    @include('reporting.partials.refund-modal', [
-                        'upload' => $upload,
-                        'payment' => $payment,
-                        'modalId' => $modalId,
-                        'defaultRefundAmount' => min($defaultRefundAmount, (float) $payment->amount),
-                    ])
-                @endif
             @endif
         </article>
     @empty
@@ -317,3 +315,17 @@
         </div>
     @endforelse
 </div>
+
+@if($canManageBnsVerify)
+    @foreach($rows as $upload)
+        @php($payment = $paymentsByReg[trim((string) $upload->registration_number)] ?? null)
+        @if($payment && $upload->canOfferRefund($payment))
+            @include('reporting.partials.refund-modal', [
+                'upload' => $upload,
+                'payment' => $payment,
+                'modalId' => 'bnsRefundModalMobile-'.$upload->id,
+                'defaultRefundAmount' => min($defaultRefundAmount, (float) $payment->amount),
+            ])
+        @endif
+    @endforeach
+@endif

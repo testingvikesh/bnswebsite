@@ -14,7 +14,7 @@ return [
         'brand' => 'Business Navachar School (BNS)',
         'tagline' => 'Business Education for Every Indian',
         'head_label' => 'Head Office',
-        'address_line' => '',
+        'address_line' => 'Shree Shantiniketan Oroom Elive Flatno 501 Shubh Park Rajkot 360005',
         'city' => 'Rajkot',
         'state' => 'Gujarat',
         'pin_code' => '360005',

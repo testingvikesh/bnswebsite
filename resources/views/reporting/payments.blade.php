@@ -109,12 +109,99 @@
                     <h4>{{ $program['program'] }}</h4>
                     <p>{{ number_format($program['count']) }} {{ Str::plural('payment', $program['count']) }}</p>
                 </div>
-                <strong>₹{{ number_format($program['amount'], 2) }}</strong>
+                <div class="bns-reporting-program-card__amounts">
+                    <strong>₹{{ number_format($program['amount'], 2) }}</strong>
+                    @if(($program['refund_amount'] ?? 0) > 0)
+                        <span class="bns-reporting-program-card__refund">Refund ₹{{ number_format($program['refund_amount'], 2) }}</span>
+                    @endif
+                </div>
             </article>
         @endforeach
     </div>
 </section>
 @endif
+
+<section class="bns-reporting-refund-list mb-4" id="refund-list">
+    <div class="bns-reporting-table-card__head">
+        <div>
+            <h3><i class="bi bi-cash-coin me-1"></i> Refund List</h3>
+            <span>
+                {{ number_format($stats['refund_count']) }} successful
+                · ₹{{ number_format($stats['refund_amount'], 2) }} refunded
+                @if(($stats['refund_pending'] ?? 0) > 0)
+                    · {{ number_format($stats['refund_pending']) }} pending
+                @endif
+                @if(($stats['refund_failed'] ?? 0) > 0)
+                    · {{ number_format($stats['refund_failed']) }} failed
+                @endif
+            </span>
+        </div>
+    </div>
+    <div class="bns-reporting-table-wrap">
+        <table class="table bns-reporting-table bns-reporting-refund-table mb-0 align-middle">
+            <thead>
+                <tr>
+                    <th>Refunded On</th>
+                    <th>Participant</th>
+                    <th>Program</th>
+                    <th>Paid Amount</th>
+                    <th>Refund Amount</th>
+                    <th>Status</th>
+                    <th>Refund Txn No.</th>
+                </tr>
+            </thead>
+            <tbody>
+                @forelse($refunds as $refund)
+                    @php
+                        $refundStatus = (string) ($refund->refund_status ?: '');
+                        $refundBadge = match ($refundStatus) {
+                            'success' => 'success',
+                            'failed' => 'danger',
+                            'pending' => 'warning',
+                            default => 'secondary',
+                        };
+                        $refundLabel = match ($refundStatus) {
+                            'success' => 'Refunded',
+                            'failed' => 'Failed',
+                            'pending' => 'Pending',
+                            default => '—',
+                        };
+                    @endphp
+                    <tr>
+                        <td class="text-nowrap small">
+                            {{ $refund->refunded_at?->timezone('Asia/Kolkata')->format('d M Y') ?: '—' }}<br>
+                            <span class="text-muted">{{ $refund->refunded_at?->timezone('Asia/Kolkata')->format('h:i A') ?: '' }}</span>
+                        </td>
+                        <td>
+                            <div class="fw-bold">{{ $refund->customer_name ?: '—' }}</div>
+                            <div class="small text-muted">{{ $refund->customer_mobile ?: '—' }}</div>
+                            <div class="small text-muted">{{ $refund->registration_number ?: '—' }}</div>
+                        </td>
+                        <td>{{ $refund->display_program }}</td>
+                        <td class="text-nowrap">₹{{ number_format((float) $refund->amount, 2) }}</td>
+                        <td class="text-nowrap">
+                            <strong class="bns-reporting-refund-amount">₹{{ number_format((float) ($refund->refund_amount ?? 0), 2) }}</strong>
+                        </td>
+                        <td>
+                            <span class="badge rounded-pill text-bg-{{ $refundBadge }}">{{ $refundLabel }}</span>
+                            @if($refundStatus === 'failed' && $refund->refund_response_description)
+                                <div class="small text-danger mt-1">{{ $refund->refund_response_description }}</div>
+                            @endif
+                        </td>
+                        <td class="small text-nowrap">{{ $refund->refund_merchant_txn_no ?: '—' }}</td>
+                    </tr>
+                @empty
+                    <tr>
+                        <td colspan="7" class="bns-reporting-empty">
+                            <i class="bi bi-cash-coin"></i>
+                            No refunds found.
+                        </td>
+                    </tr>
+                @endforelse
+            </tbody>
+        </table>
+    </div>
+</section>
 
 <div class="bns-reporting-filter">
     <div class="bns-reporting-filter__head">

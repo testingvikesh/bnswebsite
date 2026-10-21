@@ -935,9 +935,40 @@ a.bns-reporting-stat:focus {
 }
 
 .bns-reporting-program-card > strong,
+.bns-reporting-program-card__amounts > strong,
 .bns-reporting-payment-amount {
     color: #15803d;
     font-weight: 800;
+}
+
+.bns-reporting-program-card__amounts {
+    display: flex;
+    flex-direction: column;
+    align-items: flex-end;
+    gap: 2px;
+}
+
+.bns-reporting-program-card__refund,
+.bns-reporting-refund-amount {
+    color: #b45309;
+    font-weight: 800;
+}
+
+.bns-reporting-refund-list {
+    overflow: hidden;
+    border: 1px solid rgba(15, 23, 42, 0.08);
+    border-radius: 20px;
+    background: #fff;
+    box-shadow: 0 12px 32px rgba(15, 23, 42, 0.05);
+}
+
+.bns-reporting-refund-table {
+    min-width: 860px;
+}
+
+.bns-reporting-refund-table td,
+.bns-reporting-refund-table th {
+    vertical-align: middle;
 }
 
 .bns-reporting-payment-table {

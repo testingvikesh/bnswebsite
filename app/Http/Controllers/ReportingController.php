@@ -145,8 +145,15 @@ class ReportingController extends Controller
                 'program' => $program,
                 'count' => $rows->count(),
                 'amount' => $rows->sum(fn (AdmissionPayment $payment) => (float) $payment->amount),
+                'refund_count' => $rows->filter(fn (AdmissionPayment $payment) => $payment->isRefunded())->count(),
+                'refund_amount' => $rows->sum(fn (AdmissionPayment $payment) => $payment->isRefunded() ? (float) $payment->refund_amount : 0),
             ])
             ->sortByDesc('amount')
+            ->values();
+
+        $refunds = $allSuccessful
+            ->filter(fn (AdmissionPayment $payment) => filled($payment->refund_status) || (float) ($payment->refund_amount ?? 0) > 0)
+            ->sortByDesc(fn (AdmissionPayment $payment) => $payment->refunded_at?->timestamp ?? 0)
             ->values();
 
         $dateChips = $this->introSessionPaymentChips($allSuccessful);
@@ -158,6 +165,7 @@ class ReportingController extends Controller
         return view('reporting.payments', [
             'payments' => $payments,
             'programSummary' => $programSummary,
+            'refunds' => $refunds,
             'dateChips' => $dateChips,
             'paidDate' => $filters['paid_date'],
             'sessionFilter' => $filters['session'],
@@ -179,6 +187,10 @@ class ReportingController extends Controller
                 'programs' => $allSuccessful->pluck('display_program')->filter()->unique()->count(),
                 'filtered' => $payments->count(),
                 'filtered_amount' => $payments->sum(fn (AdmissionPayment $payment) => (float) $payment->amount),
+                'refund_count' => $refunds->filter(fn (AdmissionPayment $payment) => $payment->isRefunded())->count(),
+                'refund_amount' => $refunds->sum(fn (AdmissionPayment $payment) => $payment->isRefunded() ? (float) $payment->refund_amount : 0),
+                'refund_pending' => $refunds->filter(fn (AdmissionPayment $payment) => $payment->refund_status === AdmissionPayment::REFUND_STATUS_PENDING)->count(),
+                'refund_failed' => $refunds->filter(fn (AdmissionPayment $payment) => $payment->refund_status === AdmissionPayment::REFUND_STATUS_FAILED)->count(),
             ],
         ]);
     }
