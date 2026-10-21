@@ -33,33 +33,51 @@
     </div>
 @endif
 
+@php
+    $refundAmount = (float) ($stats['refund_amount'] ?? 0);
+    $netTotal = (float) $stats['amount'] - $refundAmount;
+@endphp
 <div class="row g-3 mb-4">
-    <div class="col-6 col-lg-3">
+    <div class="col-6 col-lg-4 col-xl-2">
         <div class="bns-reporting-stat bns-reporting-stat--total">
             <div class="bns-reporting-stat__icon"><i class="bi bi-check-circle-fill"></i></div>
             <div class="bns-reporting-stat__label">Successful Payments</div>
             <div class="bns-reporting-stat__value">{{ number_format($stats['total']) }}</div>
         </div>
     </div>
-    <div class="col-6 col-lg-3">
+    <div class="col-6 col-lg-4 col-xl-2">
         <div class="bns-reporting-stat bns-reporting-stat--today">
             <div class="bns-reporting-stat__icon"><i class="bi bi-currency-rupee"></i></div>
             <div class="bns-reporting-stat__label">Total Collected</div>
             <div class="bns-reporting-stat__value bns-reporting-stat__value--amount">₹{{ number_format($stats['amount'], 2) }}</div>
         </div>
     </div>
-    <div class="col-6 col-lg-3">
+    <div class="col-6 col-lg-4 col-xl-2">
         <div class="bns-reporting-stat bns-reporting-stat--intro">
             <div class="bns-reporting-stat__icon"><i class="bi bi-calendar-check-fill"></i></div>
             <div class="bns-reporting-stat__label">Paid Today</div>
             <div class="bns-reporting-stat__value">{{ number_format($stats['today']) }}</div>
         </div>
     </div>
-    <div class="col-6 col-lg-3">
+    <div class="col-6 col-lg-4 col-xl-2">
         <div class="bns-reporting-stat bns-reporting-stat--quick">
             <div class="bns-reporting-stat__icon"><i class="bi bi-grid-fill"></i></div>
             <div class="bns-reporting-stat__label">Programs</div>
             <div class="bns-reporting-stat__value">{{ number_format($stats['programs']) }}</div>
+        </div>
+    </div>
+    <div class="col-6 col-lg-4 col-xl-2">
+        <a href="#refund-list" class="bns-reporting-stat bns-reporting-stat--pending text-decoration-none">
+            <div class="bns-reporting-stat__icon"><i class="bi bi-cash-coin"></i></div>
+            <div class="bns-reporting-stat__label">Refund</div>
+            <div class="bns-reporting-stat__value bns-reporting-stat__value--amount">₹{{ number_format($refundAmount, 2) }}</div>
+        </a>
+    </div>
+    <div class="col-6 col-lg-4 col-xl-2">
+        <div class="bns-reporting-stat bns-reporting-stat--paid">
+            <div class="bns-reporting-stat__icon"><i class="bi bi-calculator-fill"></i></div>
+            <div class="bns-reporting-stat__label">Last Total</div>
+            <div class="bns-reporting-stat__value bns-reporting-stat__value--amount">₹{{ number_format($netTotal, 2) }}</div>
         </div>
     </div>
 </div>
