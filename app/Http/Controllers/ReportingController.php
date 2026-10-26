@@ -201,13 +201,12 @@ class ReportingController extends Controller
 
         $filters = $this->paymentFiltersFromRequest($request);
         $payments = $this->filteredSuccessfulPayments($filters);
-        $filename = 'bns-successful-payments-'.now()->format('Y-m-d-His').'.xls';
+        $filename = 'bns-successful-payments-'.now()->format('Y-m-d-His').'.xlsx';
         $institute = (string) config(
             'team.venue_partner.venue.location',
             'Shree Vardhaman Sthanakwasi Jain Shravak Sangh Santacruz West'
         );
         $columns = ['Sr', 'Source', 'Institute', 'Member', 'Phone', 'Email', 'Amount', 'Refunded', 'Net', 'Date', 'Mode', 'Status', 'Reference'];
-        $lastRow = $payments->count() + 2;
 
         $filterBits = array_filter([
             $filters['search'] !== '' ? 'Search: '.$filters['search'] : null,
@@ -219,70 +218,42 @@ class ReportingController extends Controller
         ]);
         $filterLine = $filterBits === [] ? 'Filters: All payments' : 'Filters: '.implode(' | ', $filterBits);
 
-        return response()->streamDownload(function () use ($payments, $institute, $columns, $lastRow, $filterLine) {
-            $xml = function (string $value): string {
-                return htmlspecialchars($value, ENT_XML1 | ENT_QUOTES, 'UTF-8');
-            };
-            $cell = function (string $value, string $style = 'Text') use ($xml): string {
-                return '<Cell ss:StyleID="'.$style.'"><Data ss:Type="String">'.$xml($value).'</Data></Cell>';
-            };
-            $number = function (float $value, string $style = 'Number') : string {
-                $formatted = $style === 'Integer'
-                    ? (string) (int) $value
-                    : number_format($value, 2, '.', '');
+        $rows = [$this->xlsxTextRow(1, [$filterLine], 1)];
+        $rows[] = $this->xlsxTextRow(2, $columns, 2);
 
-                return '<Cell ss:StyleID="'.$style.'"><Data ss:Type="Number">'.$formatted.'</Data></Cell>';
-            };
+        foreach ($payments->values() as $index => $payment) {
+            $amount = (float) $payment->amount;
+            $refunded = $payment->isRefunded() ? (float) ($payment->refund_amount ?? 0) : 0;
+            $phone = preg_replace('/\s+/', '', (string) ($payment->customer_mobile ?: '')) ?: '';
+            $source = $payment->form_type === 'intro-session' ? 'Introduction Session' : 'Admission';
+            $paidOn = $payment->paid_at?->timezone('Asia/Kolkata')->format('d-M-y') ?? '';
+            $rowNumber = $index + 3;
 
-            echo '<?xml version="1.0" encoding="UTF-8"?>'."\n";
-            echo '<?mso-application progid="Excel.Sheet"?>'."\n";
-            echo '<Workbook xmlns="urn:schemas-microsoft-com:office:spreadsheet" xmlns:ss="urn:schemas-microsoft-com:office:spreadsheet" xmlns:x="urn:schemas-microsoft-com:office:excel">';
-            echo '<Styles>';
-            echo '<Style ss:ID="Title"><Font ss:Bold="1" ss:Size="12" ss:Color="#0A1D37"/></Style>';
-            echo '<Style ss:ID="Header"><Font ss:Bold="1" ss:Color="#FFFFFF"/><Interior ss:Color="#0A1D37" ss:Pattern="Solid"/><Alignment ss:Horizontal="Center"/></Style>';
-            echo '<Style ss:ID="Text"><NumberFormat ss:Format="@"/></Style>';
-            echo '<Style ss:ID="Number"><NumberFormat ss:Format="#,##0.00"/></Style>';
-            echo '<Style ss:ID="Integer"><NumberFormat ss:Format="0"/></Style>';
-            echo '</Styles>';
-            echo '<Worksheet ss:Name="Payments"><Table>';
-            echo '<Column ss:Width="40"/><Column ss:Width="110"/><Column ss:Width="280"/><Column ss:Width="180"/><Column ss:Width="120"/><Column ss:Width="200"/><Column ss:Width="90"/><Column ss:Width="90"/><Column ss:Width="90"/><Column ss:Width="90"/><Column ss:Width="80"/><Column ss:Width="90"/><Column ss:Width="160"/>';
-            echo '<Row>'.$cell($filterLine, 'Title').'</Row>';
-            echo '<Row>';
-            foreach ($columns as $column) {
-                echo $cell($column, 'Header');
-            }
-            echo '</Row>';
+            $rows[] = '<row r="'.$rowNumber.'">'
+                .$this->xlsxNumberCell($this->xlsxColumn(1).$rowNumber, (string) ($index + 1), 5)
+                .$this->xlsxTextCell($this->xlsxColumn(2).$rowNumber, $source, 3)
+                .$this->xlsxTextCell($this->xlsxColumn(3).$rowNumber, $institute, 3)
+                .$this->xlsxTextCell($this->xlsxColumn(4).$rowNumber, (string) ($payment->customer_name ?: ''), 3)
+                .$this->xlsxTextCell($this->xlsxColumn(5).$rowNumber, $phone, 3)
+                .$this->xlsxTextCell($this->xlsxColumn(6).$rowNumber, (string) ($payment->customer_email ?: ''), 3)
+                .$this->xlsxNumberCell($this->xlsxColumn(7).$rowNumber, number_format($amount, 2, '.', ''), 4)
+                .$this->xlsxNumberCell($this->xlsxColumn(8).$rowNumber, number_format($refunded, 2, '.', ''), 4)
+                .$this->xlsxNumberCell($this->xlsxColumn(9).$rowNumber, number_format($amount - $refunded, 2, '.', ''), 4)
+                .$this->xlsxTextCell($this->xlsxColumn(10).$rowNumber, $paidOn, 3)
+                .$this->xlsxTextCell($this->xlsxColumn(11).$rowNumber, (string) ($payment->payment_mode ?: ''), 3)
+                .$this->xlsxTextCell($this->xlsxColumn(12).$rowNumber, 'Success', 3)
+                .$this->xlsxTextCell($this->xlsxColumn(13).$rowNumber, (string) ($payment->registration_number ?: $payment->merchant_txn_no ?: ''), 3)
+                .'</row>';
+        }
 
-            foreach ($payments->values() as $index => $payment) {
-                $amount = (float) $payment->amount;
-                $refunded = $payment->isRefunded() ? (float) ($payment->refund_amount ?? 0) : 0;
-                $phone = preg_replace('/\s+/', '', (string) ($payment->customer_mobile ?: '')) ?: '';
-                $source = $payment->form_type === 'intro-session' ? 'Introduction Session' : 'Admission';
-                $paidOn = $payment->paid_at?->timezone('Asia/Kolkata')->format('d-M-y') ?? '';
+        $lastRow = max(2, $payments->count() + 2);
+        $path = $this->writePaymentsXlsx(implode('', $rows), 'A2:M'.$lastRow);
 
-                echo '<Row>';
-                echo $number((float) ($index + 1), 'Integer');
-                echo $cell($source);
-                echo $cell($institute);
-                echo $cell((string) ($payment->customer_name ?: ''));
-                echo $cell($phone);
-                echo $cell((string) ($payment->customer_email ?: ''));
-                echo $number($amount);
-                echo $number($refunded);
-                echo $number($amount - $refunded);
-                echo $cell($paidOn);
-                echo $cell((string) ($payment->payment_mode ?: ''));
-                echo $cell('Success');
-                echo $cell((string) ($payment->registration_number ?: $payment->merchant_txn_no ?: ''));
-                echo '</Row>';
-            }
-
-            echo '</Table>';
-            echo '<AutoFilter x:Range="R2C1:R'.$lastRow.'C'.count($columns).'"/>';
-            echo '<WorksheetOptions xmlns="urn:schemas-microsoft-com:office:excel"><FreezePanes/><FrozenNoSplit/><SplitHorizontal>2</SplitHorizontal><TopRowBottomPane>2</TopRowBottomPane><ActivePane>2</ActivePane></WorksheetOptions>';
-            echo '</Worksheet></Workbook>';
+        return response()->streamDownload(function () use ($path) {
+            readfile($path);
+            @unlink($path);
         }, $filename, [
-            'Content-Type' => 'application/vnd.ms-excel; charset=UTF-8',
+            'Content-Type' => 'application/vnd.openxmlformats-officedocument.spreadsheetml.sheet',
         ]);
     }
 
@@ -1267,6 +1238,128 @@ class ReportingController extends Controller
                 return $mobile !== '' ? $mobile : 'record-'.$item->id;
             })
             ->count();
+    }
+
+    private function xlsxTextRow(int $row, array $values, int $style): string
+    {
+        $cells = '';
+        foreach (array_values($values) as $index => $value) {
+            $cells .= $this->xlsxTextCell($this->xlsxColumn($index + 1).$row, (string) $value, $style);
+        }
+
+        return '<row r="'.$row.'">'.$cells.'</row>';
+    }
+
+    private function xlsxTextCell(string $ref, string $value, int $style): string
+    {
+        $value = htmlspecialchars($value, ENT_XML1 | ENT_QUOTES, 'UTF-8');
+
+        return '<c r="'.$ref.'" t="inlineStr" s="'.$style.'"><is><t xml:space="preserve">'.$value.'</t></is></c>';
+    }
+
+    private function xlsxNumberCell(string $ref, string $value, int $style): string
+    {
+        return '<c r="'.$ref.'" s="'.$style.'"><v>'.$value.'</v></c>';
+    }
+
+    private function xlsxColumn(int $index): string
+    {
+        $column = '';
+        while ($index > 0) {
+            $index--;
+            $column = chr(65 + ($index % 26)).$column;
+            $index = intdiv($index, 26);
+        }
+
+        return $column;
+    }
+
+    private function writePaymentsXlsx(string $rowsXml, string $filterRange): string
+    {
+        if (! class_exists(\ZipArchive::class)) {
+            throw new RuntimeException('Excel export needs the PHP Zip extension.');
+        }
+
+        $sheet = '<?xml version="1.0" encoding="UTF-8" standalone="yes"?>'
+            .'<worksheet xmlns="http://schemas.openxmlformats.org/spreadsheetml/2006/main">'
+            .'<sheetViews><sheetView workbookViewId="0"><pane ySplit="2" topLeftCell="A3" activePane="bottomLeft" state="frozen"/></sheetView></sheetViews>'
+            .'<cols>'
+            .'<col min="1" max="1" width="6" customWidth="1"/>'
+            .'<col min="2" max="2" width="22" customWidth="1"/>'
+            .'<col min="3" max="3" width="62" customWidth="1"/>'
+            .'<col min="4" max="4" width="28" customWidth="1"/>'
+            .'<col min="5" max="5" width="16" customWidth="1"/>'
+            .'<col min="6" max="6" width="32" customWidth="1"/>'
+            .'<col min="7" max="9" width="14" customWidth="1"/>'
+            .'<col min="10" max="12" width="14" customWidth="1"/>'
+            .'<col min="13" max="13" width="24" customWidth="1"/>'
+            .'</cols>'
+            .'<sheetData>'.$rowsXml.'</sheetData>'
+            .'<autoFilter ref="'.$filterRange.'"/>'
+            .'<mergeCells count="1"><mergeCell ref="A1:M1"/></mergeCells>'
+            .'</worksheet>';
+
+        $styles = '<?xml version="1.0" encoding="UTF-8" standalone="yes"?>'
+            .'<styleSheet xmlns="http://schemas.openxmlformats.org/spreadsheetml/2006/main">'
+            .'<numFmts count="1"><numFmt numFmtId="164" formatCode="#,##0.00"/></numFmts>'
+            .'<fonts count="3">'
+            .'<font><sz val="11"/><name val="Calibri"/></font>'
+            .'<font><b/><sz val="12"/><color rgb="FF0A1D37"/><name val="Calibri"/></font>'
+            .'<font><b/><sz val="11"/><color rgb="FFFFFFFF"/><name val="Calibri"/></font>'
+            .'</fonts>'
+            .'<fills count="3">'
+            .'<fill><patternFill patternType="none"/></fill>'
+            .'<fill><patternFill patternType="gray125"/></fill>'
+            .'<fill><patternFill patternType="solid"><fgColor rgb="FF0A1D37"/><bgColor indexed="64"/></patternFill></fill>'
+            .'</fills>'
+            .'<borders count="1"><border><left/><right/><top/><bottom/><diagonal/></border></borders>'
+            .'<cellStyleXfs count="1"><xf numFmtId="0" fontId="0" fillId="0" borderId="0"/></cellStyleXfs>'
+            .'<cellXfs count="6">'
+            .'<xf numFmtId="0" fontId="0" fillId="0" borderId="0" xfId="0"/>'
+            .'<xf numFmtId="0" fontId="1" fillId="0" borderId="0" xfId="0" applyFont="1"/>'
+            .'<xf numFmtId="0" fontId="2" fillId="2" borderId="0" xfId="0" applyFont="1" applyFill="1" applyAlignment="1"><alignment horizontal="center"/></xf>'
+            .'<xf numFmtId="49" fontId="0" fillId="0" borderId="0" xfId="0" applyNumberFormat="1"/>'
+            .'<xf numFmtId="164" fontId="0" fillId="0" borderId="0" xfId="0" applyNumberFormat="1"/>'
+            .'<xf numFmtId="1" fontId="0" fillId="0" borderId="0" xfId="0" applyNumberFormat="1"/>'
+            .'</cellXfs>'
+            .'</styleSheet>';
+
+        $path = tempnam(sys_get_temp_dir(), 'bnsxlsx');
+        if ($path === false) {
+            throw new RuntimeException('Could not create the Excel file.');
+        }
+        @unlink($path);
+        $zip = new \ZipArchive();
+        if ($zip->open($path, \ZipArchive::CREATE) !== true) {
+            throw new RuntimeException('Could not create the Excel file.');
+        }
+
+        $zip->addFromString('[Content_Types].xml', '<?xml version="1.0" encoding="UTF-8" standalone="yes"?>'
+            .'<Types xmlns="http://schemas.openxmlformats.org/package/2006/content-types">'
+            .'<Default Extension="rels" ContentType="application/vnd.openxmlformats-package.relationships+xml"/>'
+            .'<Default Extension="xml" ContentType="application/xml"/>'
+            .'<Override PartName="/xl/workbook.xml" ContentType="application/vnd.openxmlformats-officedocument.spreadsheetml.sheet.main+xml"/>'
+            .'<Override PartName="/xl/worksheets/sheet1.xml" ContentType="application/vnd.openxmlformats-officedocument.spreadsheetml.worksheet+xml"/>'
+            .'<Override PartName="/xl/styles.xml" ContentType="application/vnd.openxmlformats-officedocument.spreadsheetml.styles+xml"/>'
+            .'</Types>');
+        $zip->addFromString('_rels/.rels', '<?xml version="1.0" encoding="UTF-8" standalone="yes"?>'
+            .'<Relationships xmlns="http://schemas.openxmlformats.org/package/2006/relationships">'
+            .'<Relationship Id="rId1" Type="http://schemas.openxmlformats.org/officeDocument/2006/relationships/officeDocument" Target="xl/workbook.xml"/>'
+            .'</Relationships>');
+        $zip->addFromString('xl/workbook.xml', '<?xml version="1.0" encoding="UTF-8" standalone="yes"?>'
+            .'<workbook xmlns="http://schemas.openxmlformats.org/spreadsheetml/2006/main" xmlns:r="http://schemas.openxmlformats.org/officeDocument/2006/relationships">'
+            .'<sheets><sheet name="Payments" sheetId="1" r:id="rId1"/></sheets>'
+            .'</workbook>');
+        $zip->addFromString('xl/_rels/workbook.xml.rels', '<?xml version="1.0" encoding="UTF-8" standalone="yes"?>'
+            .'<Relationships xmlns="http://schemas.openxmlformats.org/package/2006/relationships">'
+            .'<Relationship Id="rId1" Type="http://schemas.openxmlformats.org/officeDocument/2006/relationships/worksheet" Target="worksheets/sheet1.xml"/>'
+            .'<Relationship Id="rId2" Type="http://schemas.openxmlformats.org/officeDocument/2006/relationships/styles" Target="styles.xml"/>'
+            .'</Relationships>');
+        $zip->addFromString('xl/styles.xml', $styles);
+        $zip->addFromString('xl/worksheets/sheet1.xml', $sheet);
+        $zip->close();
+
+        return $path;
     }
 
     /** @return array{search: string, program: string, payment_mode: string, date_from: string, date_to: string, paid_date: string, session: string} */
