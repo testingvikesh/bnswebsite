@@ -200,13 +200,20 @@ class ReportingController extends Controller
         $this->ensureReportingAccess();
 
         $filters = $this->paymentFiltersFromRequest($request);
-        $payments = $this->filteredSuccessfulPayments($filters);
-        $filename = 'bns-successful-payments-'.now()->format('Y-m-d-His').'.xlsx';
-        $institute = (string) config(
-            'team.venue_partner.venue.location',
-            'Shree Vardhaman Sthanakwasi Jain Shravak Sangh Santacruz West'
-        );
-        $columns = ['Sr', 'Source', 'Institute', 'Member', 'Phone', 'Email', 'Amount', 'Refunded', 'Net', 'Date', 'Mode', 'Status', 'Reference'];
+        $payments = $this->filteredSuccessfulPayments($filters)
+            ->sortBy(fn (AdmissionPayment $payment) => sprintf(
+                '%010d-%010d',
+                $payment->paid_at?->timestamp ?? $payment->created_at?->timestamp ?? 0,
+                $payment->id
+            ))
+            ->values();
+        $invoiceNumbers = $this->gstInvoiceNumbers();
+        $inquiries = ContactInquiry::query()
+            ->whereIn('registration_number', $payments->pluck('registration_number')->filter()->unique()->values())
+            ->get()
+            ->keyBy('registration_number');
+        $filename = 'bns-gst-invoices-'.now()->format('Ymd-His').'.xlsx';
+        $columns = ['Sr', 'Invoice No', 'Date', 'Member', 'GSTIN', 'PAN', 'Legal Name', 'Business', 'Place of Supply', 'State', 'City', 'Phone', 'Email', 'HSN/SAC', 'Taxable', 'CGST', 'SGST', 'IGST', 'GST Total', 'Invoice Total', 'Tax Split', 'Payment ID', 'Admission Payment ID'];
 
         $filterBits = array_filter([
             $filters['search'] !== '' ? 'Search: '.$filters['search'] : null,
@@ -216,76 +223,88 @@ class ReportingController extends Controller
             $filters['date_to'] !== '' ? 'To: '.$filters['date_to'] : null,
             $filters['paid_date'] !== '' ? 'Session date: '.$filters['paid_date'] : null,
         ]);
-        $filterLabel = $filterBits === [] ? 'All payments' : implode(' · ', $filterBits);
-        $collected = 0.0;
-        $refundTotal = 0.0;
-        foreach ($payments as $payment) {
-            $collected += (float) $payment->amount;
-            if ($payment->isRefunded()) {
-                $refundTotal += (float) ($payment->refund_amount ?? 0);
-            }
-        }
-        $netTotal = $collected - $refundTotal;
+        $filterLabel = $filterBits === [] ? 'All dates' : implode(' · ', $filterBits);
+        $taxableTotal = 0.0;
+        $gstTotal = 0.0;
+        $invoiceTotal = 0.0;
         $generatedAt = now('Asia/Kolkata')->format('d M Y, h:i A');
         $count = $payments->count();
         $lastDataRow = 6 + $count;
         $footerRow = $lastDataRow + 2;
+        $builtRows = [];
 
-        $rows = [
-            $this->xlsxOpenRow(1, 26).$this->xlsxTextCell('A1', 'Business Navachar School', 1).'</row>',
-            $this->xlsxOpenRow(2, 20).$this->xlsxTextCell('A2', 'Admission Confirm Report  ·  '.$filterLabel, 2).'</row>',
-            $this->xlsxOpenRow(3, 18).$this->xlsxTextCell('A3', number_format($count).' payments  ·  Generated '.$generatedAt, 3).'</row>',
-            $this->xlsxOpenRow(4, 36)
-                .$this->xlsxTextCell('A4', "Successful Payments\n".number_format($count), 4)
-                .$this->xlsxTextCell('D4', "Total Collected\n₹".number_format($collected, 2), 4)
-                .$this->xlsxTextCell('G4', "Refund\n₹".number_format($refundTotal, 2), 4)
-                .$this->xlsxTextCell('J4', "Last Total\n₹".number_format($netTotal, 2), 5)
-                .'</row>',
-            $this->xlsxOpenRow(5, 8).$this->xlsxTextCell('A5', '', 16).'</row>',
-            $this->xlsxTextRow(6, $columns, 6, 22),
-        ];
-
-        foreach ($payments->values() as $index => $payment) {
+        foreach ($payments as $index => $payment) {
+            $profile = $this->gstInvoiceProfile($payment, $inquiries);
             $amount = (float) $payment->amount;
-            $refunded = $payment->isRefunded() ? (float) ($payment->refund_amount ?? 0) : 0;
+            $tax = $this->gstTaxSplit($amount, $profile['state']);
+            $taxableTotal += $tax['taxable'];
+            $gstTotal += $tax['gst'];
+            $invoiceTotal += $amount;
+            $paidOn = ($payment->paid_at ?? $payment->created_at)?->timezone('Asia/Kolkata')->format('d M Y') ?? '';
+            $year = ($payment->paid_at ?? $payment->created_at)?->timezone('Asia/Kolkata')->format('Y') ?? now('Asia/Kolkata')->format('Y');
+            $invoiceNo = $invoiceNumbers[$payment->id] ?? sprintf('BNS/GST/%s/%04d', $year, $index + 1);
             $phone = preg_replace('/\s+/', '', (string) ($payment->customer_mobile ?: '')) ?: '';
-            $source = $payment->form_type === 'intro-session' ? 'Introduction Session' : 'Admission';
-            $paidOn = $payment->paid_at?->timezone('Asia/Kolkata')->format('d M Y') ?? '';
             $rowNumber = $index + 7;
             $zebra = $index % 2 === 1;
             $text = $zebra ? 8 : 7;
             $bold = $zebra ? 14 : 13;
             $sr = $zebra ? 10 : 9;
             $money = $zebra ? 12 : 11;
+            $moneyText = fn (float $value): string => number_format($value, 2, '.', '');
 
-            $rows[] = $this->xlsxOpenRow($rowNumber, 18)
-                .$this->xlsxNumberCell($this->xlsxColumn(1).$rowNumber, (string) ($index + 1), $sr)
-                .$this->xlsxTextCell($this->xlsxColumn(2).$rowNumber, $source, $text)
-                .$this->xlsxTextCell($this->xlsxColumn(3).$rowNumber, $institute, $text)
-                .$this->xlsxTextCell($this->xlsxColumn(4).$rowNumber, (string) ($payment->customer_name ?: ''), $bold)
-                .$this->xlsxTextCell($this->xlsxColumn(5).$rowNumber, $phone, $text)
-                .$this->xlsxTextCell($this->xlsxColumn(6).$rowNumber, (string) ($payment->customer_email ?: ''), $text)
-                .$this->xlsxNumberCell($this->xlsxColumn(7).$rowNumber, number_format($amount, 2, '.', ''), $money)
-                .$this->xlsxNumberCell($this->xlsxColumn(8).$rowNumber, number_format($refunded, 2, '.', ''), $money)
-                .$this->xlsxNumberCell($this->xlsxColumn(9).$rowNumber, number_format($amount - $refunded, 2, '.', ''), $money)
-                .$this->xlsxTextCell($this->xlsxColumn(10).$rowNumber, $paidOn, $text)
-                .$this->xlsxTextCell($this->xlsxColumn(11).$rowNumber, (string) ($payment->payment_mode ?: ''), $text)
-                .$this->xlsxTextCell($this->xlsxColumn(12).$rowNumber, 'Success', $text)
-                .$this->xlsxTextCell($this->xlsxColumn(13).$rowNumber, (string) ($payment->registration_number ?: $payment->merchant_txn_no ?: ''), $bold)
+            $builtRows[] = $this->xlsxOpenRow($rowNumber, 18)
+                .$this->xlsxNumberCell('A'.$rowNumber, (string) ($index + 1), $sr)
+                .$this->xlsxTextCell('B'.$rowNumber, $invoiceNo, $bold)
+                .$this->xlsxTextCell('C'.$rowNumber, $paidOn, $text)
+                .$this->xlsxTextCell('D'.$rowNumber, (string) ($payment->customer_name ?: ''), $text)
+                .$this->xlsxTextCell('E'.$rowNumber, $profile['gstin'], $text)
+                .$this->xlsxTextCell('F'.$rowNumber, $profile['pan'], $text)
+                .$this->xlsxTextCell('G'.$rowNumber, $profile['legal_name'], $text)
+                .$this->xlsxTextCell('H'.$rowNumber, $profile['business'], $text)
+                .$this->xlsxTextCell('I'.$rowNumber, $profile['state'], $text)
+                .$this->xlsxTextCell('J'.$rowNumber, $profile['state'], $text)
+                .$this->xlsxTextCell('K'.$rowNumber, $profile['city'], $text)
+                .$this->xlsxTextCell('L'.$rowNumber, $phone, $text)
+                .$this->xlsxTextCell('M'.$rowNumber, (string) ($payment->customer_email ?: ''), $text)
+                .$this->xlsxTextCell('N'.$rowNumber, '999293', $text)
+                .$this->xlsxNumberCell('O'.$rowNumber, $moneyText($tax['taxable']), $money)
+                .$this->xlsxNumberCell('P'.$rowNumber, $moneyText($tax['cgst']), $money)
+                .$this->xlsxNumberCell('Q'.$rowNumber, $moneyText($tax['sgst']), $money)
+                .$this->xlsxNumberCell('R'.$rowNumber, $moneyText($tax['igst']), $money)
+                .$this->xlsxNumberCell('S'.$rowNumber, $moneyText($tax['gst']), $money)
+                .$this->xlsxNumberCell('T'.$rowNumber, $moneyText($amount), $money)
+                .$this->xlsxTextCell('U'.$rowNumber, $tax['split'], $text)
+                .$this->xlsxTextCell('V'.$rowNumber, (string) ($payment->payment_id ?: ''), $text)
+                .$this->xlsxNumberCell('W'.$rowNumber, (string) $payment->id, $text)
                 .'</row>';
         }
 
+        $rows = [
+            $this->xlsxOpenRow(1, 26).$this->xlsxTextCell('A1', 'Business Navachar School', 1).'</row>',
+            $this->xlsxOpenRow(2, 20).$this->xlsxTextCell('A2', 'GST Invoices Excel Report  ·  '.$filterLabel, 2).'</row>',
+            $this->xlsxOpenRow(3, 18).$this->xlsxTextCell('A3', number_format($count).' invoices  ·  Generated '.$generatedAt, 3).'</row>',
+            $this->xlsxOpenRow(4, 36)
+                .$this->xlsxTextCell('A4', "Invoices\n".number_format($count), 4)
+                .$this->xlsxTextCell('F4', "Taxable\n₹".number_format($taxableTotal, 2), 4)
+                .$this->xlsxTextCell('K4', "GST Amount\n₹".number_format($gstTotal, 2), 4)
+                .$this->xlsxTextCell('Q4', "Invoice Total\n₹".number_format($invoiceTotal, 2), 5)
+                .'</row>',
+            $this->xlsxOpenRow(5, 8).$this->xlsxTextCell('A5', '', 16).'</row>',
+            $this->xlsxTextRow(6, $columns, 6, 22),
+            ...$builtRows,
+        ];
+
         $rows[] = $this->xlsxOpenRow($footerRow, 18)
-            .$this->xlsxTextCell('A'.$footerRow, 'Generated from BNS Admission Confirm Report  ·  businessnavacharschool.com', 15)
+            .$this->xlsxTextCell('A'.$footerRow, 'Generated from BNS GST Invoices  ·  businessnavacharschool.com', 15)
             .'</row>';
 
         $merges = [
-            'A1:M1', 'A2:M2', 'A3:M3',
-            'A4:C4', 'D4:F4', 'G4:I4', 'J4:M4',
-            'A5:M5',
-            'A'.$footerRow.':M'.$footerRow,
+            'A1:W1', 'A2:W2', 'A3:W3',
+            'A4:E4', 'F4:J4', 'K4:P4', 'Q4:W4',
+            'A5:W5',
+            'A'.$footerRow.':W'.$footerRow,
         ];
-        $path = $this->writePaymentsXlsx(implode('', $rows), 'A6:M'.$lastDataRow, $merges, 'A1:M'.$footerRow);
+        $path = $this->writePaymentsXlsx(implode('', $rows), 'A6:W'.$lastDataRow, $merges, 'A1:W'.$footerRow);
 
         return response()->streamDownload(function () use ($path) {
             readfile($path);
@@ -1278,6 +1297,143 @@ class ReportingController extends Controller
             ->count();
     }
 
+    /** @return array<int, string> */
+    private function gstInvoiceNumbers(): array
+    {
+        $numbers = [];
+        $sequenceByYear = [];
+        $rows = AdmissionPayment::query()
+            ->where('status', AdmissionPayment::STATUS_SUCCESS)
+            ->orderBy('paid_at')
+            ->orderBy('id')
+            ->get(['id', 'paid_at', 'created_at']);
+
+        foreach ($rows as $row) {
+            $at = $row->paid_at ?? $row->created_at;
+            $year = $at?->timezone('Asia/Kolkata')->format('Y') ?? now('Asia/Kolkata')->format('Y');
+            $sequenceByYear[$year] = ($sequenceByYear[$year] ?? 0) + 1;
+            $numbers[$row->id] = sprintf('BNS/GST/%s/%04d', $year, $sequenceByYear[$year]);
+        }
+
+        return $numbers;
+    }
+
+    /**
+     * @param  Collection<string, ContactInquiry>  $inquiries
+     * @return array{gstin: string, pan: string, legal_name: string, business: string, state: string, city: string}
+     */
+    private function gstInvoiceProfile(AdmissionPayment $payment, Collection $inquiries): array
+    {
+        $payable = $payment->payable;
+        $inquiry = $payable instanceof ContactInquiry
+            ? $payable
+            : $inquiries->get((string) $payment->registration_number);
+        $formData = is_object($payable) && is_array($payable->form_data ?? null) ? $payable->form_data : [];
+        $gstin = strtoupper(trim((string) (
+            ($inquiry?->gst_no ?? null)
+            ?: (is_object($payable) ? ($payable->gst_no ?? null) : null)
+            ?: ($formData['gst_no'] ?? '')
+        )));
+        $validGstin = (bool) preg_match('/^[0-9]{2}[A-Z]{5}[0-9]{4}[A-Z][1-9A-Z]Z[0-9A-Z]$/', $gstin);
+        $state = trim((string) ($inquiry?->state ?? (is_object($payable) ? ($payable->state ?? null) : null) ?: ($formData['state'] ?? '')));
+        if ($validGstin) {
+            $state = $this->gstStateName(substr($gstin, 0, 2)) ?: $state;
+        }
+        if ($state === '') {
+            $state = 'Gujarat';
+        }
+
+        $business = trim((string) (
+            ($inquiry?->organization_name ?? null)
+            ?: (is_object($payable) ? ($payable->organization_name ?? null) : null)
+            ?: ($formData['organization_name'] ?? $formData['business_name'] ?? '')
+        ));
+        if ($business === '') {
+            $business = (string) ($payment->customer_name ?: '');
+        }
+
+        return [
+            'gstin' => $validGstin ? $gstin : 'B2C',
+            'pan' => $validGstin ? substr($gstin, 2, 10) : '',
+            'legal_name' => $business,
+            'business' => $business,
+            'state' => $state,
+            'city' => trim((string) ($inquiry?->city ?? (is_object($payable) ? ($payable->city ?? null) : null) ?: ($formData['city'] ?? ''))),
+        ];
+    }
+
+    /** @return array{taxable: float, cgst: float, sgst: float, igst: float, gst: float, split: string} */
+    private function gstTaxSplit(float $invoiceTotal, string $state): array
+    {
+        $taxable = round($invoiceTotal / 1.18, 2);
+        $gst = round($invoiceTotal - $taxable, 2);
+        $intraState = strcasecmp(trim($state), 'Gujarat') === 0;
+
+        if ($intraState) {
+            $cgst = round($gst / 2, 2);
+
+            return [
+                'taxable' => $taxable,
+                'cgst' => $cgst,
+                'sgst' => round($gst - $cgst, 2),
+                'igst' => 0.0,
+                'gst' => $gst,
+                'split' => 'CGST+SGST',
+            ];
+        }
+
+        return [
+            'taxable' => $taxable,
+            'cgst' => 0.0,
+            'sgst' => 0.0,
+            'igst' => $gst,
+            'gst' => $gst,
+            'split' => 'IGST',
+        ];
+    }
+
+    private function gstStateName(string $code): string
+    {
+        return [
+            '01' => 'Jammu and Kashmir',
+            '02' => 'Himachal Pradesh',
+            '03' => 'Punjab',
+            '04' => 'Chandigarh',
+            '05' => 'Uttarakhand',
+            '06' => 'Haryana',
+            '07' => 'Delhi',
+            '08' => 'Rajasthan',
+            '09' => 'Uttar Pradesh',
+            '10' => 'Bihar',
+            '11' => 'Sikkim',
+            '12' => 'Arunachal Pradesh',
+            '13' => 'Nagaland',
+            '14' => 'Manipur',
+            '15' => 'Mizoram',
+            '16' => 'Tripura',
+            '17' => 'Meghalaya',
+            '18' => 'Assam',
+            '19' => 'West Bengal',
+            '20' => 'Jharkhand',
+            '21' => 'Odisha',
+            '22' => 'Chhattisgarh',
+            '23' => 'Madhya Pradesh',
+            '24' => 'Gujarat',
+            '26' => 'Dadra and Nagar Haveli and Daman and Diu',
+            '27' => 'Maharashtra',
+            '29' => 'Karnataka',
+            '30' => 'Goa',
+            '31' => 'Lakshadweep',
+            '32' => 'Kerala',
+            '33' => 'Tamil Nadu',
+            '34' => 'Puducherry',
+            '35' => 'Andaman and Nicobar Islands',
+            '36' => 'Telangana',
+            '37' => 'Andhra Pradesh',
+            '38' => 'Ladakh',
+        ][$code] ?? '';
+    }
+
     private function xlsxOpenRow(int $row, int $height): string
     {
         return '<row r="'.$row.'" ht="'.$height.'" customHeight="1">';
@@ -1339,14 +1495,20 @@ class ReportingController extends Controller
             .'<cols>'
             .'<col min="1" max="1" width="8" customWidth="1"/>'
             .'<col min="2" max="2" width="22" customWidth="1"/>'
-            .'<col min="3" max="3" width="42" customWidth="1"/>'
-            .'<col min="4" max="4" width="26" customWidth="1"/>'
-            .'<col min="5" max="5" width="16" customWidth="1"/>'
-            .'<col min="6" max="6" width="32" customWidth="1"/>'
-            .'<col min="7" max="9" width="14" customWidth="1"/>'
-            .'<col min="10" max="10" width="16" customWidth="1"/>'
+            .'<col min="3" max="3" width="14" customWidth="1"/>'
+            .'<col min="4" max="4" width="24" customWidth="1"/>'
+            .'<col min="5" max="5" width="18" customWidth="1"/>'
+            .'<col min="6" max="6" width="14" customWidth="1"/>'
+            .'<col min="7" max="8" width="24" customWidth="1"/>'
+            .'<col min="9" max="10" width="16" customWidth="1"/>'
             .'<col min="11" max="12" width="14" customWidth="1"/>'
-            .'<col min="13" max="13" width="24" customWidth="1"/>'
+            .'<col min="13" max="13" width="28" customWidth="1"/>'
+            .'<col min="14" max="14" width="12" customWidth="1"/>'
+            .'<col min="15" max="15" width="14" customWidth="1"/>'
+            .'<col min="16" max="18" width="12" customWidth="1"/>'
+            .'<col min="19" max="21" width="14" customWidth="1"/>'
+            .'<col min="22" max="22" width="14" customWidth="1"/>'
+            .'<col min="23" max="23" width="20" customWidth="1"/>'
             .'</cols>'
             .'<sheetData>'.$rowsXml.'</sheetData>'
             .'<autoFilter ref="'.$filterRange.'"/>'
@@ -1427,7 +1589,7 @@ class ReportingController extends Controller
             .'</Relationships>');
         $zip->addFromString('xl/workbook.xml', '<?xml version="1.0" encoding="UTF-8" standalone="yes"?>'
             .'<workbook xmlns="http://schemas.openxmlformats.org/spreadsheetml/2006/main" xmlns:r="http://schemas.openxmlformats.org/officeDocument/2006/relationships">'
-            .'<sheets><sheet name="Payments" sheetId="1" r:id="rId1"/></sheets>'
+            .'<sheets><sheet name="GST Invoices" sheetId="1" r:id="rId1"/></sheets>'
             .'</workbook>');
         $zip->addFromString('xl/_rels/workbook.xml.rels', '<?xml version="1.0" encoding="UTF-8" standalone="yes"?>'
             .'<Relationships xmlns="http://schemas.openxmlformats.org/package/2006/relationships">'
