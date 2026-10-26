@@ -216,38 +216,76 @@ class ReportingController extends Controller
             $filters['date_to'] !== '' ? 'To: '.$filters['date_to'] : null,
             $filters['paid_date'] !== '' ? 'Session date: '.$filters['paid_date'] : null,
         ]);
-        $filterLine = $filterBits === [] ? 'Filters: All payments' : 'Filters: '.implode(' | ', $filterBits);
+        $filterLabel = $filterBits === [] ? 'All payments' : implode(' · ', $filterBits);
+        $collected = 0.0;
+        $refundTotal = 0.0;
+        foreach ($payments as $payment) {
+            $collected += (float) $payment->amount;
+            if ($payment->isRefunded()) {
+                $refundTotal += (float) ($payment->refund_amount ?? 0);
+            }
+        }
+        $netTotal = $collected - $refundTotal;
+        $generatedAt = now('Asia/Kolkata')->format('d M Y, h:i A');
+        $count = $payments->count();
+        $lastDataRow = 6 + $count;
+        $footerRow = $lastDataRow + 2;
 
-        $rows = [$this->xlsxTextRow(1, [$filterLine], 1)];
-        $rows[] = $this->xlsxTextRow(2, $columns, 2);
+        $rows = [
+            $this->xlsxOpenRow(1, 26).$this->xlsxTextCell('A1', 'Business Navachar School', 1).'</row>',
+            $this->xlsxOpenRow(2, 20).$this->xlsxTextCell('A2', 'Admission Confirm Report  ·  '.$filterLabel, 2).'</row>',
+            $this->xlsxOpenRow(3, 18).$this->xlsxTextCell('A3', number_format($count).' payments  ·  Generated '.$generatedAt, 3).'</row>',
+            $this->xlsxOpenRow(4, 36)
+                .$this->xlsxTextCell('A4', "Successful Payments\n".number_format($count), 4)
+                .$this->xlsxTextCell('D4', "Total Collected\n₹".number_format($collected, 2), 4)
+                .$this->xlsxTextCell('G4', "Refund\n₹".number_format($refundTotal, 2), 4)
+                .$this->xlsxTextCell('J4', "Last Total\n₹".number_format($netTotal, 2), 5)
+                .'</row>',
+            $this->xlsxOpenRow(5, 8).$this->xlsxTextCell('A5', '', 16).'</row>',
+            $this->xlsxTextRow(6, $columns, 6, 22),
+        ];
 
         foreach ($payments->values() as $index => $payment) {
             $amount = (float) $payment->amount;
             $refunded = $payment->isRefunded() ? (float) ($payment->refund_amount ?? 0) : 0;
             $phone = preg_replace('/\s+/', '', (string) ($payment->customer_mobile ?: '')) ?: '';
             $source = $payment->form_type === 'intro-session' ? 'Introduction Session' : 'Admission';
-            $paidOn = $payment->paid_at?->timezone('Asia/Kolkata')->format('d-M-y') ?? '';
-            $rowNumber = $index + 3;
+            $paidOn = $payment->paid_at?->timezone('Asia/Kolkata')->format('d M Y') ?? '';
+            $rowNumber = $index + 7;
+            $zebra = $index % 2 === 1;
+            $text = $zebra ? 8 : 7;
+            $bold = $zebra ? 14 : 13;
+            $sr = $zebra ? 10 : 9;
+            $money = $zebra ? 12 : 11;
 
-            $rows[] = '<row r="'.$rowNumber.'">'
-                .$this->xlsxNumberCell($this->xlsxColumn(1).$rowNumber, (string) ($index + 1), 5)
-                .$this->xlsxTextCell($this->xlsxColumn(2).$rowNumber, $source, 3)
-                .$this->xlsxTextCell($this->xlsxColumn(3).$rowNumber, $institute, 3)
-                .$this->xlsxTextCell($this->xlsxColumn(4).$rowNumber, (string) ($payment->customer_name ?: ''), 3)
-                .$this->xlsxTextCell($this->xlsxColumn(5).$rowNumber, $phone, 3)
-                .$this->xlsxTextCell($this->xlsxColumn(6).$rowNumber, (string) ($payment->customer_email ?: ''), 3)
-                .$this->xlsxNumberCell($this->xlsxColumn(7).$rowNumber, number_format($amount, 2, '.', ''), 4)
-                .$this->xlsxNumberCell($this->xlsxColumn(8).$rowNumber, number_format($refunded, 2, '.', ''), 4)
-                .$this->xlsxNumberCell($this->xlsxColumn(9).$rowNumber, number_format($amount - $refunded, 2, '.', ''), 4)
-                .$this->xlsxTextCell($this->xlsxColumn(10).$rowNumber, $paidOn, 3)
-                .$this->xlsxTextCell($this->xlsxColumn(11).$rowNumber, (string) ($payment->payment_mode ?: ''), 3)
-                .$this->xlsxTextCell($this->xlsxColumn(12).$rowNumber, 'Success', 3)
-                .$this->xlsxTextCell($this->xlsxColumn(13).$rowNumber, (string) ($payment->registration_number ?: $payment->merchant_txn_no ?: ''), 3)
+            $rows[] = $this->xlsxOpenRow($rowNumber, 18)
+                .$this->xlsxNumberCell($this->xlsxColumn(1).$rowNumber, (string) ($index + 1), $sr)
+                .$this->xlsxTextCell($this->xlsxColumn(2).$rowNumber, $source, $text)
+                .$this->xlsxTextCell($this->xlsxColumn(3).$rowNumber, $institute, $text)
+                .$this->xlsxTextCell($this->xlsxColumn(4).$rowNumber, (string) ($payment->customer_name ?: ''), $bold)
+                .$this->xlsxTextCell($this->xlsxColumn(5).$rowNumber, $phone, $text)
+                .$this->xlsxTextCell($this->xlsxColumn(6).$rowNumber, (string) ($payment->customer_email ?: ''), $text)
+                .$this->xlsxNumberCell($this->xlsxColumn(7).$rowNumber, number_format($amount, 2, '.', ''), $money)
+                .$this->xlsxNumberCell($this->xlsxColumn(8).$rowNumber, number_format($refunded, 2, '.', ''), $money)
+                .$this->xlsxNumberCell($this->xlsxColumn(9).$rowNumber, number_format($amount - $refunded, 2, '.', ''), $money)
+                .$this->xlsxTextCell($this->xlsxColumn(10).$rowNumber, $paidOn, $text)
+                .$this->xlsxTextCell($this->xlsxColumn(11).$rowNumber, (string) ($payment->payment_mode ?: ''), $text)
+                .$this->xlsxTextCell($this->xlsxColumn(12).$rowNumber, 'Success', $text)
+                .$this->xlsxTextCell($this->xlsxColumn(13).$rowNumber, (string) ($payment->registration_number ?: $payment->merchant_txn_no ?: ''), $bold)
                 .'</row>';
         }
 
-        $lastRow = max(2, $payments->count() + 2);
-        $path = $this->writePaymentsXlsx(implode('', $rows), 'A2:M'.$lastRow);
+        $rows[] = $this->xlsxOpenRow($footerRow, 18)
+            .$this->xlsxTextCell('A'.$footerRow, 'Generated from BNS Admission Confirm Report  ·  businessnavacharschool.com', 15)
+            .'</row>';
+
+        $merges = [
+            'A1:M1', 'A2:M2', 'A3:M3',
+            'A4:C4', 'D4:F4', 'G4:I4', 'J4:M4',
+            'A5:M5',
+            'A'.$footerRow.':M'.$footerRow,
+        ];
+        $path = $this->writePaymentsXlsx(implode('', $rows), 'A6:M'.$lastDataRow, $merges, 'A1:M'.$footerRow);
 
         return response()->streamDownload(function () use ($path) {
             readfile($path);
@@ -1240,14 +1278,19 @@ class ReportingController extends Controller
             ->count();
     }
 
-    private function xlsxTextRow(int $row, array $values, int $style): string
+    private function xlsxOpenRow(int $row, int $height): string
+    {
+        return '<row r="'.$row.'" ht="'.$height.'" customHeight="1">';
+    }
+
+    private function xlsxTextRow(int $row, array $values, int $style, int $height = 20): string
     {
         $cells = '';
         foreach (array_values($values) as $index => $value) {
             $cells .= $this->xlsxTextCell($this->xlsxColumn($index + 1).$row, (string) $value, $style);
         }
 
-        return '<row r="'.$row.'">'.$cells.'</row>';
+        return $this->xlsxOpenRow($row, $height).$cells.'</row>';
     }
 
     private function xlsxTextCell(string $ref, string $value, int $style): string
@@ -1274,53 +1317,89 @@ class ReportingController extends Controller
         return $column;
     }
 
-    private function writePaymentsXlsx(string $rowsXml, string $filterRange): string
+    /**
+     * @param  list<string>  $merges
+     */
+    private function writePaymentsXlsx(string $rowsXml, string $filterRange, array $merges, string $dimension): string
     {
         if (! class_exists(\ZipArchive::class)) {
             throw new RuntimeException('Excel export needs the PHP Zip extension.');
         }
 
+        $mergeXml = '';
+        foreach ($merges as $ref) {
+            $mergeXml .= '<mergeCell ref="'.htmlspecialchars($ref, ENT_XML1 | ENT_QUOTES, 'UTF-8').'"/>';
+        }
+
         $sheet = '<?xml version="1.0" encoding="UTF-8" standalone="yes"?>'
             .'<worksheet xmlns="http://schemas.openxmlformats.org/spreadsheetml/2006/main">'
-            .'<sheetViews><sheetView workbookViewId="0"><pane ySplit="2" topLeftCell="A3" activePane="bottomLeft" state="frozen"/></sheetView></sheetViews>'
+            .'<dimension ref="'.$dimension.'"/>'
+            .'<sheetViews><sheetView tabSelected="1" workbookViewId="0"><pane ySplit="6" topLeftCell="A7" activePane="bottomLeft" state="frozen"/></sheetView></sheetViews>'
+            .'<sheetFormatPr defaultRowHeight="16"/>'
             .'<cols>'
-            .'<col min="1" max="1" width="6" customWidth="1"/>'
+            .'<col min="1" max="1" width="8" customWidth="1"/>'
             .'<col min="2" max="2" width="22" customWidth="1"/>'
-            .'<col min="3" max="3" width="62" customWidth="1"/>'
-            .'<col min="4" max="4" width="28" customWidth="1"/>'
+            .'<col min="3" max="3" width="42" customWidth="1"/>'
+            .'<col min="4" max="4" width="26" customWidth="1"/>'
             .'<col min="5" max="5" width="16" customWidth="1"/>'
             .'<col min="6" max="6" width="32" customWidth="1"/>'
             .'<col min="7" max="9" width="14" customWidth="1"/>'
-            .'<col min="10" max="12" width="14" customWidth="1"/>'
+            .'<col min="10" max="10" width="16" customWidth="1"/>'
+            .'<col min="11" max="12" width="14" customWidth="1"/>'
             .'<col min="13" max="13" width="24" customWidth="1"/>'
             .'</cols>'
             .'<sheetData>'.$rowsXml.'</sheetData>'
             .'<autoFilter ref="'.$filterRange.'"/>'
-            .'<mergeCells count="1"><mergeCell ref="A1:M1"/></mergeCells>'
+            .'<mergeCells count="'.count($merges).'">'.$mergeXml.'</mergeCells>'
+            .'<pageSetup orientation="landscape" paperSize="9" fitToPage="1" fitToWidth="1" fitToHeight="0"/>'
             .'</worksheet>';
 
         $styles = '<?xml version="1.0" encoding="UTF-8" standalone="yes"?>'
             .'<styleSheet xmlns="http://schemas.openxmlformats.org/spreadsheetml/2006/main">'
             .'<numFmts count="1"><numFmt numFmtId="164" formatCode="#,##0.00"/></numFmts>'
-            .'<fonts count="3">'
-            .'<font><sz val="11"/><name val="Calibri"/></font>'
-            .'<font><b/><sz val="12"/><color rgb="FF0A1D37"/><name val="Calibri"/></font>'
+            .'<fonts count="7">'
+            .'<font><sz val="11"/><color rgb="FF0A1D37"/><name val="Calibri"/></font>'
+            .'<font><b/><sz val="18"/><color rgb="FFFFFFFF"/><name val="Calibri"/></font>'
+            .'<font><b/><sz val="13"/><color rgb="FF0A1D37"/><name val="Calibri"/></font>'
+            .'<font><sz val="10"/><color rgb="FF64748B"/><name val="Calibri"/></font>'
             .'<font><b/><sz val="11"/><color rgb="FFFFFFFF"/><name val="Calibri"/></font>'
+            .'<font><b/><sz val="11"/><color rgb="FF0A1D37"/><name val="Calibri"/></font>'
+            .'<font><b/><sz val="10"/><color rgb="FFFFFFFF"/><name val="Calibri"/></font>'
             .'</fonts>'
-            .'<fills count="3">'
+            .'<fills count="8">'
             .'<fill><patternFill patternType="none"/></fill>'
             .'<fill><patternFill patternType="gray125"/></fill>'
-            .'<fill><patternFill patternType="solid"><fgColor rgb="FF0A1D37"/><bgColor indexed="64"/></patternFill></fill>'
+            .'<fill><patternFill patternType="solid"><fgColor rgb="FF0A1D37"/><bgColor rgb="FF0A1D37"/></patternFill></fill>'
+            .'<fill><patternFill patternType="solid"><fgColor rgb="FFFFB800"/><bgColor rgb="FFFFB800"/></patternFill></fill>'
+            .'<fill><patternFill patternType="solid"><fgColor rgb="FFF8FAFC"/><bgColor rgb="FFF8FAFC"/></patternFill></fill>'
+            .'<fill><patternFill patternType="solid"><fgColor rgb="FFE0F2FE"/><bgColor rgb="FFE0F2FE"/></patternFill></fill>'
+            .'<fill><patternFill patternType="solid"><fgColor rgb="FFE07A2F"/><bgColor rgb="FFE07A2F"/></patternFill></fill>'
+            .'<fill><patternFill patternType="solid"><fgColor rgb="FFFFF7ED"/><bgColor rgb="FFFFF7ED"/></patternFill></fill>'
             .'</fills>'
-            .'<borders count="1"><border><left/><right/><top/><bottom/><diagonal/></border></borders>'
+            .'<borders count="3">'
+            .'<border><left/><right/><top/><bottom/><diagonal/></border>'
+            .'<border><left style="thin"><color rgb="FFE8EDF3"/></left><right style="thin"><color rgb="FFE8EDF3"/></right><top style="thin"><color rgb="FFE8EDF3"/></top><bottom style="thin"><color rgb="FFE8EDF3"/></bottom><diagonal/></border>'
+            .'<border><left style="thin"><color rgb="FFC96A28"/></left><right style="thin"><color rgb="FFC96A28"/></right><top style="thin"><color rgb="FFC96A28"/></top><bottom style="thin"><color rgb="FFC96A28"/></bottom><diagonal/></border>'
+            .'</borders>'
             .'<cellStyleXfs count="1"><xf numFmtId="0" fontId="0" fillId="0" borderId="0"/></cellStyleXfs>'
-            .'<cellXfs count="6">'
+            .'<cellXfs count="17">'
             .'<xf numFmtId="0" fontId="0" fillId="0" borderId="0" xfId="0"/>'
-            .'<xf numFmtId="0" fontId="1" fillId="0" borderId="0" xfId="0" applyFont="1"/>'
-            .'<xf numFmtId="0" fontId="2" fillId="2" borderId="0" xfId="0" applyFont="1" applyFill="1" applyAlignment="1"><alignment horizontal="center"/></xf>'
-            .'<xf numFmtId="49" fontId="0" fillId="0" borderId="0" xfId="0" applyNumberFormat="1"/>'
-            .'<xf numFmtId="164" fontId="0" fillId="0" borderId="0" xfId="0" applyNumberFormat="1"/>'
-            .'<xf numFmtId="1" fontId="0" fillId="0" borderId="0" xfId="0" applyNumberFormat="1"/>'
+            .'<xf numFmtId="0" fontId="1" fillId="2" borderId="0" xfId="0" applyFont="1" applyFill="1" applyAlignment="1"><alignment vertical="center"/></xf>'
+            .'<xf numFmtId="0" fontId="2" fillId="3" borderId="0" xfId="0" applyFont="1" applyFill="1" applyAlignment="1"><alignment vertical="center"/></xf>'
+            .'<xf numFmtId="0" fontId="3" fillId="4" borderId="0" xfId="0" applyFont="1" applyFill="1" applyAlignment="1"><alignment vertical="center"/></xf>'
+            .'<xf numFmtId="0" fontId="5" fillId="5" borderId="1" xfId="0" applyFont="1" applyFill="1" applyBorder="1" applyAlignment="1"><alignment horizontal="center" vertical="center" wrapText="1"/></xf>'
+            .'<xf numFmtId="0" fontId="4" fillId="6" borderId="2" xfId="0" applyFont="1" applyFill="1" applyBorder="1" applyAlignment="1"><alignment horizontal="center" vertical="center" wrapText="1"/></xf>'
+            .'<xf numFmtId="0" fontId="6" fillId="6" borderId="2" xfId="0" applyFont="1" applyFill="1" applyBorder="1" applyAlignment="1"><alignment horizontal="center" vertical="center" wrapText="1"/></xf>'
+            .'<xf numFmtId="0" fontId="0" fillId="0" borderId="1" xfId="0" applyFont="1" applyBorder="1" applyAlignment="1"><alignment vertical="center"/></xf>'
+            .'<xf numFmtId="0" fontId="0" fillId="7" borderId="1" xfId="0" applyFont="1" applyFill="1" applyBorder="1" applyAlignment="1"><alignment vertical="center"/></xf>'
+            .'<xf numFmtId="0" fontId="5" fillId="0" borderId="1" xfId="0" applyFont="1" applyBorder="1" applyAlignment="1"><alignment horizontal="center" vertical="center"/></xf>'
+            .'<xf numFmtId="0" fontId="5" fillId="7" borderId="1" xfId="0" applyFont="1" applyFill="1" applyBorder="1" applyAlignment="1"><alignment horizontal="center" vertical="center"/></xf>'
+            .'<xf numFmtId="164" fontId="0" fillId="0" borderId="1" xfId="0" applyFont="1" applyNumberFormat="1" applyBorder="1" applyAlignment="1"><alignment horizontal="right" vertical="center"/></xf>'
+            .'<xf numFmtId="164" fontId="0" fillId="7" borderId="1" xfId="0" applyFont="1" applyFill="1" applyNumberFormat="1" applyBorder="1" applyAlignment="1"><alignment horizontal="right" vertical="center"/></xf>'
+            .'<xf numFmtId="0" fontId="5" fillId="0" borderId="1" xfId="0" applyFont="1" applyBorder="1" applyAlignment="1"><alignment vertical="center"/></xf>'
+            .'<xf numFmtId="0" fontId="5" fillId="7" borderId="1" xfId="0" applyFont="1" applyFill="1" applyBorder="1" applyAlignment="1"><alignment vertical="center"/></xf>'
+            .'<xf numFmtId="0" fontId="6" fillId="2" borderId="0" xfId="0" applyFont="1" applyFill="1" applyAlignment="1"><alignment vertical="center"/></xf>'
+            .'<xf numFmtId="0" fontId="0" fillId="0" borderId="0" xfId="0"/>'
             .'</cellXfs>'
             .'</styleSheet>';
 
