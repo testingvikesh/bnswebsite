@@ -233,6 +233,9 @@
     </div>
 
     <form method="GET" action="{{ route('reporting.payments') }}" class="row g-3 align-items-end js-reporting-filter-form">
+        @if(($paidDate ?? '') !== '')
+            <input type="hidden" name="paid_date" value="{{ $paidDate }}">
+        @endif
         <div class="col-md-4">
             <label class="form-label">Search</label>
             <input

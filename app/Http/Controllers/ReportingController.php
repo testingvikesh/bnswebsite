@@ -199,54 +199,88 @@ class ReportingController extends Controller
     {
         $this->ensureReportingAccess();
 
-        $payments = $this->filteredSuccessfulPayments($this->paymentFiltersFromRequest($request));
+        $filters = $this->paymentFiltersFromRequest($request);
+        $payments = $this->filteredSuccessfulPayments($filters);
         $filename = 'bns-successful-payments-'.now()->format('Y-m-d-His').'.xls';
-        $headers = [
-            'Paid Date',
-            'Paid Time',
-            'Program',
-            'Registration Number',
-            'Name',
-            'Email',
-            'Mobile',
-            'Amount',
-            'Currency',
-            'Payment Mode',
-            'Merchant Transaction No.',
-            'Gateway Transaction ID',
-            'Payment ID',
-            'Response Code',
-            'Response Description',
-            'Status',
-        ];
+        $institute = (string) config(
+            'team.venue_partner.venue.location',
+            'Shree Vardhaman Sthanakwasi Jain Shravak Sangh Santacruz West'
+        );
+        $columns = ['Sr', 'Source', 'Institute', 'Member', 'Phone', 'Email', 'Amount', 'Refunded', 'Net', 'Date', 'Mode', 'Status', 'Reference'];
+        $lastRow = $payments->count() + 2;
 
-        return response()->streamDownload(function () use ($payments, $headers) {
-            $handle = fopen('php://output', 'w');
-            fwrite($handle, "\xEF\xBB\xBF");
-            fputcsv($handle, $headers);
+        $filterBits = array_filter([
+            $filters['search'] !== '' ? 'Search: '.$filters['search'] : null,
+            $filters['program'] !== '' ? 'Program: '.$filters['program'] : null,
+            $filters['payment_mode'] !== '' ? 'Mode: '.$filters['payment_mode'] : null,
+            $filters['date_from'] !== '' ? 'From: '.$filters['date_from'] : null,
+            $filters['date_to'] !== '' ? 'To: '.$filters['date_to'] : null,
+            $filters['paid_date'] !== '' ? 'Session date: '.$filters['paid_date'] : null,
+        ]);
+        $filterLine = $filterBits === [] ? 'Filters: All payments' : 'Filters: '.implode(' | ', $filterBits);
 
-            foreach ($payments as $payment) {
-                fputcsv($handle, [
-                    $payment->paid_at?->format('d M Y') ?? '',
-                    $payment->paid_at?->format('h:i A') ?? '',
-                    $payment->display_program,
-                    $payment->registration_number,
-                    $payment->customer_name,
-                    $payment->customer_email,
-                    $payment->customer_mobile,
-                    number_format((float) $payment->amount, 2, '.', ''),
-                    $payment->currency_code,
-                    $payment->payment_mode,
-                    $payment->merchant_txn_no,
-                    $payment->txn_id,
-                    $payment->payment_id,
-                    $payment->response_code,
-                    $payment->response_description,
-                    $payment->statusLabel(),
-                ]);
+        return response()->streamDownload(function () use ($payments, $institute, $columns, $lastRow, $filterLine) {
+            $xml = function (string $value): string {
+                return htmlspecialchars($value, ENT_XML1 | ENT_QUOTES, 'UTF-8');
+            };
+            $cell = function (string $value, string $style = 'Text') use ($xml): string {
+                return '<Cell ss:StyleID="'.$style.'"><Data ss:Type="String">'.$xml($value).'</Data></Cell>';
+            };
+            $number = function (float $value, string $style = 'Number') : string {
+                $formatted = $style === 'Integer'
+                    ? (string) (int) $value
+                    : number_format($value, 2, '.', '');
+
+                return '<Cell ss:StyleID="'.$style.'"><Data ss:Type="Number">'.$formatted.'</Data></Cell>';
+            };
+
+            echo '<?xml version="1.0" encoding="UTF-8"?>'."\n";
+            echo '<?mso-application progid="Excel.Sheet"?>'."\n";
+            echo '<Workbook xmlns="urn:schemas-microsoft-com:office:spreadsheet" xmlns:ss="urn:schemas-microsoft-com:office:spreadsheet" xmlns:x="urn:schemas-microsoft-com:office:excel">';
+            echo '<Styles>';
+            echo '<Style ss:ID="Title"><Font ss:Bold="1" ss:Size="12" ss:Color="#0A1D37"/></Style>';
+            echo '<Style ss:ID="Header"><Font ss:Bold="1" ss:Color="#FFFFFF"/><Interior ss:Color="#0A1D37" ss:Pattern="Solid"/><Alignment ss:Horizontal="Center"/></Style>';
+            echo '<Style ss:ID="Text"><NumberFormat ss:Format="@"/></Style>';
+            echo '<Style ss:ID="Number"><NumberFormat ss:Format="#,##0.00"/></Style>';
+            echo '<Style ss:ID="Integer"><NumberFormat ss:Format="0"/></Style>';
+            echo '</Styles>';
+            echo '<Worksheet ss:Name="Payments"><Table>';
+            echo '<Column ss:Width="40"/><Column ss:Width="110"/><Column ss:Width="280"/><Column ss:Width="180"/><Column ss:Width="120"/><Column ss:Width="200"/><Column ss:Width="90"/><Column ss:Width="90"/><Column ss:Width="90"/><Column ss:Width="90"/><Column ss:Width="80"/><Column ss:Width="90"/><Column ss:Width="160"/>';
+            echo '<Row>'.$cell($filterLine, 'Title').'</Row>';
+            echo '<Row>';
+            foreach ($columns as $column) {
+                echo $cell($column, 'Header');
+            }
+            echo '</Row>';
+
+            foreach ($payments->values() as $index => $payment) {
+                $amount = (float) $payment->amount;
+                $refunded = $payment->isRefunded() ? (float) ($payment->refund_amount ?? 0) : 0;
+                $phone = preg_replace('/\s+/', '', (string) ($payment->customer_mobile ?: '')) ?: '';
+                $source = $payment->form_type === 'intro-session' ? 'Introduction Session' : 'Admission';
+                $paidOn = $payment->paid_at?->timezone('Asia/Kolkata')->format('d-M-y') ?? '';
+
+                echo '<Row>';
+                echo $number((float) ($index + 1), 'Integer');
+                echo $cell($source);
+                echo $cell($institute);
+                echo $cell((string) ($payment->customer_name ?: ''));
+                echo $cell($phone);
+                echo $cell((string) ($payment->customer_email ?: ''));
+                echo $number($amount);
+                echo $number($refunded);
+                echo $number($amount - $refunded);
+                echo $cell($paidOn);
+                echo $cell((string) ($payment->payment_mode ?: ''));
+                echo $cell('Success');
+                echo $cell((string) ($payment->registration_number ?: $payment->merchant_txn_no ?: ''));
+                echo '</Row>';
             }
 
-            fclose($handle);
+            echo '</Table>';
+            echo '<AutoFilter x:Range="R2C1:R'.$lastRow.'C'.count($columns).'"/>';
+            echo '<WorksheetOptions xmlns="urn:schemas-microsoft-com:office:excel"><FreezePanes/><FrozenNoSplit/><SplitHorizontal>2</SplitHorizontal><TopRowBottomPane>2</TopRowBottomPane><ActivePane>2</ActivePane></WorksheetOptions>';
+            echo '</Worksheet></Workbook>';
         }, $filename, [
             'Content-Type' => 'application/vnd.ms-excel; charset=UTF-8',
         ]);
