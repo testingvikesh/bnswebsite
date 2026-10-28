@@ -26,7 +26,7 @@
             <div class="modal-body bns-intro-whatsapp-notice__body">
                 <p class="bns-intro-whatsapp-notice__alert">Important information for BNS introduction participants</p>
                 <p>Please join our official WhatsApp group:</p>
-                <a class="bns-intro-whatsapp-notice__link" href="https://chat.whatsapp.com/L3tPWVwZLN92yUB0UH7WdP?s=cl&amp;p=a&amp;mlu=4&amp;ilr=4&amp;iam=0" target="_blank" rel="noopener noreferrer">https://chat.whatsapp.com/L3tPWVwZLN92yUB0UH7WdP</a>
+                <a class="bns-intro-whatsapp-notice__link" href="https://chat.whatsapp.com/HvbKeBjiBFLAPMurJep3SM?s=sw&amp;p=a&amp;mlu=4&amp;ilr=4&amp;iam=2" target="_blank" rel="noopener noreferrer">https://chat.whatsapp.com/HvbKeBjiBFLAPMurJep3SM</a>
                 <p>If you have filled the BNS Introduction Form and want to receive further information, updates and session details, please join the above WhatsApp group.</p>
                 <p>All further communication will be shared through the WhatsApp group.</p>
                 <p class="bns-intro-whatsapp-notice__warn">We will not make personal calls or individual approaches.</p>
@@ -35,7 +35,7 @@
                 <a
                     class="bns-intro-whatsapp-notice__join"
                     id="bnsIntroWhatsappJoin"
-                    href="https://chat.whatsapp.com/L3tPWVwZLN92yUB0UH7WdP?s=cl&amp;p=a&amp;mlu=4&amp;ilr=4&amp;iam=0"
+                    href="https://chat.whatsapp.com/HvbKeBjiBFLAPMurJep3SM?s=sw&amp;p=a&amp;mlu=4&amp;ilr=4&amp;iam=2"
                     target="_blank"
                     rel="noopener noreferrer"
                 >
