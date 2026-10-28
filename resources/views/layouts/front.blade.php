@@ -556,6 +556,7 @@
         'stickyIntroSession' => $bnsStickyCtaResolved['intro'] ?? config('home.sticky_cta.intro_session', []),
         'openOnLoad' => $bnsOpenIntroSession,
     ])
+    @include('partials.intro-session-whatsapp-modal')
     @include('partials.quick-register-modal', [
         'stickyRegister' => $bnsStickyCtaResolved['register'] ?? config('home.sticky_cta.intro_session', []),
         'openOnLoad' => $bnsOpenQuickRegister,

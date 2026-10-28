@@ -737,5 +737,79 @@
                 refreshCsrfToken($form);
             }
         });
+
+        window.bnsShowIntroWhatsappNotice = function (redirectUrl) {
+            var notice = document.getElementById('bnsIntroWhatsappModal');
+            if (!notice) {
+                if (redirectUrl) {
+                    window.location.href = redirectUrl;
+                }
+                return;
+            }
+
+            notice.setAttribute('data-bns-next', redirectUrl || '');
+            if (typeof window.bnsCloseIntroModal === 'function') {
+                window.bnsCloseIntroModal();
+            }
+
+            window.setTimeout(function () {
+                notice.classList.remove('bns-modal-is-closed');
+                notice.style.removeProperty('display');
+                notice.setAttribute('aria-hidden', 'false');
+
+                var modalApi = null;
+                if (window.bootstrap && window.bootstrap.Modal) {
+                    try {
+                        if (typeof window.bootstrap.Modal.getOrCreateInstance === 'function') {
+                            modalApi = window.bootstrap.Modal.getOrCreateInstance(notice);
+                        } else if (typeof window.bootstrap.Modal.getInstance === 'function' && window.bootstrap.Modal.getInstance(notice)) {
+                            modalApi = window.bootstrap.Modal.getInstance(notice);
+                        } else {
+                            modalApi = new window.bootstrap.Modal(notice);
+                        }
+                    } catch (error) {
+                        modalApi = null;
+                    }
+                }
+
+                if (modalApi) {
+                    modalApi.show();
+                    return;
+                }
+
+                notice.classList.add('show');
+                notice.style.setProperty('display', 'block', 'important');
+                document.body.classList.add('modal-open');
+            }, 160);
+        };
+
+        (function bindIntroWhatsappNotice() {
+            var notice = document.getElementById('bnsIntroWhatsappModal');
+            var join = document.getElementById('bnsIntroWhatsappJoin');
+            if (!notice || notice.getAttribute('data-bns-bound') === '1') {
+                return;
+            }
+            notice.setAttribute('data-bns-bound', '1');
+
+            var leaving = false;
+            var goNext = function () {
+                if (leaving) {
+                    return;
+                }
+                var next = notice.getAttribute('data-bns-next') || '';
+                if (!next) {
+                    return;
+                }
+                leaving = true;
+                window.location.href = next;
+            };
+
+            notice.addEventListener('hidden.bs.modal', goNext);
+            if (join) {
+                join.addEventListener('click', function () {
+                    window.setTimeout(goNext, 400);
+                });
+            }
+        })();
     });
 })(window.jQuery);
