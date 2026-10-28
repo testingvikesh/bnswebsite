@@ -155,4 +155,29 @@
     } catch (e) {}
 })();
 </script>
+@if(($thankYou['form_source'] ?? '') === 'intro-session-modal')
+<script>
+(function () {
+    function openNotice() {
+        if (typeof window.bnsShowIntroWhatsappNotice !== 'function') {
+            return false;
+        }
+        window.bnsShowIntroWhatsappNotice('');
+        return true;
+    }
+
+    if (openNotice()) {
+        return;
+    }
+
+    var tries = 0;
+    var timer = window.setInterval(function () {
+        tries += 1;
+        if (openNotice() || tries > 40) {
+            window.clearInterval(timer);
+        }
+    }, 50);
+})();
+</script>
+@endif
 @endpush

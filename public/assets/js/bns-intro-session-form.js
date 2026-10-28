@@ -806,8 +806,16 @@
 
             notice.addEventListener('hidden.bs.modal', goNext);
             if (join) {
-                join.addEventListener('click', function () {
-                    window.setTimeout(goNext, 400);
+                join.addEventListener('click', function (event) {
+                    if (!notice.getAttribute('data-bns-next')) {
+                        return;
+                    }
+                    event.preventDefault();
+                    var url = join.getAttribute('href');
+                    if (url) {
+                        window.open(url, '_blank', 'noopener');
+                    }
+                    window.setTimeout(goNext, 300);
                 });
             }
         })();

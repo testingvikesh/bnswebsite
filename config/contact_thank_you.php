@@ -6,7 +6,7 @@ return [
         'title' => 'Introduction Session Request Submitted',
         'eyebrow' => 'Thank You',
         'thank_you' => 'Thank you, :name! Your Introduction Session request has been received successfully.',
-        'contact_soon' => 'A confirmation email with your Introduction Session date, time, venue details, and a calendar reminder has been sent to your registered email address. Our Admission Team will also contact you shortly on your mobile number.',
+        'contact_soon' => 'A confirmation email with your Introduction Session date, time, venue details, and a calendar reminder has been sent to your registered email address. Please join the official WhatsApp group for further updates. We will not make personal calls or individual approaches.',
         'reference_label' => 'Your Reference Number',
     ],
 

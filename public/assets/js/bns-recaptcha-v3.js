@@ -187,14 +187,6 @@
 
             return parseJsonSafe(response).then(function (payload) {
                 if (response.ok && payload && payload.redirect) {
-                    var sourceInput = el.querySelector('[name="form_source"]');
-                    var source = sourceInput ? (sourceInput.value || '') : '';
-                    if (el.classList.contains('bns-intro-session-form')
-                        && source === 'intro-session-modal'
-                        && typeof window.bnsShowIntroWhatsappNotice === 'function') {
-                        window.bnsShowIntroWhatsappNotice(payload.redirect);
-                        return payload;
-                    }
                     window.location.href = payload.redirect;
                     return payload;
                 }
