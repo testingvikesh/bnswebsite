@@ -5,8 +5,8 @@ namespace App\Http\Controllers\Sop;
 use App\Http\Controllers\Controller;
 use App\Models\AdmissionPayment;
 use App\Models\ContactInquiry;
+use App\Models\SessionAttendance;
 use App\Support\ColoredXlsx;
-use App\Support\CrmLeadStatus;
 use Illuminate\Http\Request;
 use Illuminate\Http\Response;
 use Illuminate\Support\Collection;
@@ -15,6 +15,9 @@ use Illuminate\View\View;
 
 class IntroSessionRegisterController extends Controller
 {
+    /** @var Collection<int, array{session: int, inquiry: ContactInquiry, payment: ?AdmissionPayment, present: bool}>|null */
+    private ?Collection $allRows = null;
+
     public function index(Request $request): View
     {
         $state = $this->stateFromRequest($request);
@@ -34,18 +37,17 @@ class IntroSessionRegisterController extends Controller
     {
         $state = $this->stateFromRequest($request);
         $rows = $this->rowsForView($state);
-        $isPaid = $state['view'] === 'paid';
+        $viewLabel = $this->viewLabel($state['view']);
         $sessionLabel = $state['session'] > 0 ? 'session-'.$state['session'] : 'all-sessions';
-        $filename = 'bns-intro-'.$state['view'].'-'.$sessionLabel.'-'.now()->format('Ymd-His').'.xlsx';
-        $title = $isPaid ? 'Payment Done Users' : 'Intro Session Registered Users';
+        $filename = 'bns-intro-'.str_replace('_', '-', $state['view']).'-'.$sessionLabel.'-'.now()->format('Ymd-His').'.xlsx';
         $sessionTitle = $state['session'] > 0
             ? bns_intro_session_label($state['session'])
             : 'All Sessions';
         $event = $state['session'] > 0 ? bns_introduction_session($state['session']) : null;
         $stats = $this->stats($state);
         $xlsx = new ColoredXlsx();
-        $colCount = $isPaid ? 11 : 9;
-        $lastCol = $isPaid ? 'K' : 'I';
+        $colCount = 14;
+        $lastCol = 'N';
         $c = fn (string $value, int $style = 0) => $xlsx->cell($value, $style);
 
         $pad = function (array $cells) use ($c, $colCount): array {
@@ -78,78 +80,58 @@ class IntroSessionRegisterController extends Controller
 
         $sheet = [
             $pad([$c('Business Navachar School (BNS)', ColoredXlsx::S_BRAND)]),
-            $pad([$c($title.' · '.$sessionTitle, ColoredXlsx::S_SUBTITLE)]),
+            $pad([$c($viewLabel.' · '.$sessionTitle, ColoredXlsx::S_SUBTITLE)]),
             $pad([$c($meta, ColoredXlsx::S_META)]),
-            $pad($isPaid
-                ? [
-                    $c('Registered', ColoredXlsx::S_STAT_LABEL),
-                    $c('Payment Done', ColoredXlsx::S_STAT_LABEL),
-                    $c('Showing', ColoredXlsx::S_STAT_LABEL),
-                    $c('Report', ColoredXlsx::S_STAT_LABEL),
-                ]
-                : [
-                    $c('Registered', ColoredXlsx::S_STAT_LABEL),
-                    $c('Showing', ColoredXlsx::S_STAT_LABEL),
-                    $c('Report', ColoredXlsx::S_STAT_LABEL),
-                ]),
-            $pad($isPaid
-                ? [
-                    $c((string) number_format($stats['registered'] ?? 0), ColoredXlsx::S_STAT_VALUE),
-                    $c((string) number_format($stats['paid'] ?? 0), ColoredXlsx::S_STAT_VALUE),
-                    $c((string) number_format($stats['filtered'] ?? 0), ColoredXlsx::S_STAT_VALUE),
-                    $c('Successful payment list', ColoredXlsx::S_META),
-                ]
-                : [
-                    $c((string) number_format($stats['registered'] ?? 0), ColoredXlsx::S_STAT_VALUE),
-                    $c((string) number_format($stats['filtered'] ?? 0), ColoredXlsx::S_STAT_VALUE),
-                    $c('Unique registered members', ColoredXlsx::S_META),
-                ]),
+            $pad([
+                $c('Total', ColoredXlsx::S_STAT_LABEL),
+                $c('Payment Done', ColoredXlsx::S_STAT_LABEL),
+                $c('Remain', ColoredXlsx::S_STAT_LABEL),
+                $c('Remain Present', ColoredXlsx::S_STAT_LABEL),
+                $c('Remain Absent', ColoredXlsx::S_STAT_LABEL),
+                $c('This list', ColoredXlsx::S_STAT_LABEL),
+            ]),
+            $pad([
+                $c((string) number_format($stats['total'] ?? 0), ColoredXlsx::S_STAT_VALUE),
+                $c((string) number_format($stats['paid'] ?? 0), ColoredXlsx::S_STAT_VALUE),
+                $c((string) number_format($stats['remain'] ?? 0), ColoredXlsx::S_STAT_VALUE),
+                $c((string) number_format($stats['remain_present'] ?? 0), ColoredXlsx::S_STAT_VALUE),
+                $c((string) number_format($stats['remain_absent'] ?? 0), ColoredXlsx::S_STAT_VALUE),
+                $c((string) number_format($rows->count()).' · '.$viewLabel, ColoredXlsx::S_META),
+            ]),
         ];
 
-        $headers = $isPaid
-            ? ['Sr. No.', 'Session', 'Paid Date', 'Name', 'Mobile', 'Email', 'Reg. No.', 'Amount', 'Payment Mode', 'Txn No.', 'Program']
-            : ['Sr. No.', 'Session', 'Registered At', 'Name', 'Mobile', 'Email', 'Reg. No.', 'Form Source', 'Program'];
+        $headers = ['Sr. No.', 'Session', 'Name', 'Mobile', 'Email', 'Reg. No.', 'Program', 'Registered At', 'Payment', 'Amount', 'Paid At', 'Txn No.', 'Attendance', 'Form Source'];
         $sheet[] = array_map(fn (string $label) => $c($label, ColoredXlsx::S_HEAD), $headers);
 
         foreach ($rows as $index => $row) {
             $inquiry = $row['inquiry'] ?? null;
             $payment = $row['payment'] ?? null;
             $sessionNo = (int) ($row['session'] ?? 0);
-            $rowStyle = ColoredXlsx::S_ROW_PAID;
-            $textStyle = ColoredXlsx::S_TEXT_PAID;
-            $amountStyle = ColoredXlsx::S_AMOUNT;
-            if (! $isPaid) {
-                $rowStyle = $index % 2 === 0 ? ColoredXlsx::S_ROW_UNPAID : ColoredXlsx::S_META;
-                $textStyle = ColoredXlsx::S_TEXT_UNPAID;
-            }
-
-            if ($isPaid) {
-                $sheet[] = [
-                    $c((string) ($index + 1), $rowStyle),
-                    $c($sessionNo > 0 ? bns_intro_session_label($sessionNo) : '—', ColoredXlsx::S_SESSION),
-                    $c($payment?->paid_at?->timezone('Asia/Kolkata')->format('d M Y, h:i A') ?: '—', $rowStyle),
-                    $c((string) ($payment->customer_name ?? ($inquiry?->full_name ?? '—')), $rowStyle),
-                    $c((string) ($payment->customer_mobile ?? ($inquiry?->mobile ?? '—')), $textStyle),
-                    $c((string) ($payment->customer_email ?? ($inquiry?->email ?? '—')), $rowStyle),
-                    $c((string) ($payment->registration_number ?? ($inquiry?->registration_number ?? '—')), $textStyle),
-                    $c($payment ? number_format((float) $payment->amount, 2) : '', $amountStyle),
-                    $c((string) ($payment->payment_mode ?? '—'), $rowStyle),
-                    $c((string) ($payment->merchant_txn_no ?? '—'), $textStyle),
-                    $c((string) ($inquiry?->interested_program ?? '—'), $rowStyle),
-                ];
-                continue;
-            }
+            $isPaidRow = $payment !== null;
+            $rowStyle = $isPaidRow
+                ? ColoredXlsx::S_ROW_PAID
+                : ($index % 2 === 0 ? ColoredXlsx::S_ROW_UNPAID : ColoredXlsx::S_META);
+            $textStyle = $isPaidRow ? ColoredXlsx::S_TEXT_PAID : ColoredXlsx::S_TEXT_UNPAID;
+            $name = (string) ($payment->customer_name ?? ($inquiry->full_name ?? '—'));
+            $mobile = (string) ($payment->customer_mobile ?? ($inquiry->mobile ?? '—'));
+            $email = (string) ($payment->customer_email ?? ($inquiry->email ?? '—'));
+            $reg = (string) ($payment->registration_number ?? ($inquiry->registration_number ?? '—'));
 
             $sheet[] = [
                 $c((string) ($index + 1), $rowStyle),
                 $c($sessionNo > 0 ? bns_intro_session_label($sessionNo) : '—', ColoredXlsx::S_SESSION),
+                $c($name !== '' ? $name : '—', $rowStyle),
+                $c($mobile !== '' ? $mobile : '—', $textStyle),
+                $c($email !== '' ? $email : '—', $rowStyle),
+                $c($reg !== '' ? $reg : '—', $textStyle),
+                $c((string) ($inquiry?->interested_program ?? '—'), $rowStyle),
                 $c($inquiry?->created_at?->timezone('Asia/Kolkata')->format('d M Y, h:i A') ?: '—', $rowStyle),
-                $c((string) ($inquiry->full_name ?? '—'), $rowStyle),
-                $c((string) ($inquiry->mobile ?? '—'), $textStyle),
-                $c((string) ($inquiry->email ?? '—'), $rowStyle),
-                $c((string) ($inquiry->registration_number ?? '—'), $textStyle),
+                $c($isPaidRow ? 'Payment done' : 'Not paid', $isPaidRow ? ColoredXlsx::S_PAID : ColoredXlsx::S_UNPAID),
+                $c($payment ? number_format((float) $payment->amount, 2) : '', ColoredXlsx::S_AMOUNT),
+                $c($payment?->paid_at?->timezone('Asia/Kolkata')->format('d M Y, h:i A') ?: '—', $rowStyle),
+                $c((string) ($payment->merchant_txn_no ?? '—'), $textStyle),
+                $c(! empty($row['present']) ? 'Present' : 'Absent', $rowStyle),
                 $c((string) ($inquiry?->formSourceLabel() ?? '—'), $rowStyle),
-                $c((string) ($inquiry->interested_program ?? '—'), $rowStyle),
             ];
         }
 
@@ -158,14 +140,16 @@ class IntroSessionRegisterController extends Controller
         }
 
         $binary = $xlsx->build(
-            $isPaid ? 'Payment Done' : 'Registered Users',
+            $viewLabel,
             $sheet,
-            $isPaid
-                ? ['A1:'.$lastCol.'1', 'A2:'.$lastCol.'2', 'A3:'.$lastCol.'3', 'D4:'.$lastCol.'4', 'D5:'.$lastCol.'5']
-                : ['A1:'.$lastCol.'1', 'A2:'.$lastCol.'2', 'A3:'.$lastCol.'3', 'C4:'.$lastCol.'4', 'C5:'.$lastCol.'5'],
-            $isPaid
-                ? [1 => 8, 2 => 22, 3 => 22, 4 => 28, 5 => 16, 6 => 28, 7 => 20, 8 => 12, 9 => 16, 10 => 22, 11 => 28]
-                : [1 => 8, 2 => 22, 3 => 22, 4 => 28, 5 => 16, 6 => 28, 7 => 20, 8 => 22, 9 => 28]
+            [
+                'A1:'.$lastCol.'1',
+                'A2:'.$lastCol.'2',
+                'A3:'.$lastCol.'3',
+                'F4:'.$lastCol.'4',
+                'F5:'.$lastCol.'5',
+            ],
+            [1 => 8, 2 => 22, 3 => 28, 4 => 16, 5 => 28, 6 => 20, 7 => 24, 8 => 20, 9 => 16, 10 => 12, 11 => 20, 12 => 22, 13 => 14, 14 => 22]
         );
 
         return response($binary, 200, [
@@ -193,7 +177,7 @@ class IntroSessionRegisterController extends Controller
     {
         $allowed = bns_intro_session_allowed_numbers();
         $view = strtolower(trim((string) $request->query('view', 'registered')));
-        if (! in_array($view, ['registered', 'paid'], true)) {
+        if (! in_array($view, ['registered', 'paid', 'remain', 'remain_present', 'remain_absent'], true)) {
             $view = 'registered';
         }
 
@@ -206,7 +190,7 @@ class IntroSessionRegisterController extends Controller
         if (! in_array($payment, ['paid', 'unpaid'], true)) {
             $payment = '';
         }
-        if ($view === 'paid') {
+        if ($view !== 'registered') {
             $payment = '';
         }
 
@@ -230,28 +214,66 @@ class IntroSessionRegisterController extends Controller
 
     /**
      * @param  array{view: string, session: int, search: string, allowed: list<int>}  $state
-     * @return array{registered: int, paid: int, filtered: int, session_totals: array<int, int>, session_paid: array<int, int>}
+     * @return array{
+     *     total: int,
+     *     paid: int,
+     *     remain: int,
+     *     remain_present: int,
+     *     remain_absent: int,
+     *     registered: int,
+     *     filtered: int,
+     *     session_counts: array<int, array{total: int, paid: int, remain: int, remain_present: int, remain_absent: int}>
+     * }
      */
     private function stats(array $state): array
     {
-        $registeredRows = $this->registeredRows(0, '');
-        $paidRows = $this->paidRows(0, '');
-        $filtered = $this->rowsForView($state);
+        $all = $this->allMemberRows();
+        $scoped = $state['session'] > 0
+            ? $all->where('session', $state['session'])->values()
+            : $all;
+        $counts = $this->bucketCounts($scoped);
 
-        $sessionTotals = [];
-        $sessionPaid = [];
+        $sessionCounts = [];
         foreach ($state['allowed'] as $sessionNo) {
-            $sessionTotals[$sessionNo] = $registeredRows->where('session', $sessionNo)->count();
-            $sessionPaid[$sessionNo] = $paidRows->where('session', $sessionNo)->count();
+            $sessionCounts[$sessionNo] = $this->bucketCounts($all->where('session', $sessionNo)->values());
         }
 
         return [
-            'registered' => $registeredRows->count(),
-            'paid' => $paidRows->count(),
-            'filtered' => $filtered->count(),
-            'session_totals' => $sessionTotals,
-            'session_paid' => $sessionPaid,
+            ...$counts,
+            'registered' => $counts['total'],
+            'filtered' => $this->rowsForView($state)->count(),
+            'session_counts' => $sessionCounts,
         ];
+    }
+
+    /**
+     * @param  Collection<int, array{session: int, payment: ?AdmissionPayment, present: bool}>  $rows
+     * @return array{total: int, paid: int, remain: int, remain_present: int, remain_absent: int}
+     */
+    private function bucketCounts(Collection $rows): array
+    {
+        $paid = $rows->filter(fn (array $row) => $row['payment'] !== null)->count();
+        $remain = $rows->count() - $paid;
+        $remainPresent = $rows->filter(fn (array $row) => $row['payment'] === null && ! empty($row['present']))->count();
+
+        return [
+            'total' => $rows->count(),
+            'paid' => $paid,
+            'remain' => $remain,
+            'remain_present' => $remainPresent,
+            'remain_absent' => $remain - $remainPresent,
+        ];
+    }
+
+    private function viewLabel(string $view): string
+    {
+        return match ($view) {
+            'paid' => 'Payment Done',
+            'remain' => 'Remain',
+            'remain_present' => 'Remain Present',
+            'remain_absent' => 'Remain Absent',
+            default => 'Total',
+        };
     }
 
     /**
@@ -260,11 +282,56 @@ class IntroSessionRegisterController extends Controller
      */
     private function rowsForView(array $state): Collection
     {
-        $rows = $state['view'] === 'paid'
-            ? $this->paidRows($state['session'], $state['search'])
-            : $this->registeredRows($state['session'], $state['search']);
+        $rows = $this->allMemberRows();
+        if ($state['session'] > 0) {
+            $rows = $rows->where('session', $state['session'])->values();
+        }
+        if ($state['search'] !== '') {
+            $needle = mb_strtolower($state['search']);
+            $rows = $rows->filter(function (array $row) use ($needle) {
+                $inquiry = $row['inquiry'] ?? null;
+                $payment = $row['payment'] ?? null;
+                $hay = mb_strtolower(implode(' ', array_filter([
+                    (string) ($inquiry->full_name ?? ''),
+                    (string) ($inquiry->email ?? ''),
+                    (string) ($inquiry->mobile ?? ''),
+                    (string) ($inquiry->registration_number ?? ''),
+                    (string) ($inquiry->interested_program ?? ''),
+                    (string) ($payment->customer_name ?? ''),
+                    (string) ($payment->customer_mobile ?? ''),
+                    (string) ($payment->customer_email ?? ''),
+                    (string) ($payment->registration_number ?? ''),
+                    (string) ($payment->merchant_txn_no ?? ''),
+                ])));
 
-        return $this->applyRowFilters($rows, $state);
+                return str_contains($hay, $needle);
+            })->values();
+        }
+
+        return $this->applyView($this->applyRowFilters($rows, $state), $state['view']);
+    }
+
+    /**
+     * @param  Collection<int, array{session: int, inquiry: ?ContactInquiry, payment: ?AdmissionPayment, present?: bool}>  $rows
+     * @return Collection<int, array{session: int, inquiry: ?ContactInquiry, payment: ?AdmissionPayment, present?: bool}>
+     */
+    private function applyView(Collection $rows, string $view): Collection
+    {
+        return match ($view) {
+            'paid' => $rows->filter(fn (array $row) => $row['payment'] !== null)->values(),
+            'remain' => $rows->filter(fn (array $row) => $row['payment'] === null)->values(),
+            'remain_present' => $rows->filter(fn (array $row) => $row['payment'] === null && ! empty($row['present']))->values(),
+            'remain_absent' => $rows->filter(fn (array $row) => $row['payment'] === null && empty($row['present']))->values(),
+            default => $rows->values(),
+        };
+    }
+
+    /**
+     * @return Collection<int, array{session: int, inquiry: ContactInquiry, payment: ?AdmissionPayment, present: bool}>
+     */
+    private function allMemberRows(): Collection
+    {
+        return $this->allRows ??= $this->registeredRows(0, '');
     }
 
     /**
@@ -329,12 +396,13 @@ class IntroSessionRegisterController extends Controller
     }
 
     /**
-     * @return Collection<int, array{session: int, inquiry: ContactInquiry, payment: ?AdmissionPayment}>
+     * @return Collection<int, array{session: int, inquiry: ContactInquiry, payment: ?AdmissionPayment, present: bool}>
      */
     private function registeredRows(int $sessionFilter, string $search): Collection
     {
         $map = bns_reporting_session_mobile_map(onlyIntro: false);
         $lookup = $this->paymentLookup();
+        $attendance = $this->attendanceIndex();
         $idsBySession = [];
 
         foreach ($map as $row) {
@@ -357,13 +425,18 @@ class IntroSessionRegisterController extends Controller
         $this->applyInquirySearch($query, $search);
 
         return $query->get()
-            ->map(function (ContactInquiry $inquiry) use ($idsBySession, $lookup) {
+            ->map(function (ContactInquiry $inquiry) use ($idsBySession, $lookup, $attendance) {
                 $session = (int) ($idsBySession[(int) $inquiry->id] ?? 0);
+                $mobile = ContactInquiry::normalizeMobile((string) $inquiry->mobile);
 
                 return [
                     'session' => $session,
                     'inquiry' => $inquiry,
                     'payment' => $this->paymentForInquiry($inquiry, $lookup),
+                    'present' => $session > 0 && (
+                        isset($attendance['ids'][$session][(int) $inquiry->id])
+                        || ($mobile !== '' && isset($attendance['mobiles'][$session][$mobile]))
+                    ),
                 ];
             })
             ->when($sessionFilter > 0, fn (Collection $rows) => $rows->where('session', $sessionFilter)->values())
@@ -371,38 +444,38 @@ class IntroSessionRegisterController extends Controller
     }
 
     /**
-     * @return Collection<int, array{session: int, inquiry: ?ContactInquiry, payment: AdmissionPayment}>
+     * @return array{ids: array<int, array<int, true>>, mobiles: array<int, array<string, true>>}
      */
-    private function paidRows(int $sessionFilter, string $search): Collection
+    private function attendanceIndex(): array
     {
-        if (! Schema::hasTable('admission_payments')) {
-            return collect();
+        $ids = [];
+        $mobiles = [];
+        if (! Schema::hasTable('session_attendances')) {
+            return compact('ids', 'mobiles');
         }
 
-        $query = CrmLeadStatus::successfulPaymentsQuery();
-        CrmLeadStatus::applySearch($query, $search, [
-            'customer_name',
-            'customer_mobile',
-            'customer_email',
-            'registration_number',
-            'merchant_txn_no',
-        ]);
+        $rows = SessionAttendance::query()
+            ->get(['contact_inquiry_id', 'mobile', 'session_number', 'status']);
 
-        $allowed = bns_intro_session_allowed_numbers();
-        $map = bns_reporting_session_mobile_map(onlyIntro: false);
+        foreach ($rows as $row) {
+            if ((string) $row->status === SessionAttendance::STATUS_ABSENT) {
+                continue;
+            }
+            $session = (int) $row->session_number;
+            if ($session < 1) {
+                continue;
+            }
+            $id = (int) $row->contact_inquiry_id;
+            if ($id > 0) {
+                $ids[$session][$id] = true;
+            }
+            $mobile = ContactInquiry::normalizeMobile((string) $row->mobile);
+            if ($mobile !== '') {
+                $mobiles[$session][$mobile] = true;
+            }
+        }
 
-        return $query->get()
-            ->map(function (AdmissionPayment $payment) use ($map, $allowed) {
-                $inquiry = CrmLeadStatus::findInquiryForPayment($payment);
-
-                return [
-                    'session' => $this->sessionNumberForPayment($payment, $inquiry, $map, $allowed),
-                    'inquiry' => $inquiry,
-                    'payment' => $payment,
-                ];
-            })
-            ->when($sessionFilter > 0, fn (Collection $rows) => $rows->where('session', $sessionFilter)->values())
-            ->values();
+        return compact('ids', 'mobiles');
     }
 
     /**
@@ -464,36 +537,6 @@ class IntroSessionRegisterController extends Controller
         }
 
         return null;
-    }
-
-    /**
-     * @param  array<string, array{session: int, source: string, id: int}>  $mobileMap
-     * @param  list<int>  $allowed
-     */
-    private function sessionNumberForPayment(
-        AdmissionPayment $payment,
-        ?ContactInquiry $inquiry,
-        array $mobileMap,
-        array $allowed
-    ): int {
-        if ($inquiry) {
-            $stored = (int) ($inquiry->intro_session_number ?? 0);
-            if (in_array($stored, $allowed, true)) {
-                return $stored;
-            }
-        }
-
-        $mobile = ContactInquiry::normalizeMobile(
-            ($inquiry?->mobile ?: $payment->customer_mobile) ?? ''
-        );
-        if ($mobile === '') {
-            return 0;
-        }
-
-        $row = $mobileMap[$mobile] ?? null;
-        $session = is_array($row) ? (int) ($row['session'] ?? 0) : 0;
-
-        return in_array($session, $allowed, true) ? $session : 0;
     }
 
     private function applyInquirySearch($query, string $search): void

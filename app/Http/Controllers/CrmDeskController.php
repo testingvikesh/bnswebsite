@@ -95,7 +95,7 @@ class CrmDeskController extends Controller
 
         $filters = $this->deskFilters($request);
         $allAssigned = $this->employeeAssignments($employee->id, $session);
-        $totals = $this->assignmentTotals($allAssigned, (int) $employee->id);
+        $totals = $this->assignmentTotals($allAssigned, (int) $employee->id, $session);
         $filtered = $this->applyDeskFilters($allAssigned, $filters);
         $presentRows = $filtered->where('attendance_status', 'present')->values();
         $absentRows = $filtered->where('attendance_status', 'absent')->values();
@@ -251,14 +251,15 @@ class CrmDeskController extends Controller
      * @param  \Illuminate\Support\Collection<int, CrmAssignment>  $assignments
      * @return array<string, mixed>
      */
-    private function assignmentTotals($assignments, int $employeeId): array
+    private function assignmentTotals($assignments, int $employeeId, int $session = 0): array
     {
         $callStatusOptions = CrmFollowup::statusOptions();
         $paidCount = 0;
         if (Schema::hasTable('admission_payments')) {
             $paidCount = CrmLeadStatus::filterPaymentsForEmployee(
                 CrmLeadStatus::successfulPaymentsQuery(),
-                $employeeId
+                $employeeId,
+                $session
             )->count();
         }
 

@@ -66,7 +66,7 @@
                     <span>Absent</span>
                     <strong>{{ number_format($totals['absent']) }}</strong>
                 </a>
-                <a href="{{ route('crm.payments') }}" class="bns-crm-stat bns-crm-stat--present">
+                <a href="{{ route('crm.payments', ['session' => $sessionNo]) }}" class="bns-crm-stat bns-crm-stat--present">
                     <span>Payment done</span>
                     <strong>{{ number_format($totals['paid'] ?? 0) }}</strong>
                 </a>

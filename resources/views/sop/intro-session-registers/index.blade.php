@@ -15,7 +15,28 @@
     $dateTo = $date_to ?? '';
     $sessions = $sessions ?? bns_introduction_sessions();
     $allowed = $allowed ?? bns_intro_session_allowed_numbers();
-    $stats = $stats ?? ['registered' => 0, 'paid' => 0, 'filtered' => 0, 'session_totals' => [], 'session_paid' => []];
+    $stats = $stats ?? ['total' => 0, 'paid' => 0, 'remain' => 0, 'remain_present' => 0, 'remain_absent' => 0, 'filtered' => 0, 'session_counts' => []];
+    $countKey = match ($view) {
+        'paid' => 'paid',
+        'remain' => 'remain',
+        'remain_present' => 'remain_present',
+        'remain_absent' => 'remain_absent',
+        default => 'total',
+    };
+    $viewLabel = match ($view) {
+        'paid' => 'Payment Done',
+        'remain' => 'Remain',
+        'remain_present' => 'Remain Present',
+        'remain_absent' => 'Remain Absent',
+        default => 'Total',
+    };
+    $cards = [
+        ['view' => 'registered', 'stat' => 'total', 'label' => 'Total', 'icon' => 'bi-people-fill', 'tone' => 'primary'],
+        ['view' => 'paid', 'stat' => 'paid', 'label' => 'Payment Done', 'icon' => 'bi-check-circle-fill', 'tone' => 'success'],
+        ['view' => 'remain', 'stat' => 'remain', 'label' => 'Remain', 'icon' => 'bi-hourglass-split', 'tone' => 'warning'],
+        ['view' => 'remain_present', 'stat' => 'remain_present', 'label' => 'Remain Present', 'icon' => 'bi-person-check-fill', 'tone' => 'info'],
+        ['view' => 'remain_absent', 'stat' => 'remain_absent', 'label' => 'Remain Absent', 'icon' => 'bi-person-x-fill', 'tone' => 'danger'],
+    ];
     $programOptions = $programOptions ?? [];
     $formSourceOptions = $formSourceOptions ?? [];
     $keep = array_filter([
@@ -37,7 +58,7 @@
 
 <div class="d-flex flex-wrap justify-content-between align-items-start gap-3 mb-4">
     <p class="text-muted mb-0">
-        All Introduction Session registered members and payment-done members. Download Excel for the list you are viewing.
+        Total = Payment Done + Remain. Remain = Remain Present + Remain Absent. Open a count to see that list, then download the same list in Excel.
     </p>
     <a href="{{ route('controlpanel.intro-session-registers.export', $keep) }}" class="btn btn-success">
         <i class="bi bi-file-earmark-excel me-1"></i> Excel download
@@ -45,44 +66,26 @@
 </div>
 
 <div class="row g-3 mb-4">
-    <div class="col-sm-6 col-xl-3">
-        <a href="{{ route('controlpanel.intro-session-registers.index', $linkKeep(['view' => null, 'session' => $session ?: null])) }}" class="text-decoration-none">
-            <div class="sop-stat {{ $view === 'registered' ? 'border-primary' : '' }}">
-                <div class="sop-stat__icon bg-primary-subtle text-primary"><i class="bi bi-people-fill"></i></div>
-                <div>
-                    <div class="text-muted small">Registered users</div>
-                    <strong>{{ number_format($stats['registered']) }}</strong>
+    @foreach($cards as $card)
+        <div class="col-6 col-lg">
+            <a href="{{ route('controlpanel.intro-session-registers.index', $linkKeep(['view' => $card['view'] === 'registered' ? null : $card['view'], 'payment' => null, 'session' => $session ?: null])) }}" class="text-decoration-none">
+                <div class="sop-stat h-100 {{ $view === $card['view'] ? 'border-'.$card['tone'] : '' }}">
+                    <div class="sop-stat__icon bg-{{ $card['tone'] }}-subtle text-{{ $card['tone'] }}"><i class="bi {{ $card['icon'] }}"></i></div>
+                    <div>
+                        <div class="text-muted small">{{ $card['label'] }}</div>
+                        <strong>{{ number_format($stats[$card['stat']] ?? 0) }}</strong>
+                    </div>
                 </div>
-            </div>
-        </a>
-    </div>
-    <div class="col-sm-6 col-xl-3">
-        <a href="{{ route('controlpanel.intro-session-registers.index', $linkKeep(['view' => 'paid', 'session' => $session ?: null, 'payment' => null])) }}" class="text-decoration-none">
-            <div class="sop-stat {{ $view === 'paid' ? 'border-success' : '' }}">
-                <div class="sop-stat__icon bg-success-subtle text-success"><i class="bi bi-check-circle-fill"></i></div>
-                <div>
-                    <div class="text-muted small">Payment done</div>
-                    <strong>{{ number_format($stats['paid']) }}</strong>
-                </div>
-            </div>
-        </a>
-    </div>
-    <div class="col-sm-6 col-xl-3">
-        <div class="sop-stat">
-            <div class="sop-stat__icon bg-info-subtle text-info"><i class="bi bi-funnel"></i></div>
-            <div>
-                <div class="text-muted small">Showing now</div>
-                <strong>{{ number_format($stats['filtered']) }}</strong>
-            </div>
+            </a>
         </div>
-    </div>
+    @endforeach
 </div>
 
 <div class="sop-card p-4 mb-4">
     <div class="d-flex flex-wrap justify-content-between align-items-start gap-2 mb-3">
         <div>
-            <h5 class="mb-1">{{ $view === 'paid' ? 'Payment done users' : 'Registered users' }}</h5>
-            <p class="text-muted small mb-0">Filter by session, payment, program, source, or date, then download Excel.</p>
+            <h5 class="mb-1">{{ $viewLabel }} <span class="text-muted fw-normal">({{ number_format($stats['filtered'] ?? $rows->count()) }})</span></h5>
+            <p class="text-muted small mb-0">This list matches the {{ $viewLabel }} count. Excel downloads these rows.</p>
         </div>
         <div class="btn-group flex-wrap">
             <a href="{{ route('controlpanel.intro-session-registers.index', $linkKeep(['session' => null])) }}"
@@ -93,7 +96,7 @@
                 <a href="{{ route('controlpanel.intro-session-registers.index', $linkKeep(['session' => $sessionNo])) }}"
                    class="btn btn-sm {{ $session === (int) $sessionNo ? 'btn-danger' : 'btn-outline-secondary' }}">
                     S{{ $sessionNo }}
-                    <span class="ms-1">{{ number_format($view === 'paid' ? ($stats['session_paid'][$sessionNo] ?? 0) : ($stats['session_totals'][$sessionNo] ?? 0)) }}</span>
+                    <span class="ms-1">{{ number_format($stats['session_counts'][$sessionNo][$countKey] ?? 0) }}</span>
                 </a>
             @endforeach
         </div>
@@ -110,7 +113,7 @@
             <label class="form-label">Search</label>
             <input type="text" name="q" class="form-control" value="{{ $search }}" placeholder="Name, mobile, email, registration number">
         </div>
-        @if($view !== 'paid')
+        @if($view === 'registered')
             <div class="col-md-2">
                 <label class="form-label">Payment</label>
                 <select name="payment" class="form-select">
@@ -167,14 +170,10 @@
                     <th>Contact</th>
                     <th>Reg. No.</th>
                     <th>Session</th>
-                    @if($view === 'paid')
-                        <th>Amount</th>
-                        <th>Paid at</th>
-                    @else
-                        <th>Program</th>
-                        <th>Registered</th>
-                        <th>Payment</th>
-                    @endif
+                    <th>Program</th>
+                    <th>Registered</th>
+                    <th>Payment</th>
+                    <th>Attendance</th>
                 </tr>
             </thead>
             <tbody>
@@ -198,25 +197,27 @@
                         </td>
                         <td class="small fw-semibold">{{ $payment->registration_number ?? ($inquiry->registration_number ?? '—') }}</td>
                         <td>{{ $sessionNo > 0 ? bns_intro_session_label($sessionNo) : '—' }}</td>
-                        @if($view === 'paid')
-                            <td class="fw-semibold text-success">₹{{ $payment ? number_format((float) $payment->amount, 2) : '—' }}</td>
-                            <td class="small text-muted">{{ $payment?->paid_at?->timezone('Asia/Kolkata')->format('d M Y, h:i A') ?: '—' }}</td>
-                        @else
-                            <td class="small">{{ $inquiry->interested_program ?? '—' }}</td>
-                            <td class="small text-muted">{{ $inquiry?->created_at?->timezone('Asia/Kolkata')->format('d M Y, h:i A') ?: '—' }}</td>
-                            <td>
-                                @if($payment)
-                                    <span class="badge text-bg-success">Payment done</span>
-                                    <div class="small text-muted mt-1">₹{{ number_format((float) $payment->amount, 2) }}</div>
-                                @else
-                                    <span class="badge text-bg-secondary">Not paid</span>
-                                @endif
-                            </td>
-                        @endif
+                        <td class="small">{{ $inquiry->interested_program ?? '—' }}</td>
+                        <td class="small text-muted">{{ $inquiry?->created_at?->timezone('Asia/Kolkata')->format('d M Y, h:i A') ?: '—' }}</td>
+                        <td>
+                            @if($payment)
+                                <span class="badge text-bg-success">Payment done</span>
+                                <div class="small text-muted mt-1">₹{{ number_format((float) $payment->amount, 2) }}</div>
+                            @else
+                                <span class="badge text-bg-secondary">Not paid</span>
+                            @endif
+                        </td>
+                        <td>
+                            @if(!empty($row['present']))
+                                <span class="badge text-bg-success">Present</span>
+                            @else
+                                <span class="badge text-bg-danger">Absent</span>
+                            @endif
+                        </td>
                     </tr>
                 @empty
                     <tr>
-                        <td colspan="8" class="text-center text-muted py-4">No records found.</td>
+                        <td colspan="9" class="text-center text-muted py-4">No records found.</td>
                     </tr>
                 @endforelse
             </tbody>

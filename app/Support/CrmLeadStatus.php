@@ -234,11 +234,12 @@ class CrmLeadStatus
             ->latest('id');
     }
 
-    public static function filterPaymentsForEmployee(Builder $query, int $employeeId): Builder
+    public static function filterPaymentsForEmployee(Builder $query, int $employeeId, int $session = 0): Builder
     {
         $assignments = CrmAssignment::query()
             ->with('inquiry')
             ->where('crm_employee_id', $employeeId)
+            ->when($session > 0, fn ($builder) => $builder->where('session_number', $session))
             ->get();
 
         $inquiryIds = $assignments->pluck('contact_inquiry_id')->map(fn ($id) => (int) $id)->all();
