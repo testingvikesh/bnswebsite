@@ -18,9 +18,14 @@
             <h1>Admission Confirm Report</h1>
             <p>View every successful BNS payment with participant, program, amount, gateway transaction, response, and receipt details.</p>
         </div>
-        <a href="{{ route('reporting.payments.export', request()->query()) }}" class="btn bns-reporting-btn-export">
-            <i class="bi bi-file-earmark-excel me-1"></i> Export Payments
-        </a>
+        <div class="bns-reporting-hero__actions">
+            <a href="{{ route('reporting.payments.export', request()->query()) }}" class="btn bns-reporting-btn-export">
+                <i class="bi bi-file-earmark-excel me-1"></i> GST Invoice
+            </a>
+            <a href="{{ route('reporting.payments.credit-notes', request()->query()) }}" class="btn bns-reporting-btn-export bns-reporting-btn-export--credit">
+                <i class="bi bi-receipt me-1"></i> Credit note
+            </a>
+        </div>
     </div>
 </section>
 
@@ -165,7 +170,8 @@
                     <th>Paid Amount</th>
                     <th>Refund Amount</th>
                     <th>Status</th>
-                    <th>Refund Txn No.</th>
+                    <th>Credit Note No.</th>
+                    <th>Reference No.</th>
                 </tr>
             </thead>
             <tbody>
@@ -184,6 +190,7 @@
                             'pending' => 'Pending',
                             default => '—',
                         };
+                        $creditNoteNo = ($creditNoteNumbers[$refund->id] ?? null);
                     @endphp
                     <tr>
                         <td class="text-nowrap small">
@@ -206,11 +213,12 @@
                                 <div class="small text-danger mt-1">{{ $refund->refund_response_description }}</div>
                             @endif
                         </td>
+                        <td class="small text-nowrap fw-semibold">{{ $creditNoteNo ?: '—' }}</td>
                         <td class="small text-nowrap">{{ $refund->refund_merchant_txn_no ?: '—' }}</td>
                     </tr>
                 @empty
                     <tr>
-                        <td colspan="7" class="bns-reporting-empty">
+                        <td colspan="8" class="bns-reporting-empty">
                             <i class="bi bi-cash-coin"></i>
                             No refunds found.
                         </td>

@@ -11,6 +11,7 @@ Route::prefix('reporting')->name('reporting.')->group(function () {
         Route::get('/export', [ReportingController::class, 'export'])->name('export');
         Route::get('/payments', [ReportingController::class, 'payments'])->name('payments');
         Route::get('/payments/export', [ReportingController::class, 'exportPayments'])->name('payments.export');
+        Route::get('/payments/credit-notes', [ReportingController::class, 'exportCreditNotes'])->name('payments.credit-notes');
         Route::post('/payments/{payment}/refund-otp', [ReportingController::class, 'sendPaymentRefundOtp'])
             ->name('payments.refund-otp');
         Route::post('/payments/{payment}/refund', [ReportingController::class, 'refundPayment'])
