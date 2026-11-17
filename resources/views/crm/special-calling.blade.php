@@ -27,9 +27,20 @@
             @php
                 $sessionFilter = (int) ($sessionFilter ?? 0);
                 $search = $search ?? '';
+                $team = $team ?? '';
                 $queryKeep = array_filter([
                     'q' => $search !== '' ? $search : null,
+                    'team' => $team !== '' ? $team : null,
                 ]);
+                $teamKeep = array_filter([
+                    'q' => $search !== '' ? $search : null,
+                    'session' => $sessionFilter > 0 ? $sessionFilter : null,
+                ]);
+                $teamLabel = match ($team) {
+                    'assigned' => 'Assigned',
+                    'unassigned' => 'Unassigned',
+                    default => (($employees ?? collect())->firstWhere('id', (int) $team)?->name ?: 'All members'),
+                };
             @endphp
 
             <div class="bns-crm-stats">
@@ -46,9 +57,35 @@
             </div>
             <p class="bns-crm-section-copy">Special Calling list = Absent + Not paid. Click a session to focus that list.</p>
 
+            <h3 class="bns-crm-section-title">Member wise count</h3>
+            <div class="bns-crm-stats">
+                <a href="{{ route('crm.special-calling', $teamKeep) }}" class="bns-crm-stat{{ $team === '' ? ' is-active' : '' }}">
+                    <span>Total{{ $sessionFilter > 0 ? ' · S'.$sessionFilter : '' }}</span>
+                    <strong>{{ number_format($scopedCount ?? $results->count()) }}</strong>
+                </a>
+                <a href="{{ route('crm.special-calling', array_filter($teamKeep + ['team' => 'assigned'])) }}" class="bns-crm-stat bns-crm-stat--present{{ $team === 'assigned' ? ' is-active' : '' }}">
+                    <span>Assigned</span>
+                    <strong>{{ number_format($assignedCount ?? 0) }}</strong>
+                </a>
+                <a href="{{ route('crm.special-calling', array_filter($teamKeep + ['team' => 'unassigned'])) }}" class="bns-crm-stat bns-crm-stat--spot{{ $team === 'unassigned' ? ' is-active' : '' }}">
+                    <span>Unassigned</span>
+                    <strong>{{ number_format($unassignedCount ?? 0) }}</strong>
+                </a>
+                @foreach(($employees ?? collect()) as $employee)
+                    <a href="{{ route('crm.special-calling', array_filter($teamKeep + ['team' => $employee->id])) }}" class="bns-crm-stat{{ $team === (string) $employee->id ? ' is-active' : '' }}">
+                        <span>{{ $employee->name }}@if($employee->facility) · {{ $employee->facility }}@endif</span>
+                        <strong>{{ number_format($teamCounts[$employee->id] ?? 0) }}</strong>
+                    </a>
+                @endforeach
+            </div>
+            <p class="bns-crm-section-copy">Click a calling team member to open only their Special Calling students.</p>
+
             <form method="GET" action="{{ route('crm.special-calling') }}" class="bns-crm-filters">
                 @if($sessionFilter > 0)
                     <input type="hidden" name="session" value="{{ $sessionFilter }}">
+                @endif
+                @if($team !== '')
+                    <input type="hidden" name="team" value="{{ $team }}">
                 @endif
                 <div>
                     <label for="crmSpecialSearch">Search</label>
@@ -56,7 +93,7 @@
                 </div>
                 <div class="bns-crm-filters__actions">
                     <button type="submit"><i class="fas fa-search" aria-hidden="true"></i> Search</button>
-                    @if($search !== '' || $sessionFilter > 0)
+                    @if($search !== '' || $sessionFilter > 0 || $team !== '')
                         <a href="{{ route('crm.special-calling') }}" class="bns-crm-search__reset">Clear</a>
                     @endif
                 </div>
@@ -68,6 +105,9 @@
                         Special Calling
                         @if($sessionFilter > 0)
                             · {{ bns_intro_session_label($sessionFilter) }}
+                        @endif
+                        @if($team !== '')
+                            · {{ $teamLabel }}
                         @endif
                     </h3>
                     <span>
@@ -96,8 +136,7 @@
                             @forelse($results as $index => $hit)
                                 @php
                                     $item = $hit->inquiry;
-                                    $assignmentKey = (int) $hit->session_number.'-'.(int) ($item->id ?? 0);
-                                    $assignment = ($assignments ?? collect())->get($assignmentKey);
+                                    $assignment = $hit->assignment ?? ($assignments ?? collect())->get((int) $hit->session_number.'-'.(int) ($item->id ?? 0));
                                 @endphp
                                 <tr>
                                     <td>{{ $index + 1 }}</td>

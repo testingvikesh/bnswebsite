@@ -239,19 +239,67 @@ class CrmController extends Controller
             $sessionFilter = 0;
         }
 
+        $employees = Schema::hasTable('crm_employees')
+            ? CrmEmployee::query()->where('is_active', true)->orderBy('name')->get()
+            : collect();
+
+        $team = trim((string) $request->query('team', ''));
+        $allowedTeamIds = $employees->pluck('id')->map(fn ($id) => (string) $id)->all();
+        if ($team !== '' && $team !== 'assigned' && $team !== 'unassigned' && ! in_array($team, $allowedTeamIds, true)) {
+            $team = '';
+        }
+
         $allAbsentUnpaid = $this->searchAcrossSessions('', $this->sessionCards())
             ->where('status', 'absent')
             ->values();
+
+        $assignments = Schema::hasTable('crm_assignments')
+            ? CrmAssignment::query()
+                ->with(['employee', 'followups'])
+                ->get()
+                ->keyBy(fn (CrmAssignment $row) => (int) $row->session_number.'-'.(int) $row->contact_inquiry_id)
+            : collect();
+
+        $attachTeam = function (Collection $rows) use ($assignments): Collection {
+            return $rows->map(function (object $hit) use ($assignments) {
+                $inquiryId = (int) ($hit->inquiry->id ?? 0);
+                $key = (int) $hit->session_number.'-'.$inquiryId;
+                $assignment = $assignments->get($key);
+                $hit->assignment = $assignment;
+                $hit->team_id = (int) ($assignment?->crm_employee_id ?? 0);
+
+                return $hit;
+            })->values();
+        };
+
+        $allAbsentUnpaid = $attachTeam($allAbsentUnpaid);
 
         $sessionTotals = [];
         foreach ($allowed as $sessionNo) {
             $sessionTotals[$sessionNo] = $allAbsentUnpaid->where('session_number', $sessionNo)->count();
         }
 
-        $results = $allAbsentUnpaid;
-        if ($sessionFilter > 0) {
-            $results = $results->where('session_number', $sessionFilter)->values();
+        $scoped = $sessionFilter > 0
+            ? $allAbsentUnpaid->where('session_number', $sessionFilter)->values()
+            : $allAbsentUnpaid;
+
+        $teamCounts = [];
+        foreach ($employees as $employee) {
+            $teamCounts[(int) $employee->id] = $scoped->where('team_id', (int) $employee->id)->count();
         }
+        $assignedCount = $scoped->filter(fn (object $hit) => (int) $hit->team_id > 0)->count();
+        $unassignedCount = $scoped->count() - $assignedCount;
+
+        $results = $scoped;
+        if ($team === 'unassigned') {
+            $results = $results->filter(fn (object $hit) => (int) $hit->team_id < 1)->values();
+        } elseif ($team === 'assigned') {
+            $results = $results->filter(fn (object $hit) => (int) $hit->team_id > 0)->values();
+        } elseif ($team !== '') {
+            $teamId = (int) $team;
+            $results = $results->filter(fn (object $hit) => (int) $hit->team_id === $teamId)->values();
+        }
+
         if ($search !== '') {
             $needle = mb_strtolower($search);
             $results = $results->filter(function (object $hit) use ($needle) {
@@ -272,24 +320,22 @@ class CrmController extends Controller
             })->values();
         }
 
-        $assignments = Schema::hasTable('crm_assignments')
-            ? CrmAssignment::query()
-                ->with(['employee', 'followups'])
-                ->when($sessionFilter > 0, fn ($query) => $query->where('session_number', $sessionFilter))
-                ->get()
-                ->keyBy(fn (CrmAssignment $row) => (int) $row->session_number.'-'.(int) $row->contact_inquiry_id)
-            : collect();
-
         return view('crm.special-calling', [
             'heroImage' => $this->heroImage(),
             'page' => config('crm.page', []),
             'search' => $search,
             'sessionFilter' => $sessionFilter,
+            'team' => $team,
             'allowedSessions' => $allowed,
+            'employees' => $employees,
             'results' => $results,
             'assignments' => $assignments,
             'sessionTotals' => $sessionTotals,
+            'teamCounts' => $teamCounts,
+            'assignedCount' => $assignedCount,
+            'unassignedCount' => $unassignedCount,
             'allCount' => $allAbsentUnpaid->count(),
+            'scopedCount' => $scoped->count(),
             'isAdmin' => true,
         ]);
     }
