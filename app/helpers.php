@@ -736,32 +736,36 @@ if (! function_exists('bns_session_attendance_breakdown')) {
                 ->orderBy('id')
                 ->get();
 
-        $attendedMobiles = \App\Models\SessionAttendance::query()
+        $attendanceRows = \App\Models\SessionAttendance::query()
             ->where('session_number', $sessionNumber)
-            ->get(['mobile'])
+            ->get(['mobile', 'contact_inquiry_id']);
+
+        $attendedMobiles = $attendanceRows
             ->map(fn (\App\Models\SessionAttendance $row) => \App\Models\ContactInquiry::normalizeMobile($row->mobile))
             ->filter()
             ->unique()
             ->values()
             ->all();
-
         $attendedLookup = array_fill_keys($attendedMobiles, true);
+        $attendedInquiryIds = [];
+        foreach ($attendanceRows as $row) {
+            $inquiryId = (int) $row->contact_inquiry_id;
+            if ($inquiryId > 0) {
+                $attendedInquiryIds[$inquiryId] = true;
+            }
+        }
 
-        $presentRows = $registeredRows
-            ->filter(function (\App\Models\ContactInquiry $row) use ($attendedLookup) {
-                $mobile = \App\Models\ContactInquiry::normalizeMobile($row->mobile);
+        $isPresent = static function (\App\Models\ContactInquiry $row) use ($attendedLookup, $attendedInquiryIds): bool {
+            if (isset($attendedInquiryIds[(int) $row->id])) {
+                return true;
+            }
+            $mobile = \App\Models\ContactInquiry::normalizeMobile($row->mobile);
 
-                return $mobile !== '' && isset($attendedLookup[$mobile]);
-            })
-            ->values();
+            return $mobile !== '' && isset($attendedLookup[$mobile]);
+        };
 
-        $absentRows = $registeredRows
-            ->filter(function (\App\Models\ContactInquiry $row) use ($attendedLookup) {
-                $mobile = \App\Models\ContactInquiry::normalizeMobile($row->mobile);
-
-                return $mobile === '' || ! isset($attendedLookup[$mobile]);
-            })
-            ->values();
+        $presentRows = $registeredRows->filter($isPresent)->values();
+        $absentRows = $registeredRows->reject($isPresent)->values();
 
         return [
             'registered' => $registeredRows->count(),

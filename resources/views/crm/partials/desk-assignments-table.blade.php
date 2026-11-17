@@ -15,7 +15,18 @@
         </thead>
         <tbody>
             @forelse($assignments as $assignment)
-                @php($item = $assignment->inquiry)
+                @php
+                    $item = $assignment->inquiry;
+                    $nextFollowup = 1;
+                    for ($n = 1; $n <= 3; $n++) {
+                        $probe = $assignment->followup($n);
+                        $nextFollowup = $n;
+                        if (! $probe || ! $probe->isDone()) {
+                            break;
+                        }
+                    }
+                    $nextFu = $assignment->followup($nextFollowup);
+                @endphp
                 <tr>
                     <td><strong>{{ $item->full_name ?? '—' }}</strong></td>
                     <td>
@@ -47,7 +58,18 @@
                         <div class="is-muted">{{ $assignment->lastCallStatusLabel() }}</div>
                     </td>
                     <td>
-                        <a href="{{ route('crm.desk.show', $assignment) }}" class="bns-crm-mini-btn bns-crm-mini-btn--primary">Call / Follow-up</a>
+                        <button
+                            type="button"
+                            class="bns-crm-mini-btn bns-crm-mini-btn--primary js-crm-remark"
+                            title="Call / Follow-up {{ $nextFollowup }}"
+                            data-name="{{ $item->full_name ?? 'Member' }}"
+                            data-followup="{{ $nextFollowup }}"
+                            data-status="{{ $nextFu ? $nextFu->statusLabel() : 'Not saved yet' }}"
+                            data-when="{{ $nextFu && $nextFu->called_at ? $nextFu->called_at->timezone('Asia/Kolkata')->format('d M Y, h:i A') : '' }}"
+                            data-note="{{ $nextFu && filled($nextFu->note) ? $nextFu->note : '' }}"
+                            data-status-value="{{ $nextFu?->status ?? 'pending' }}"
+                            data-save-url="{{ route('crm.desk.followup', ['assignment' => $assignment->id, 'followup' => $nextFollowup]) }}"
+                        >Call / Follow-up</button>
                     </td>
                 </tr>
             @empty

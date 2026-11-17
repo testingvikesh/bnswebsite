@@ -272,7 +272,20 @@ class CrmController extends Controller
             })->values();
         };
 
-        $allAbsentUnpaid = $attachTeam($allAbsentUnpaid);
+        // Same rules as employee desk: live attendance (id or mobile) + hide confirmed/paid.
+        $allAbsentUnpaid = $attachTeam($allAbsentUnpaid)
+            ->filter(function (object $hit) {
+                $inquiry = $hit->inquiry;
+                if (! $inquiry instanceof ContactInquiry) {
+                    return false;
+                }
+                if (CrmLeadStatus::isConfirmed($inquiry)) {
+                    return false;
+                }
+
+                return $this->attendanceSync->liveStatus($inquiry, (int) $hit->session_number) === 'absent';
+            })
+            ->values();
 
         $sessionTotals = [];
         foreach ($allowed as $sessionNo) {
