@@ -77,6 +77,65 @@ class CrmDeskController extends Controller
         ]);
     }
 
+    public function specialCalling(Request $request): View|RedirectResponse
+    {
+        if (CrmPortal::isAdmin($request)) {
+            return redirect()->route('crm.special-calling');
+        }
+
+        $employee = CrmPortal::employee($request);
+        if (! $employee) {
+            abort(403);
+        }
+
+        $allowed = bns_intro_session_allowed_numbers();
+        $sessionFilter = (int) $request->query('session', 0);
+        if (! in_array($sessionFilter, $allowed, true)) {
+            $sessionFilter = 0;
+        }
+
+        $filters = $this->deskFilters($request);
+        $allAssigned = $this->employeeAssignments($employee->id);
+        $specialAll = $allAssigned
+            ->filter(fn (CrmAssignment $row) => (string) $row->attendance_status === 'absent')
+            ->values();
+
+        $sessionTotals = [];
+        foreach ($allowed as $sessionNo) {
+            $sessionTotals[$sessionNo] = $specialAll->where('session_number', $sessionNo)->count();
+        }
+
+        $scoped = $sessionFilter > 0
+            ? $specialAll->where('session_number', $sessionFilter)->values()
+            : $specialAll;
+
+        $callDone = $scoped->filter(fn (CrmAssignment $row) => $row->hasCallDone())->count();
+        $remain = $scoped->count() - $callDone;
+        $filtered = $this->applyDeskFilters($scoped, array_merge($filters, [
+            'status' => 'all',
+        ]));
+
+        return view('crm.desk-special-calling', [
+            'heroImage' => $this->homeImages->url('about_bg'),
+            'page' => config('crm.page', []),
+            'employee' => $employee,
+            'results' => $filtered,
+            'search' => $filters['search'],
+            'call' => $filters['call'],
+            'callStatus' => $filters['callStatus'],
+            'callStatusCounts' => $this->assignmentTotals($scoped, (int) $employee->id, $sessionFilter)['callStatusCounts'],
+            'followupStatusOptions' => CrmFollowup::statusOptions(),
+            'allowedSessions' => $allowed,
+            'sessionFilter' => $sessionFilter,
+            'sessionTotals' => $sessionTotals,
+            'allCount' => $specialAll->count(),
+            'scopedCount' => $scoped->count(),
+            'callDone' => $callDone,
+            'remain' => $remain,
+            'isAdmin' => false,
+        ]);
+    }
+
     public function session(Request $request, int $session): View|RedirectResponse
     {
         if (CrmPortal::isAdmin($request)) {

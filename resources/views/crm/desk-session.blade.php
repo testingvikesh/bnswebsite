@@ -78,8 +78,12 @@
                     <span>Remain</span>
                     <strong>{{ number_format($totals['remain'] ?? 0) }}</strong>
                 </a>
+                <a href="{{ route('crm.desk.special-calling', ['session' => $sessionNo]) }}" class="bns-crm-stat bns-crm-stat--absent">
+                    <span>Special Calling</span>
+                    <strong>{{ number_format($totals['absent'] ?? 0) }}</strong>
+                </a>
             </div>
-            <p class="bns-crm-section-copy">Present and Absent lists are for members assigned to you in this session.</p>
+            <p class="bns-crm-section-copy">Present and Absent lists are for members assigned to you in this session. Special Calling opens Absent + Not paid for calling.</p>
 
             <form method="GET" action="{{ route('crm.desk.session', $sessionNo) }}" class="bns-crm-filters">
                 <div>

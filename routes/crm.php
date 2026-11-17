@@ -40,6 +40,7 @@ Route::prefix('crm')->name('crm.')->group(function () {
         });
 
         Route::get('/desk', [CrmDeskController::class, 'index'])->name('desk');
+        Route::get('/desk/special-calling', [CrmDeskController::class, 'specialCalling'])->name('desk.special-calling');
         Route::get('/desk/sessions/{session}', [CrmDeskController::class, 'session'])
             ->whereNumber('session')
             ->name('desk.session');
