@@ -230,6 +230,70 @@ class CrmController extends Controller
         ]);
     }
 
+    public function specialCalling(Request $request): View
+    {
+        $search = trim((string) $request->query('q', ''));
+        $allowed = bns_intro_session_allowed_numbers();
+        $sessionFilter = (int) $request->query('session', 0);
+        if (! in_array($sessionFilter, $allowed, true)) {
+            $sessionFilter = 0;
+        }
+
+        $allAbsentUnpaid = $this->searchAcrossSessions('', $this->sessionCards())
+            ->where('status', 'absent')
+            ->values();
+
+        $sessionTotals = [];
+        foreach ($allowed as $sessionNo) {
+            $sessionTotals[$sessionNo] = $allAbsentUnpaid->where('session_number', $sessionNo)->count();
+        }
+
+        $results = $allAbsentUnpaid;
+        if ($sessionFilter > 0) {
+            $results = $results->where('session_number', $sessionFilter)->values();
+        }
+        if ($search !== '') {
+            $needle = mb_strtolower($search);
+            $results = $results->filter(function (object $hit) use ($needle) {
+                $row = $hit->inquiry;
+                if (! $row instanceof ContactInquiry) {
+                    return false;
+                }
+                $hay = mb_strtolower(implode(' ', array_filter([
+                    (string) $row->full_name,
+                    (string) $row->email,
+                    (string) $row->mobile,
+                    (string) $row->registration_number,
+                    (string) $row->city,
+                    (string) $row->interested_program,
+                ])));
+
+                return str_contains($hay, $needle);
+            })->values();
+        }
+
+        $assignments = Schema::hasTable('crm_assignments')
+            ? CrmAssignment::query()
+                ->with(['employee', 'followups'])
+                ->when($sessionFilter > 0, fn ($query) => $query->where('session_number', $sessionFilter))
+                ->get()
+                ->keyBy(fn (CrmAssignment $row) => (int) $row->session_number.'-'.(int) $row->contact_inquiry_id)
+            : collect();
+
+        return view('crm.special-calling', [
+            'heroImage' => $this->heroImage(),
+            'page' => config('crm.page', []),
+            'search' => $search,
+            'sessionFilter' => $sessionFilter,
+            'allowedSessions' => $allowed,
+            'results' => $results,
+            'assignments' => $assignments,
+            'sessionTotals' => $sessionTotals,
+            'allCount' => $allAbsentUnpaid->count(),
+            'isAdmin' => true,
+        ]);
+    }
+
     public function todayAttendance(Request $request): View
     {
         $search = trim((string) $request->query('q', ''));

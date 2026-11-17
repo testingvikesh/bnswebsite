@@ -21,6 +21,7 @@ Route::prefix('crm')->name('crm.')->group(function () {
 
         Route::middleware('crm.admin')->group(function () {
             Route::get('/dashboard', [CrmController::class, 'dashboard'])->name('dashboard');
+            Route::get('/special-calling', [CrmController::class, 'specialCalling'])->name('special-calling');
             Route::get('/today-attendance', [CrmController::class, 'todayAttendance'])->name('today-attendance');
             Route::get('/sessions/{session}', [CrmController::class, 'session'])
                 ->whereNumber('session')

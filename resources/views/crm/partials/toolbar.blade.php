@@ -58,6 +58,11 @@
         <a href="{{ route('crm.payments') }}" class="bns-mail-toolbar__link{{ ($active ?? '') === 'payments' ? ' is-active' : '' }}">
             <i class="fas fa-rupee-sign" aria-hidden="true"></i> Payment Done
         </a>
+        @if($isAdmin)
+            <a href="{{ route('crm.special-calling') }}" class="bns-mail-toolbar__link{{ ($active ?? '') === 'special-calling' ? ' is-active' : '' }}">
+                <i class="fas fa-phone-volume" aria-hidden="true"></i> Special Calling
+            </a>
+        @endif
         <a href="{{ route('crm.attendance-sync') }}" class="bns-mail-toolbar__link{{ ($active ?? '') === 'attendance-sync' ? ' is-active' : '' }}">
             <i class="fas fa-qrcode" aria-hidden="true"></i> Attendance Sync
         </a>
