@@ -699,6 +699,22 @@
     color: #0a1d37;
 }
 
+.bns-crm-bulkbar .bns-crm-assign {
+    margin-left: auto;
+}
+
+@media (max-width: 760px) {
+    .bns-crm-bulkbar .bns-crm-assign {
+        width: 100%;
+        margin-left: 0;
+    }
+
+    .bns-crm-bulkbar .bns-crm-assign select,
+    .bns-crm-bulkbar .bns-crm-assign button {
+        width: 100%;
+    }
+}
+
 @media (max-width: 1000px) {
     .bns-crm-grid-2,
     .bns-crm-followups {
