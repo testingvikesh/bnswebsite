@@ -9,7 +9,7 @@
                 <th>Contact</th>
                 <th>Session</th>
                 <th>Attendance</th>
-                <th>1st · 2nd · 3rd · 4th · 5th call</th>
+                <th>Follow-ups</th>
                 <th></th>
             </tr>
         </thead>
@@ -50,7 +50,7 @@
                                 @php($fu = $assignment->followup($n))
                                 <button
                                     type="button"
-                                    class="bns-crm-call-chip {{ $fu && $fu->isDone() ? 'is-done' : '' }} js-crm-remark"
+                                    class="bns-crm-dot {{ $fu && $fu->isDone() ? 'is-done' : '' }} js-crm-remark"
                                     title="{{ \App\Models\CrmFollowup::ordinalLabel((int) $n) }}"
                                     data-name="{{ $item->full_name ?? 'Member' }}"
                                     data-followup="{{ $n }}"
@@ -59,10 +59,7 @@
                                     data-note="{{ $fu && filled($fu->note) ? $fu->note : '' }}"
                                     data-status-value="{{ $fu?->status ?? 'pending' }}"
                                     data-save-url="{{ route('crm.desk.followup', ['assignment' => $assignment->id, 'followup' => $n]) }}"
-                                >
-                                    <span class="bns-crm-call-chip__label">{{ \App\Models\CrmFollowup::ordinalLabel((int) $n) }}</span>
-                                    <span class="bns-crm-call-chip__status">{{ $fu && $fu->isDone() ? $fu->statusLabel() : 'Pending' }}</span>
-                                </button>
+                                >{{ $n }}</button>
                             @endforeach
                         </div>
                         <button
@@ -76,7 +73,7 @@
                             data-note="{{ $statusOpenFu && filled($statusOpenFu->note) ? $statusOpenFu->note : '' }}"
                             data-status-value="{{ $statusOpenFu?->status ?? 'pending' }}"
                             data-save-url="{{ route('crm.desk.followup', ['assignment' => $assignment->id, 'followup' => $statusOpenNo]) }}"
-                        >Latest: {{ $assignment->lastCallStatusLabel() }}</button>
+                        >{{ $assignment->lastCallStatusLabel() }}</button>
                     </td>
                     <td>
                         <button

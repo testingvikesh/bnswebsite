@@ -257,58 +257,7 @@
     display: flex;
     gap: 6px;
     flex-wrap: wrap;
-    align-items: stretch;
-}
-
-.bns-crm-call-chip {
-    display: inline-flex;
-    flex-direction: column;
-    align-items: flex-start;
-    justify-content: center;
-    min-width: 72px;
-    margin: 0;
-    padding: 6px 8px;
-    border: 1px solid #cbd5e1;
-    border-radius: 0;
-    background: #f8fafc;
-    color: #0a1d37;
-    font-family: inherit;
-    text-align: left;
-    cursor: pointer;
-    -webkit-tap-highlight-color: transparent;
-}
-
-.bns-crm-call-chip__label {
-    font-size: 0.72rem;
-    font-weight: 800;
-    line-height: 1.2;
-}
-
-.bns-crm-call-chip__status {
-    margin-top: 2px;
-    color: #64748b;
-    font-size: 0.65rem;
-    font-weight: 700;
-    line-height: 1.2;
-}
-
-.bns-crm-call-chip.is-done {
-    border-color: #86efac;
-    background: #ecfdf5;
-}
-
-.bns-crm-call-chip.is-done .bns-crm-call-chip__label {
-    color: #15803d;
-}
-
-.bns-crm-call-chip.is-done .bns-crm-call-chip__status {
-    color: #166534;
-}
-
-.bns-crm-call-chip:hover,
-.bns-crm-call-chip:focus {
-    outline: 2px solid #0a1d37;
-    outline-offset: 1px;
+    align-items: center;
 }
 
 .bns-crm-pills {
