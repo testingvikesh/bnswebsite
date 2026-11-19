@@ -19,7 +19,7 @@
                 <th>City</th>
                 <th>Status</th>
                 <th>Calling team</th>
-                <th>Remarks</th>
+                <th>1st · 2nd · 3rd · 4th · 5th call</th>
             </tr>
         </thead>
         <tbody>
@@ -77,8 +77,8 @@
                                     @php($fu = $assignment->followup($n))
                                     <button
                                         type="button"
-                                        class="bns-crm-dot {{ $fu && $fu->isDone() ? 'is-done' : '' }} js-crm-remark"
-                                        title="Follow-up {{ $n }} remark"
+                                        class="bns-crm-call-chip {{ $fu && $fu->isDone() ? 'is-done' : '' }} js-crm-remark"
+                                        title="{{ \App\Models\CrmFollowup::ordinalLabel((int) $n) }}"
                                         data-name="{{ $item->full_name ?? 'Member' }}"
                                         data-followup="{{ $n }}"
                                         data-status="{{ $fu ? $fu->statusLabel() : 'Not saved yet' }}"
@@ -86,10 +86,13 @@
                                         data-when="{{ $fu && $fu->called_at ? $fu->called_at->timezone('Asia/Kolkata')->format('d M Y, h:i A') : '' }}"
                                         data-note="{{ $fu && filled($fu->note) ? $fu->note : '' }}"
                                         data-save-url="{{ route('crm.desk.followup', ['assignment' => $assignment->id, 'followup' => $n]) }}"
-                                    >{{ $n }}</button>
+                                    >
+                                        <span class="bns-crm-call-chip__label">{{ \App\Models\CrmFollowup::ordinalLabel((int) $n) }}</span>
+                                        <span class="bns-crm-call-chip__status">{{ $fu && $fu->isDone() ? $fu->statusLabel() : 'Pending' }}</span>
+                                    </button>
                                 @endforeach
                             </div>
-                            <div class="is-muted">{{ $assignment->lastCallStatusLabel() }}</div>
+                            <div class="is-muted">Latest: {{ $assignment->lastCallStatusLabel() }}</div>
                         @else
                             <span class="is-muted">Assign first</span>
                         @endif

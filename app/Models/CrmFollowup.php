@@ -52,14 +52,19 @@ class CrmFollowup extends Model
         return range(1, self::maxNumber());
     }
 
-    public static function ordinalLabel(int $number): string
+    public static function ordinalShort(int $number): string
     {
         return match ($number) {
-            1 => '1st call',
-            2 => '2nd call',
-            3 => '3rd call',
-            default => $number.'th call',
+            1 => '1st',
+            2 => '2nd',
+            3 => '3rd',
+            default => $number.'th',
         };
+    }
+
+    public static function ordinalLabel(int $number): string
+    {
+        return self::ordinalShort($number).' call';
     }
 
     /** @return array<string, string> */

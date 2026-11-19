@@ -9,7 +9,7 @@
                 <th>Contact</th>
                 <th>Session</th>
                 <th>Attendance</th>
-                <th>Follow-ups</th>
+                <th>1st · 2nd · 3rd · 4th · 5th call</th>
                 <th></th>
             </tr>
         </thead>
@@ -50,8 +50,8 @@
                                 @php($fu = $assignment->followup($n))
                                 <button
                                     type="button"
-                                    class="bns-crm-dot {{ $fu && $fu->isDone() ? 'is-done' : '' }} js-crm-remark"
-                                    title="View follow-up {{ $n }} remark"
+                                    class="bns-crm-call-chip {{ $fu && $fu->isDone() ? 'is-done' : '' }} js-crm-remark"
+                                    title="{{ \App\Models\CrmFollowup::ordinalLabel((int) $n) }}"
                                     data-name="{{ $item->full_name ?? 'Member' }}"
                                     data-followup="{{ $n }}"
                                     data-status="{{ $fu ? $fu->statusLabel() : 'Not saved yet' }}"
@@ -59,13 +59,16 @@
                                     data-note="{{ $fu && filled($fu->note) ? $fu->note : '' }}"
                                     data-status-value="{{ $fu?->status ?? 'pending' }}"
                                     data-save-url="{{ route('crm.desk.followup', ['assignment' => $assignment->id, 'followup' => $n]) }}"
-                                >{{ $n }}</button>
+                                >
+                                    <span class="bns-crm-call-chip__label">{{ \App\Models\CrmFollowup::ordinalLabel((int) $n) }}</span>
+                                    <span class="bns-crm-call-chip__status">{{ $fu && $fu->isDone() ? $fu->statusLabel() : 'Pending' }}</span>
+                                </button>
                             @endforeach
                         </div>
                         <button
                             type="button"
                             class="bns-crm-followup-status js-crm-remark"
-                            title="Open follow-up {{ $statusOpenNo }}"
+                            title="Open {{ \App\Models\CrmFollowup::ordinalLabel((int) $statusOpenNo) }}"
                             data-name="{{ $item->full_name ?? 'Member' }}"
                             data-followup="{{ $statusOpenNo }}"
                             data-status="{{ $statusOpenFu ? $statusOpenFu->statusLabel() : 'Not saved yet' }}"
@@ -73,28 +76,21 @@
                             data-note="{{ $statusOpenFu && filled($statusOpenFu->note) ? $statusOpenFu->note : '' }}"
                             data-status-value="{{ $statusOpenFu?->status ?? 'pending' }}"
                             data-save-url="{{ route('crm.desk.followup', ['assignment' => $assignment->id, 'followup' => $statusOpenNo]) }}"
-                        >{{ $assignment->lastCallStatusLabel() }}</button>
+                        >Latest: {{ $assignment->lastCallStatusLabel() }}</button>
                     </td>
                     <td>
-                        <div class="bns-crm-actions">
-                            @if(($dialHref = bns_tel_href($item->mobile ?? '')) !== '')
-                                <a class="bns-crm-mini-btn bns-crm-mini-btn--dial" href="{{ $dialHref }}" title="Dial {{ $item->mobile }}">
-                                    <i class="fas fa-phone" aria-hidden="true"></i> Dial
-                                </a>
-                            @endif
-                            <button
-                                type="button"
-                                class="bns-crm-mini-btn bns-crm-mini-btn--primary js-crm-remark"
-                                title="Follow-up {{ $nextFollowup }}"
-                                data-name="{{ $item->full_name ?? 'Member' }}"
-                                data-followup="{{ $nextFollowup }}"
-                                data-status="{{ $nextFu ? $nextFu->statusLabel() : 'Not saved yet' }}"
-                                data-when="{{ $nextFu && $nextFu->called_at ? $nextFu->called_at->timezone('Asia/Kolkata')->format('d M Y, h:i A') : '' }}"
-                                data-note="{{ $nextFu && filled($nextFu->note) ? $nextFu->note : '' }}"
-                                data-status-value="{{ $nextFu?->status ?? 'pending' }}"
-                                data-save-url="{{ route('crm.desk.followup', ['assignment' => $assignment->id, 'followup' => $nextFollowup]) }}"
-                            >Follow-up</button>
-                        </div>
+                        <button
+                            type="button"
+                            class="bns-crm-mini-btn bns-crm-mini-btn--primary js-crm-remark"
+                            title="Follow-up {{ $nextFollowup }}"
+                            data-name="{{ $item->full_name ?? 'Member' }}"
+                            data-followup="{{ $nextFollowup }}"
+                            data-status="{{ $nextFu ? $nextFu->statusLabel() : 'Not saved yet' }}"
+                            data-when="{{ $nextFu && $nextFu->called_at ? $nextFu->called_at->timezone('Asia/Kolkata')->format('d M Y, h:i A') : '' }}"
+                            data-note="{{ $nextFu && filled($nextFu->note) ? $nextFu->note : '' }}"
+                            data-status-value="{{ $nextFu?->status ?? 'pending' }}"
+                            data-save-url="{{ route('crm.desk.followup', ['assignment' => $assignment->id, 'followup' => $nextFollowup]) }}"
+                        >Follow-up</button>
                     </td>
                 </tr>
             @empty
