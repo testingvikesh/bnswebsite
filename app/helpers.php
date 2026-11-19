@@ -166,6 +166,21 @@ if (! function_exists('bns_whatsapp_digits')) {
     }
 }
 
+if (! function_exists('bns_tel_href')) {
+    /**
+     * Build a click-to-dial tel: link for Indian mobiles when possible.
+     */
+    function bns_tel_href(?string $phone): string
+    {
+        $digits = bns_whatsapp_digits($phone);
+        if ($digits === '') {
+            return '';
+        }
+
+        return 'tel:+'.$digits;
+    }
+}
+
 if (! function_exists('bns_whatsapp_link')) {
     /**
      * Build a WhatsApp click-to-chat URL with optional pre-filled message.

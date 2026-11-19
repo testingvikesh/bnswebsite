@@ -1,10 +1,6 @@
 @php
     $item = $inquiry;
-    $digits = preg_replace('/\D+/', '', (string) ($item->mobile ?? ''));
-    $tel = $digits !== '' ? 'tel:+91'.ltrim($digits, '0') : '';
-    if (strlen($digits) >= 10) {
-        $tel = 'tel:+91'.substr($digits, -10);
-    }
+    $tel = bns_tel_href($item->mobile ?? '');
 @endphp
 @extends('layouts.front')
 
@@ -41,7 +37,16 @@
                     <span>Session {{ $assignment->session_number }} · {{ $assignment->attendance_status === 'present' ? 'Present' : 'Absent' }}</span>
                 </div>
                 <div class="bns-crm-member-meta">
-                    <div><span>Mobile</span><strong>{{ $item->mobile ?: '—' }}</strong></div>
+                    <div>
+                        <span>Mobile</span>
+                        <strong>
+                            @if($tel !== '')
+                                <a class="bns-crm-dial" href="{{ $tel }}">{{ $item->mobile ?: '—' }}</a>
+                            @else
+                                {{ $item->mobile ?: '—' }}
+                            @endif
+                        </strong>
+                    </div>
                     <div><span>Email</span><strong>{{ $item->email ?: '—' }}</strong></div>
                     <div><span>Reg. No.</span><strong>{{ $item->registration_number ?: '—' }}</strong></div>
                     <div><span>City</span><strong>{{ $item->city ?: '—' }}</strong></div>
@@ -59,11 +64,12 @@
                 </div>
             </section>
 
-            <h3 class="bns-crm-section-title">3 follow-ups</h3>
-            <p class="bns-crm-section-copy">After the call, update Follow-up 1, then 2, then 3.</p>
+            @php($followupNumbers = \App\Models\CrmFollowup::numbers())
+            <h3 class="bns-crm-section-title">{{ count($followupNumbers) }} follow-ups</h3>
+            <p class="bns-crm-section-copy">After the call, update Follow-up 1 through {{ count($followupNumbers) }}.</p>
 
             <div class="bns-crm-followups">
-                @for($n = 1; $n <= 3; $n++)
+                @foreach($followupNumbers as $n)
                     @php($row = $followups[$n] ?? null)
                     <section class="bns-crm-list-card bns-crm-followup-card">
                         <div class="bns-crm-list-card__head">
@@ -89,7 +95,7 @@
                             <button type="submit" class="bns-mail-login__submit">Save follow-up {{ $n }}</button>
                         </form>
                     </section>
-                @endfor
+                @endforeach
             </div>
         </div>
     </section>

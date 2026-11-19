@@ -592,6 +592,49 @@
     text-decoration: none;
 }
 
+.bns-crm-dial {
+    display: inline-flex;
+    align-items: center;
+    gap: 6px;
+    color: #0a1d37;
+    font-weight: 800;
+    text-decoration: none;
+    -webkit-tap-highlight-color: transparent;
+}
+
+.bns-crm-dial i {
+    color: #16a34a;
+}
+
+.bns-crm-dial:hover,
+.bns-crm-dial:focus {
+    color: #16a34a;
+    text-decoration: underline;
+}
+
+.bns-crm-mail {
+    color: inherit;
+    text-decoration: none;
+}
+
+.bns-crm-mail:hover,
+.bns-crm-mail:focus {
+    color: #0a1d37;
+    text-decoration: underline;
+}
+
+.bns-crm-actions {
+    display: flex;
+    flex-wrap: wrap;
+    gap: 8px;
+    align-items: center;
+}
+
+.bns-crm-mini-btn--dial {
+    background: #16a34a;
+    color: #fff;
+}
+
 .bns-crm-followups {
     display: grid;
     grid-template-columns: repeat(3, minmax(0, 1fr));
@@ -600,9 +643,9 @@
 
 .bns-crm-dot {
     display: inline-flex;
-    width: 22px;
-    height: 22px;
-    margin-right: 4px;
+    width: 28px;
+    height: 28px;
+    margin: 0 2px 4px 0;
     padding: 0;
     border: 0;
     border-radius: 50%;
@@ -610,10 +653,37 @@
     justify-content: center;
     background: #e2e8f0;
     color: #475569;
-    font-size: 0.7rem;
+    font-size: 0.72rem;
     font-weight: 800;
     font-family: inherit;
     cursor: pointer;
+    position: relative;
+    z-index: 2;
+    -webkit-tap-highlight-color: transparent;
+}
+
+.bns-crm-followup-status {
+    display: inline-block;
+    margin-top: 2px;
+    padding: 0;
+    border: 0;
+    background: transparent;
+    color: #64748b;
+    font: inherit;
+    font-size: 0.82rem;
+    font-weight: 700;
+    text-align: left;
+    cursor: pointer;
+}
+
+.bns-crm-followup-status:hover,
+.bns-crm-followup-status:focus {
+    color: #0a1d37;
+    text-decoration: underline;
+}
+
+.bns-crm-remark-modal {
+    z-index: 1080;
 }
 
 .bns-crm-dot.is-done {

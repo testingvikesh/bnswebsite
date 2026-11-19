@@ -173,6 +173,24 @@
         }
     }, true);
 
+    function allowModal(modalElOrId) {
+        var modalEl = typeof modalElOrId === 'string'
+            ? document.getElementById(modalElOrId)
+            : modalElOrId;
+        if (!modalEl) return null;
+        var id = modalEl.id || '';
+        if (id) {
+            dismissed[id] = false;
+            closing[id] = false;
+        }
+        modalEl.classList.remove('bns-modal-is-closed');
+        modalEl.style.removeProperty('display');
+        modalEl.style.removeProperty('visibility');
+        modalEl.style.removeProperty('opacity');
+        modalEl.style.removeProperty('pointer-events');
+        return modalEl;
+    }
+
     document.addEventListener('click', function (event) {
         var trigger = event.target && event.target.closest
             ? event.target.closest('[data-bs-toggle="modal"][data-bs-target]')
@@ -180,13 +198,17 @@
         if (!trigger) return;
         var id = (trigger.getAttribute('data-bs-target') || '').replace(/^#/, '');
         if (!id) return;
-        dismissed[id] = false;
-        closing[id] = false;
-        var modalEl = document.getElementById(id);
-        if (modalEl) {
-            modalEl.classList.remove('bns-modal-is-closed');
-            modalEl.style.removeProperty('display');
-        }
+        allowModal(id);
+    }, true);
+
+    // CRM follow-up buttons open #crmRemarkModal via JS (not data-bs-toggle).
+    // Clear the dismissed lock so reopen works after bnsCloseModal.
+    document.addEventListener('click', function (event) {
+        var trigger = event.target && event.target.closest
+            ? event.target.closest('.js-crm-remark')
+            : null;
+        if (!trigger) return;
+        allowModal('crmRemarkModal');
     }, true);
 
     document.addEventListener('show.bs.modal', function (event) {
@@ -232,6 +254,7 @@
     });
 
     window.bnsCloseModal = forceClose;
+    window.bnsAllowModal = allowModal;
     window.bnsCloseIntroModal = function () {
         return forceClose(document.getElementById('bnsIntroSessionModal'));
     };

@@ -33,8 +33,10 @@
                         <strong>{{ $item->full_name ?: '—' }}</strong>
                     </td>
                     <td>
-                        <div>{{ $item->mobile ?: '—' }}</div>
-                        <div class="is-muted">{{ $item->email ?: '—' }}</div>
+                        @include('crm.partials.contact-cell', [
+                            'mobile' => $item->mobile ?? '',
+                            'email' => $item->email ?? '',
+                        ])
                     </td>
                     <td>{{ $item->registration_number ?: '—' }}</td>
                     <td>{{ $item->interested_program ?: '—' }}</td>
@@ -71,7 +73,7 @@
                     <td>
                         @if($assignment)
                             <div class="bns-crm-remark-dots">
-                                @for($n = 1; $n <= 3; $n++)
+                                @foreach(\App\Models\CrmFollowup::numbers() as $n)
                                     @php($fu = $assignment->followup($n))
                                     <button
                                         type="button"
@@ -85,7 +87,7 @@
                                         data-note="{{ $fu && filled($fu->note) ? $fu->note : '' }}"
                                         data-save-url="{{ route('crm.desk.followup', ['assignment' => $assignment->id, 'followup' => $n]) }}"
                                     >{{ $n }}</button>
-                                @endfor
+                                @endforeach
                             </div>
                             <div class="is-muted">{{ $assignment->lastCallStatusLabel() }}</div>
                         @else

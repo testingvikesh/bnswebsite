@@ -38,14 +38,30 @@
                 $search = $search ?? '';
                 $call = $call ?? '';
                 $callStatus = $callStatus ?? '';
+                $callRound = (int) ($callRound ?? 0);
+                $followupStatusOptions = $followupStatusOptions ?? \App\Models\CrmFollowup::statusOptions();
                 $queryKeep = array_filter([
                     'q' => $search !== '' ? $search : null,
                     'call' => $call !== '' ? $call : null,
                     'call_status' => $callStatus !== '' ? $callStatus : null,
+                    'call_round' => $callRound > 0 ? $callRound : null,
                 ]);
                 $callKeep = array_filter([
                     'q' => $search !== '' ? $search : null,
                     'session' => $sessionFilter > 0 ? $sessionFilter : null,
+                    'call_status' => $callStatus !== '' ? $callStatus : null,
+                    'call_round' => $callRound > 0 ? $callRound : null,
+                ]);
+                $resultKeep = array_filter([
+                    'q' => $search !== '' ? $search : null,
+                    'session' => $sessionFilter > 0 ? $sessionFilter : null,
+                    'call' => $call !== '' ? $call : null,
+                    'call_round' => $callRound > 0 ? $callRound : null,
+                ]);
+                $roundKeep = array_filter([
+                    'q' => $search !== '' ? $search : null,
+                    'session' => $sessionFilter > 0 ? $sessionFilter : null,
+                    'call' => $call !== '' ? $call : null,
                     'call_status' => $callStatus !== '' ? $callStatus : null,
                 ]);
             @endphp
@@ -65,7 +81,7 @@
             <p class="bns-crm-section-copy">Your Special Calling list = members assigned to you who are Absent + Not paid.</p>
 
             <div class="bns-crm-stats">
-                <a href="{{ route('crm.desk.special-calling', $callKeep) }}" class="bns-crm-stat{{ $call === '' && $callStatus === '' ? ' is-active' : '' }}">
+                <a href="{{ route('crm.desk.special-calling', $callKeep) }}" class="bns-crm-stat{{ $call === '' && $callStatus === '' && $callRound === 0 ? ' is-active' : '' }}">
                     <span>Total{{ $sessionFilter > 0 ? ' · S'.$sessionFilter : '' }}</span>
                     <strong>{{ number_format($scopedCount ?? $results->count()) }}</strong>
                 </a>
@@ -79,9 +95,25 @@
                 </a>
             </div>
 
+            @include('crm.partials.call-result-stats', [
+                'routeName' => 'crm.desk.special-calling',
+                'resultKeep' => $resultKeep,
+                'roundKeep' => $roundKeep,
+                'callStatus' => $callStatus,
+                'callRound' => $callRound,
+                'followupStatusOptions' => $followupStatusOptions,
+                'followupNumbers' => $followupNumbers ?? \App\Models\CrmFollowup::numbers(),
+                'callStatusCounts' => $callStatusCounts ?? [],
+                'callRoundCounts' => $callRoundCounts ?? [],
+                'callAverage' => $callAverage ?? 0,
+            ])
+
             <form method="GET" action="{{ route('crm.desk.special-calling') }}" class="bns-crm-filters">
                 @if($sessionFilter > 0)
                     <input type="hidden" name="session" value="{{ $sessionFilter }}">
+                @endif
+                @if($callRound > 0)
+                    <input type="hidden" name="call_round" value="{{ $callRound }}">
                 @endif
                 <div>
                     <label for="crmDeskSpecialSearch">Search</label>
@@ -99,7 +131,7 @@
                     <label for="crmDeskSpecialCallStatus">Call result</label>
                     <select id="crmDeskSpecialCallStatus" name="call_status">
                         <option value="">All call results</option>
-                        @foreach(($followupStatusOptions ?? []) as $value => $label)
+                        @foreach($followupStatusOptions as $value => $label)
                             <option value="{{ $value }}" @selected($callStatus === $value)>
                                 {{ $label }} ({{ number_format($callStatusCounts[$value] ?? 0) }})
                             </option>
@@ -108,7 +140,7 @@
                 </div>
                 <div class="bns-crm-filters__actions">
                     <button type="submit"><i class="fas fa-filter" aria-hidden="true"></i> Apply</button>
-                    @if($search !== '' || $sessionFilter > 0 || $call !== '' || $callStatus !== '')
+                    @if($search !== '' || $sessionFilter > 0 || $call !== '' || $callStatus !== '' || $callRound > 0)
                         <a href="{{ route('crm.desk.special-calling') }}" class="bns-crm-search__reset">Clear</a>
                     @endif
                 </div>
@@ -125,6 +157,12 @@
                             · Call done
                         @elseif($call === 'remain')
                             · Remain
+                        @endif
+                        @if($callStatus !== '')
+                            · {{ $followupStatusOptions[$callStatus] ?? $callStatus }}
+                        @endif
+                        @if($callRound > 0)
+                            · {{ \App\Models\CrmFollowup::ordinalLabel($callRound) }} done
                         @endif
                     </h3>
                     <span>

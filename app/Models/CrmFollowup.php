@@ -17,6 +17,8 @@ class CrmFollowup extends Model
 
     public const STATUS_INTERESTED = 'interested';
 
+    public const STATUS_INTERESTED_NOT_AVAILABLE = 'interested_not_available';
+
     public const STATUS_NOT_INTERESTED = 'not_interested';
 
     public const STATUS_ADMITTED = 'admitted';
@@ -39,6 +41,27 @@ class CrmFollowup extends Model
         return $this->belongsTo(CrmAssignment::class, 'crm_assignment_id');
     }
 
+    public static function maxNumber(): int
+    {
+        return max(1, (int) config('crm.followup_count', 5));
+    }
+
+    /** @return list<int> */
+    public static function numbers(): array
+    {
+        return range(1, self::maxNumber());
+    }
+
+    public static function ordinalLabel(int $number): string
+    {
+        return match ($number) {
+            1 => '1st call',
+            2 => '2nd call',
+            3 => '3rd call',
+            default => $number.'th call',
+        };
+    }
+
     /** @return array<string, string> */
     public static function statusOptions(): array
     {
@@ -48,6 +71,7 @@ class CrmFollowup extends Model
             self::STATUS_NO_ANSWER => 'No answer',
             self::STATUS_CALLBACK => 'Call back later',
             self::STATUS_INTERESTED => 'Interested',
+            self::STATUS_INTERESTED_NOT_AVAILABLE => 'Interested But Not Available',
             self::STATUS_NOT_INTERESTED => 'Not interested',
             self::STATUS_ADMITTED => 'Admitted',
         ];

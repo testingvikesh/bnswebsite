@@ -25,7 +25,7 @@
                 <div class="bns-mail-login__card">
                     <span class="bns-mail-login__badge">CRM Access</span>
                     <h2>Login to BNS CRM</h2>
-                    <p>Admin can assign members. Employees login here to call assigned members and manage 3 follow-ups.</p>
+                    <p>Admin can assign members. Employees login here to call assigned members and manage 5 follow-ups.</p>
 
                     @if(session('status'))
                         <div class="bns-mail-login__alert bns-mail-login__alert--ok">{{ session('status') }}</div>

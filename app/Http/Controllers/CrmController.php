@@ -313,6 +313,60 @@ class CrmController extends Controller
             $results = $results->filter(fn (object $hit) => (int) $hit->team_id === $teamId)->values();
         }
 
+        $followupStatusOptions = CrmFollowup::statusOptions();
+        $callStatus = trim((string) $request->query('call_status', ''));
+        if ($callStatus !== '' && ! array_key_exists($callStatus, $followupStatusOptions)) {
+            $callStatus = '';
+        }
+        $followupNumbers = CrmFollowup::numbers();
+        $callRound = (int) $request->query('call_round', 0);
+        if (! in_array($callRound, $followupNumbers, true)) {
+            $callRound = 0;
+        }
+
+        $assignedHits = $results->filter(fn (object $hit) => $hit->assignment instanceof CrmAssignment)->values();
+        $callStatusCounts = [];
+        foreach (array_keys($followupStatusOptions) as $statusKey) {
+            $callStatusCounts[$statusKey] = $assignedHits
+                ->filter(fn (object $hit) => $hit->assignment->lastCallStatus() === $statusKey)
+                ->count();
+        }
+        // Unassigned rows count as pending for result-wise totals.
+        $callStatusCounts[CrmFollowup::STATUS_PENDING] = ($callStatusCounts[CrmFollowup::STATUS_PENDING] ?? 0)
+            + $results->filter(fn (object $hit) => ! ($hit->assignment instanceof CrmAssignment))->count();
+
+        $callRoundCounts = [];
+        foreach ($followupNumbers as $roundNo) {
+            $callRoundCounts[$roundNo] = $assignedHits
+                ->filter(fn (object $hit) => ($fu = $hit->assignment->followup($roundNo)) && $fu->isDone())
+                ->count();
+        }
+        $completedFollowupSum = $assignedHits->sum(fn (object $hit) => $hit->assignment->completedFollowups());
+        $callAverage = $assignedHits->count() > 0
+            ? round($completedFollowupSum / $assignedHits->count(), 1)
+            : 0.0;
+
+        if ($callStatus !== '') {
+            $results = $results->filter(function (object $hit) use ($callStatus) {
+                if (! ($hit->assignment instanceof CrmAssignment)) {
+                    return $callStatus === CrmFollowup::STATUS_PENDING;
+                }
+
+                return $hit->assignment->lastCallStatus() === $callStatus;
+            })->values();
+        }
+
+        if ($callRound > 0) {
+            $results = $results->filter(function (object $hit) use ($callRound) {
+                if (! ($hit->assignment instanceof CrmAssignment)) {
+                    return false;
+                }
+                $fu = $hit->assignment->followup($callRound);
+
+                return $fu && $fu->isDone();
+            })->values();
+        }
+
         if ($search !== '') {
             $needle = mb_strtolower($search);
             $results = $results->filter(function (object $hit) use ($needle) {
@@ -339,6 +393,8 @@ class CrmController extends Controller
             'search' => $search,
             'sessionFilter' => $sessionFilter,
             'team' => $team,
+            'callStatus' => $callStatus,
+            'callRound' => $callRound,
             'allowedSessions' => $allowed,
             'employees' => $employees,
             'results' => $results,
@@ -347,6 +403,11 @@ class CrmController extends Controller
             'teamCounts' => $teamCounts,
             'assignedCount' => $assignedCount,
             'unassignedCount' => $unassignedCount,
+            'followupStatusOptions' => $followupStatusOptions,
+            'callStatusCounts' => $callStatusCounts,
+            'callRoundCounts' => $callRoundCounts,
+            'callAverage' => $callAverage,
+            'followupNumbers' => $followupNumbers,
             'allCount' => $allAbsentUnpaid->count(),
             'scopedCount' => $scoped->count(),
             'isAdmin' => true,

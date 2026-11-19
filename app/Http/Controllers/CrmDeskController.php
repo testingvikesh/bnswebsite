@@ -111,8 +111,35 @@ class CrmDeskController extends Controller
 
         $callDone = $scoped->filter(fn (CrmAssignment $row) => $row->hasCallDone())->count();
         $remain = $scoped->count() - $callDone;
+
+        $followupStatusOptions = CrmFollowup::statusOptions();
+        $followupNumbers = CrmFollowup::numbers();
+        $callRound = (int) $request->query('call_round', 0);
+        if (! in_array($callRound, $followupNumbers, true)) {
+            $callRound = 0;
+        }
+
+        $callStatusCounts = [];
+        foreach (array_keys($followupStatusOptions) as $statusKey) {
+            $callStatusCounts[$statusKey] = $scoped
+                ->filter(fn (CrmAssignment $row) => $row->lastCallStatus() === $statusKey)
+                ->count();
+        }
+
+        $callRoundCounts = [];
+        foreach ($followupNumbers as $roundNo) {
+            $callRoundCounts[$roundNo] = $scoped
+                ->filter(fn (CrmAssignment $row) => ($fu = $row->followup($roundNo)) && $fu->isDone())
+                ->count();
+        }
+        $completedFollowupSum = $scoped->sum(fn (CrmAssignment $row) => $row->completedFollowups());
+        $callAverage = $scoped->count() > 0
+            ? round($completedFollowupSum / $scoped->count(), 1)
+            : 0.0;
+
         $filtered = $this->applyDeskFilters($scoped, array_merge($filters, [
             'status' => 'all',
+            'callRound' => $callRound,
         ]));
 
         return view('crm.desk-special-calling', [
@@ -123,8 +150,12 @@ class CrmDeskController extends Controller
             'search' => $filters['search'],
             'call' => $filters['call'],
             'callStatus' => $filters['callStatus'],
-            'callStatusCounts' => $this->assignmentTotals($scoped, (int) $employee->id, $sessionFilter)['callStatusCounts'],
-            'followupStatusOptions' => CrmFollowup::statusOptions(),
+            'callRound' => $callRound,
+            'callStatusCounts' => $callStatusCounts,
+            'callRoundCounts' => $callRoundCounts,
+            'callAverage' => $callAverage,
+            'followupStatusOptions' => $followupStatusOptions,
+            'followupNumbers' => $followupNumbers,
             'allowedSessions' => $allowed,
             'sessionFilter' => $sessionFilter,
             'sessionTotals' => $sessionTotals,
@@ -196,7 +227,7 @@ class CrmDeskController extends Controller
         }
 
         $followups = [];
-        for ($n = 1; $n <= 3; $n++) {
+        foreach (CrmFollowup::numbers() as $n) {
             $followups[$n] = $assignment->followup($n);
         }
 
@@ -216,7 +247,7 @@ class CrmDeskController extends Controller
     {
         $this->assertOwns($request, $assignment);
 
-        if ($followup < 1 || $followup > 3) {
+        if ($followup < 1 || $followup > CrmFollowup::maxNumber()) {
             abort(404);
         }
 
@@ -343,7 +374,7 @@ class CrmDeskController extends Controller
 
     /**
      * @param  \Illuminate\Support\Collection<int, CrmAssignment>  $assignments
-     * @param  array{search: string, status: string, call: string, callStatus: string}  $filters
+     * @param  array{search: string, status: string, call: string, callStatus: string, callRound?: int}  $filters
      * @return \Illuminate\Support\Collection<int, CrmAssignment>
      */
     private function applyDeskFilters($assignments, array $filters)
@@ -381,6 +412,15 @@ class CrmDeskController extends Controller
 
         if ($filters['callStatus'] !== '') {
             $rows = $rows->filter(fn (CrmAssignment $row) => $row->lastCallStatus() === $filters['callStatus'])->values();
+        }
+
+        $callRound = (int) ($filters['callRound'] ?? 0);
+        if ($callRound > 0) {
+            $rows = $rows->filter(function (CrmAssignment $row) use ($callRound) {
+                $fu = $row->followup($callRound);
+
+                return $fu && $fu->isDone();
+            })->values();
         }
 
         return $rows;

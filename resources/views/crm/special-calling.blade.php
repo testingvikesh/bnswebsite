@@ -38,14 +38,37 @@
                 $sessionFilter = (int) ($sessionFilter ?? 0);
                 $search = $search ?? '';
                 $team = $team ?? '';
+                $callStatus = $callStatus ?? '';
+                $callRound = (int) ($callRound ?? 0);
                 $employees = $employees ?? collect();
+                $followupStatusOptions = $followupStatusOptions ?? \App\Models\CrmFollowup::statusOptions();
+                $callStatusCounts = $callStatusCounts ?? [];
+                $followupNumbers = $followupNumbers ?? \App\Models\CrmFollowup::numbers();
+                $callRoundCounts = $callRoundCounts ?? array_fill_keys($followupNumbers, 0);
+                $callAverage = $callAverage ?? 0;
                 $queryKeep = array_filter([
                     'q' => $search !== '' ? $search : null,
                     'team' => $team !== '' ? $team : null,
+                    'call_status' => $callStatus !== '' ? $callStatus : null,
+                    'call_round' => $callRound > 0 ? $callRound : null,
                 ]);
                 $teamKeep = array_filter([
                     'q' => $search !== '' ? $search : null,
                     'session' => $sessionFilter > 0 ? $sessionFilter : null,
+                    'call_status' => $callStatus !== '' ? $callStatus : null,
+                    'call_round' => $callRound > 0 ? $callRound : null,
+                ]);
+                $resultKeep = array_filter([
+                    'q' => $search !== '' ? $search : null,
+                    'session' => $sessionFilter > 0 ? $sessionFilter : null,
+                    'team' => $team !== '' ? $team : null,
+                    'call_round' => $callRound > 0 ? $callRound : null,
+                ]);
+                $roundKeep = array_filter([
+                    'q' => $search !== '' ? $search : null,
+                    'session' => $sessionFilter > 0 ? $sessionFilter : null,
+                    'team' => $team !== '' ? $team : null,
+                    'call_status' => $callStatus !== '' ? $callStatus : null,
                 ]);
                 $teamLabel = match ($team) {
                     'assigned' => 'Assigned',
@@ -92,6 +115,19 @@
             </div>
             <p class="bns-crm-section-copy">Click a calling team member to open only their Special Calling students. Tick students, choose staff + allotted facility, then Submit.</p>
 
+            @include('crm.partials.call-result-stats', [
+                'routeName' => 'crm.special-calling',
+                'resultKeep' => $resultKeep,
+                'roundKeep' => $roundKeep,
+                'callStatus' => $callStatus,
+                'callRound' => $callRound,
+                'followupStatusOptions' => $followupStatusOptions,
+                'followupNumbers' => $followupNumbers,
+                'callStatusCounts' => $callStatusCounts,
+                'callRoundCounts' => $callRoundCounts,
+                'callAverage' => $callAverage,
+            ])
+
             <form method="GET" action="{{ route('crm.special-calling') }}" class="bns-crm-filters">
                 @if($sessionFilter > 0)
                     <input type="hidden" name="session" value="{{ $sessionFilter }}">
@@ -99,13 +135,19 @@
                 @if($team !== '')
                     <input type="hidden" name="team" value="{{ $team }}">
                 @endif
+                @if($callStatus !== '')
+                    <input type="hidden" name="call_status" value="{{ $callStatus }}">
+                @endif
+                @if($callRound > 0)
+                    <input type="hidden" name="call_round" value="{{ $callRound }}">
+                @endif
                 <div>
                     <label for="crmSpecialSearch">Search</label>
                     <input id="crmSpecialSearch" type="search" name="q" value="{{ $search }}" placeholder="Name, mobile, email, registration number">
                 </div>
                 <div class="bns-crm-filters__actions">
                     <button type="submit"><i class="fas fa-search" aria-hidden="true"></i> Search</button>
-                    @if($search !== '' || $sessionFilter > 0 || $team !== '')
+                    @if($search !== '' || $sessionFilter > 0 || $team !== '' || $callStatus !== '' || $callRound > 0)
                         <a href="{{ route('crm.special-calling') }}" class="bns-crm-search__reset">Clear</a>
                     @endif
                 </div>
@@ -122,6 +164,12 @@
                             @endif
                             @if($team !== '')
                                 · {{ $teamLabel }}
+                            @endif
+                            @if($callStatus !== '')
+                                · {{ $followupStatusOptions[$callStatus] ?? $callStatus }}
+                            @endif
+                            @if($callRound > 0)
+                                · {{ \App\Models\CrmFollowup::ordinalLabel($callRound) }} done
                             @endif
                         </h3>
                         <span>
@@ -188,8 +236,10 @@
                                         </td>
                                         <td><strong>{{ $item->full_name ?: '—' }}</strong></td>
                                         <td>
-                                            <div>{{ $item->mobile ?: '—' }}</div>
-                                            <div class="is-muted">{{ $item->email ?: '—' }}</div>
+                                            @include('crm.partials.contact-cell', [
+                                                'mobile' => $item->mobile ?? '',
+                                                'email' => $item->email ?? '',
+                                            ])
                                         </td>
                                         <td>{{ $item->registration_number ?: '—' }}</td>
                                         <td>{{ $item->interested_program ?: '—' }}</td>

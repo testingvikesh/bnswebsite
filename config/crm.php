@@ -16,8 +16,8 @@ return [
         'title' => 'BNS CRM',
         'subtitle' => 'Introduction session attendance',
         'label' => 'CRM Portal',
-        'intro' => 'View every introduction session, assign members to employees, and manage calls with 3 follow-ups.',
+        'intro' => 'View every introduction session, assign members to employees, and manage calls with 5 follow-ups.',
     ],
 
-    'followup_count' => 3,
+    'followup_count' => 5,
 ];
